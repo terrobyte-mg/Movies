@@ -1,0 +1,75 @@
+/* Zone fixe d'affichage des toasts */
+#messageBox {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+/* La carte du Toast */
+.toast-card {
+    display: flex;
+    align-items: center;
+    min-width: 280px;
+    max-width: 400px;
+    padding: 16px;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    pointer-events: auto;
+    font-family: inherit;
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Alignement et espacement du texte */
+.toast-content {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.toast-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.toast-message {
+    font-size: 13px;
+    color: #555555;
+}
+
+/* L'icône Font Awesome */
+.toast-icon {
+    font-size: 22px; /* Taille optimale pour l'icône */
+}
+
+/* --- Thèmes de couleurs épurés --- */
+.toast-card.success {
+    border-left: 5px solid #2ecc71;
+}
+.toast-card.success .toast-icon,
+.toast-card.success .toast-title {
+    color: #2ecc71;
+}
+
+.toast-card.error {
+    border-left: 5px solid #e74c3c;
+}
+.toast-card.error .toast-icon,
+.toast-card.error .toast-title {
+    color: #e74c3c;
+}
+
+/* Animation d'entrée */
+@keyframes slideIn {
+    from {
+        transform: translateX(110%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

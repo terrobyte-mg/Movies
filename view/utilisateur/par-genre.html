@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADAMOV - Films par Genre</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    /* Grille des genres avec cartes colorées */
+    .grille-genres {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .carte-genre {
+      border-radius: 14px;
+      padding: 28px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .carte-genre:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.5); }
+    .carte-genre.actif { border-color: var(--rouge-mada); }
+    .carte-genre i { font-size: 2rem; margin-bottom: 10px; display: block; }
+    .carte-genre span { font-size: 14px; font-weight: 600; color: #fff; }
+
+    /* Couleurs des genres */
+    .genre-action    { background: linear-gradient(135deg, #c0392b, #7b241c); }
+    .genre-comedie   { background: linear-gradient(135deg, #f39c12, #8e6e0e); }
+    .genre-horreur   { background: linear-gradient(135deg, #2c3e50, #1a252f); }
+    .genre-romance   { background: linear-gradient(135deg, #e91e8c, #880e4f); }
+    .genre-sf        { background: linear-gradient(135deg, #1565c0, #0d3c77); }
+    .genre-thriller  { background: linear-gradient(135deg, #4a148c, #2a0f57); }
+    .genre-animation { background: linear-gradient(135deg, #00695c, #004d40); }
+    .genre-aventure  { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
+
+    /* Résultats de films filtrés */
+    .titre-resultat { font-size: 20px; font-weight: 700; margin: 24px 0 16px; color: var(--blanc); }
+    .grille-films {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 18px;
+    }
+    .carte-film {
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s;
+      background: var(--gris-fonce);
+    }
+    .carte-film:hover { transform: scale(1.04); }
+    .carte-film img { width: 100%; height: 230px; object-fit: cover; display: block; }
+    .info-film { padding: 10px 12px; }
+    .info-film h4 { font-size: 13px; font-weight: 600; color: var(--blanc); margin: 0 0 4px; }
+    .info-film span { font-size: 11px; color: var(--gris-clair); }
+  </style>
+</head>
+<body class="utilisateur-theme">
+
+  <div class="page-conteneur">
+
+    <!-- BARRE LATÉRALE -->
+    <aside class="barre-laterale">
+      <div>
+        <div class="logo">
+          <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
+          MADAMOV
+        </div>
+        <!-- Profil utilisateur -->
+        <div class="profil-section">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar" class="avatar-grand">
+          <h4 id="nomUtilisateurConnecte">Théodoric</h4>
+          <span class="badge-premium">Premium</span>
+        </div>
+
+        <!-- Navigation -->
+        <nav style="margin-top: 20px;">
+          <p class="menu-titre">Menu principal</p>
+          <ul class="menu-liens">
+            <li><a href="index.html"><i class="fa-solid fa-house-play"></i> <span>Films</span></a></li>
+            <li class="actif"><a href="par-genre.html"><i class="fa-solid fa-masks-theater"></i> <span>Par genre</span></a></li>
+            <li class="sous-menu"><a href="par-categorie.html"><i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span></a></li>
+            <li class="sous-menu"><a href="par-date.html"><i class="fa-solid fa-calendar-days"></i> <span>Par date</span></a></li>
+          </ul>
+        </nav>
+      </div>
+      <div>
+        <div class="baobab-silhouettes"></div>
+        <ul class="menu-liens" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 10px;">
+          <li><a href="parametres.html"><i class="fa-solid fa-sliders"></i> <span>Paramètres</span></a></li>
+          <li><a href="../view/auth/connexion.html" ><i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span></a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ZONE PRINCIPALE -->
+    <main class="zone-principale">
+      <!-- En-tête -->
+      <header class="en-tete" style="background: var(--fond-sombre);">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="bouton-menu-mobile" ><i class="fa-solid fa-bars"></i></button>
+          <div class="barre-recherche">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="champRecherche" placeholder="Rechercher un film..." oninput="filtrerFilms()">
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="btn-icone"><i class="fa-regular fa-bell"></i><span class="badge-notif">3</span></button>
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=60" alt="Avatar" class="avatar-petit">
+        </div>
+      </header>
+
+      <div class="contenu-principal">
+        <!-- Titre de la page -->
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 26px; font-weight: 700; color: var(--blanc);">
+            <i class="fa-solid fa-masks-theater" style="color: var(--rouge-mada);"></i> Parcourir par Genre
+          </h1>
+          <p style="color: var(--gris-clair); font-size: 14px; margin-top: 6px;">Choisissez un genre pour découvrir les films correspondants.</p>
+        </div>
+
+        <!-- Grille des genres -->
+        <div class="grille-genres" id="grilleGenres">
+          <div class="carte-genre genre-action actif" >
+            <i class="fa-solid fa-gun"></i><span>Action</span>
+          </div>
+          <div class="carte-genre genre-comedie" >
+            <i class="fa-solid fa-face-laugh"></i><span>Comédie</span>
+          </div>
+          <div class="carte-genre genre-horreur" >
+            <i class="fa-solid fa-skull"></i><span>Horreur</span>
+          </div>
+          <div class="carte-genre genre-romance" >
+            <i class="fa-solid fa-heart"></i><span>Romance</span>
+          </div>
+          <div class="carte-genre genre-sf" >
+            <i class="fa-solid fa-rocket"></i><span>Science-Fiction</span>
+          </div>
+          <div class="carte-genre genre-thriller" >
+            <i class="fa-solid fa-user-secret"></i><span>Thriller</span>
+          </div>
+          <div class="carte-genre genre-animation" >
+            <i class="fa-solid fa-dragon"></i><span>Animation</span>
+          </div>
+          <div class="carte-genre genre-aventure" >
+            <i class="fa-solid fa-compass"></i><span>Aventure</span>
+          </div>
+        </div>
+
+        <!-- Résultats -->
+        <div class="titre-resultat">
+          <i class="fa-solid fa-film" style="color: var(--rouge-mada); margin-right: 8px;"></i>
+          Films : <span id="genreSelectionne">Action</span>
+        </div>
+        <div class="grille-films" id="grilleFilms"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Données de films par genre (le backend fournira les vraies données via API)
+    const filmsParGenre = {
+      "Action": [
+        { titre: "The Batman", annee: "2022", image: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg" },
+        { titre: "Top Gun: Maverick", annee: "2022", image: "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDabo8diEhkHPm3.jpg" },
+        { titre: "Black Panther", annee: "2022", image: "https://image.tmdb.org/t/p/w500/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" },
+        { titre: "John Wick 4", annee: "2023", image: "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" },
+        { titre: "Avengers", annee: "2021", image: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
+        { titre: "Fast & Furious 10", annee: "2023", image: "https://image.tmdb.org/t/p/w500/fiVW06jE7z9YnO4trhaMEdclSiC.jpg" }
+      ],
+      "Comédie": [
+        { titre: "Barbie", annee: "2023", image: "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7IS.jpg" },
+        { titre: "The Nice Guys", annee: "2016", image: "https://image.tmdb.org/t/p/w500/tEn4a3OTn0oRFwj8IYkRHkqjpYn.jpg" },
+        { titre: "Knives Out", annee: "2019", image: "https://image.tmdb.org/t/p/w500/pThyQovXQrw2m0s9x82twj48Jq4.jpg" },
+        { titre: "Jojo Rabbit", annee: "2019", image: "https://image.tmdb.org/t/p/w500/7GszMnbTCatGGavxrxnBi7BPZWX.jpg" }
+      ],
+      "Horreur": [
+        { titre: "Nope", annee: "2022", image: "https://image.tmdb.org/t/p/w500/AcKVlWaNVVVFQwynFAiSRS0jKZs.jpg" },
+        { titre: "The Menu", annee: "2022", image: "https://image.tmdb.org/t/p/w500/v3uMpqDLfgZSJl6xzEjgJAj4xaR.jpg" },
+        { titre: "Smile", annee: "2022", image: "https://image.tmdb.org/t/p/w500/aPqcQwu4VGEwallmXWMlFCgHaus.jpg" },
+        { titre: "Hereditary", annee: "2018", image: "https://image.tmdb.org/t/p/w500/rUPlZTa6bNnP3LzE55kM8JVPoeq.jpg" }
+      ],
+      "Romance": [
+        { titre: "La La Land", annee: "2016", image: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg" },
+        { titre: "Titanic", annee: "1997", image: "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg" }
+      ],
+      "Science-Fiction": [
+        { titre: "Dune: Part 2", annee: "2024", image: "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" },
+        { titre: "Oppenheimer", annee: "2023", image: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" },
+        { titre: "Everything Everywhere", annee: "2022", image: "https://image.tmdb.org/t/p/w500/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg" }
+      ],
+      "Thriller": [
+        { titre: "Parasite", annee: "2019", image: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg" },
+        { titre: "Gone Girl", annee: "2014", image: "https://image.tmdb.org/t/p/w500/3b2irOf7o6BSF8F1EFjpuLqHJQM.jpg" }
+      ],
+      "Animation": [
+        { titre: "Spider-Man: Across the Universe", annee: "2023", image: "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" },
+        { titre: "Encanto", annee: "2021", image: "https://image.tmdb.org/t/p/w500/4j0PNHkMr5ax3IA8tjtxcmPU3QT.jpg" }
+      ],
+      "Aventure": [
+        { titre: "Indiana Jones 5", annee: "2023", image: "https://image.tmdb.org/t/p/w500/Af4bXE63pVsb2FtbW8uYIyPBadD.jpg" },
+        { titre: "Jurassic World", annee: "2022", image: "https://image.tmdb.org/t/p/w500/kAVRgw7GgK1CfYEJq8ME6EvRIgU.jpg" }
+      ]
+    };
+
+    // Sélectionner un genre et afficher ses films
+    function selectionnerGenre(nomGenre, elementClique) {
+      // Mettre à jour l'onglet actif
+      document.querySelectorAll(".carte-genre").forEach(c => c.classList.remove("actif"));
+      elementClique.classList.add("actif");
+
+      // Mettre à jour le titre des résultats
+      document.getElementById("genreSelectionne").textContent = nomGenre;
+
+      // Récupérer les films du genre sélectionné
+      afficherFilms(filmsParGenre[nomGenre] || []);
+    }
+
+    // Afficher la grille de films
+    function afficherFilms(listeFilms) {
+      const conteneur = document.getElementById("grilleFilms");
+      conteneur.innerHTML = listeFilms.map(film => `
+        <div class="carte-film" >
+          <img src="${film.image}" alt="${film.titre}" onerror="this.src='https://via.placeholder.com/160x230/1a1a2e/ffffff?text=${encodeURIComponent(film.titre)}'">
+          <div class="info-film">
+            <h4>${film.titre}</h4>
+            <span><i class="fa-regular fa-calendar" style="margin-right:4px;"></i>${film.annee}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // Charger les films d'action par défaut au chargement
+    window.addEventListener("DOMContentLoaded", () => {
+      const nomUtilisateur = localStorage.getItem("nomUtilisateur") || "Théodoric";
+      document.getElementById("nomUtilisateurConnecte").textContent = nomUtilisateur;
+      afficherFilms(filmsParGenre["Action"]);
+    });
+
+    // Filtrer les films affichés par recherche
+    function filtrerFilms() {
+      const texteRecherche = document.getElementById("champRecherche").value.toLowerCase();
+      const cartes = document.querySelectorAll(".carte-film");
+      cartes.forEach(carte => {
+        const titreCarte = carte.querySelector("h4").textContent.toLowerCase();
+        carte.style.display = titreCarte.includes(texteRecherche) ? "" : "none";
+      });
+    }
+  </script>
+</body>
+</html>
+

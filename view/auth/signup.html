@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Movies - Inscription</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="/movie/style.css">
+        <link rel="stylesheet" href="/movie/view/auth/auth.css">
+        <script src="/movie/view/utils/toast.js" defer></script>
+        <script src="/movie/view/auth/auth.js" defer></script>
+    </head>
+
+    <body class="page-inscription">
+
+        <div class="boite-inscription">
+            <!-- Logo Movies  -->
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div class="logo" style="justify-content: center; margin-bottom: 12px;">
+                    <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
+                    Movies
+                </div>
+                <p style="font-size: 13px; color: var(--gris-clair); max-width: 380px; margin: 0 auto; line-height: 1.5;">
+                    Inscrivez-vous pour accéder à des diverses de catalogue de films.
+                </p>
+            </div>
+
+            <h2 class="titre-form">Inscription</h2>
+            <p class="soustitre-form">Inscrivez-vous gratuitement et explorez tout le catalogue.</p>
+
+            <!-- Formulaire d'inscription -->
+            <form method="POST" id="signupForm">
+
+                <!-- Nom utilisateur -->
+                <div class="form-groupe">
+                    <label for="nom_utilisateur">Nom complet</label>
+                    <div class="input-icone">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="nom_utilisateur" name="nom_utilisateur" placeholder="Entrez votre nom d'utilisateur" maxlength="50" required>
+                    </div>
+                </div>
+
+                <!-- Email de l'utilisateur-->
+                <div class="form-groupe">
+                    <label for="email_utilisateur">Email valide</label>
+                    <div class="input-icone">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="email" id="email_utilisateur" name="email_utilisateur" placeholder="Entrez votre email" maxlength="255" required>
+                    </div>
+                </div>
+
+                <!-- Mot de passe -->
+                <div class="form-groupe">
+                    <label for="mot_de_passe">Mot de passe</label>
+                    <div class="input-icone">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="mot_de_passe" name="mot_de_passe1" placeholder="Votre mot de passe" required>
+                        <i class="fa-regular fa-eye toggle-mdp" onclick="basculerMotDePasse('mot_de_passe')"></i>
+                    </div>
+                </div>
+
+                <!-- Confirmer le mot de passe -->
+                <div class="form-groupe" id="groupeConfirmerMdp">
+                    <label for="confirmer_mot_de_passe">Confirmer le mot de passe</label>
+                    <div class="input-icone">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="confirmer_mot_de_passe" name="mot_de_passe2" placeholder="Confirmez votre mot de passe" required>
+                        <i class="fa-regular fa-eye toggle-mdp" onclick="basculerMotDePasse('confirmer_mot_de_passe')"></i>
+                    </div>
+                </div>
+
+                <!-- Bouton de connexion -->
+                <button type="submit" class="bouton-principal">
+                    <i class="fa-solid fa-user-plus"></i> <span>Valider</span>
+                </button>
+
+            </form>
+
+            <!-- Lien vers inscription / connexion -->
+            <p class="form-lien-retour">
+                Vous avez déjà un compte ? <a href="/movie/public/index.php?action=login" >Connectez-vous</a>
+            </p>
+
+            <!-- Pied de page -->
+            <footer>
+                <div style="padding-top: 20px; bottom: 20px; font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; width: 100%;">
+                    2026 Movies . Tous droits réservés.
+                </div>
+            </footer>
+
+        </div>
+
+        <script>
+            // Basculer affichage du mot de passe
+            function basculerMotDePasse(idChamp) {
+                const input = document.getElementById(idChamp);
+                const icone = input.nextElementSibling;
+                if (input.type === "password") {
+                    input.type = "text";
+                    icone.classList.replace("fa-eye", "fa-eye-slash");
+                } else {
+                    input.type = "password";
+                    icone.classList.replace("fa-eye-slash", "fa-eye");
+                }
+            }
+
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADAMOV - Paramètres</title>
+  <!-- FontAwesome CDN pour les icônes premium -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Style commun -->
+  <link rel="stylesheet" href="/movie/style.css">
+  <style>
+    .boite-parametres {
+      background: var(--gris-fonce);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .parametre-titre {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--blanc);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .parametre-titre i {
+      color: var(--rouge-mada);
+    }
+    .form-ligne {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .form-colonne {
+      flex: 1;
+      min-width: 250px;
+    }
+    .form-colonne label {
+      display: block;
+      font-size: 13px;
+      color: var(--gris-clair);
+      margin-bottom: 6px;
+    }
+    .form-colonne input, .form-colonne select {
+      width: 100%;
+      background: var(--fond-sombre);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--blanc);
+      font-family: inherit;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .form-colonne input:focus {
+      border-color: var(--vert-clair);
+      outline: none;
+    }
+    .btn-enregistrer {
+      background: var(--vert-clair);
+      color: var(--blanc);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-enregistrer:hover {
+      background: var(--vert-mada);
+    }
+    .carte-premium {
+      background: linear-gradient(135deg, #1b5e20, #0a5c36);
+      border-radius: 12px;
+      padding: 20px;
+      color: var(--blanc);
+      position: relative;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+    .carte-premium-decor {
+      position: absolute;
+      right: -20px;
+      bottom: -20px;
+      font-size: 120px;
+      color: rgba(255,255,255,0.05);
+      transform: rotate(-15deg);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="utilisateur-theme">
+
+  <div class="page-conteneur">
+    
+    <!-- BARRE LATÉRALE -->
+    <aside class="barre-laterale">
+      <div>
+        <div class="logo">
+          <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
+          MADAMOV
+        </div>
+        <div class="profil-section">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar" class="avatar-grand">
+          <h4 id="nomUtilisateurConnecte">Théodoric</h4>
+          <span class="badge-premium">Premium</span>
+        </div>
+        <nav style="margin-top: 20px;">
+          <p class="menu-titre">Menu principal</p>
+          <ul class="menu-liens">
+            <li><a href="index.html"><i class="fa-solid fa-house-play"></i> <span>Films</span></a></li>
+            <li class="sous-menu"><a href="par-genre.html"><i class="fa-solid fa-masks-theater"></i> <span>Par genre</span></a></li>
+            <li class="sous-menu"><a href="par-categorie.html"><i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span></a></li>
+            <li class="sous-menu"><a href="par-date.html"><i class="fa-solid fa-calendar-days"></i> <span>Par date</span></a></li>
+          </ul>
+        </nav>
+      </div>
+      <div>
+        <div class="baobab-silhouettes"></div>
+        <ul class="menu-liens" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 10px;">
+          <li class="actif"><a href="parametres.html"><i class="fa-solid fa-sliders"></i> <span>Paramètres</span></a></li>
+          <li><a href="../view/auth/connexion.html" ><i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span></a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ZONE PRINCIPALE -->
+    <main class="zone-principale">
+      <header class="en-tete" style="background: var(--fond-sombre);">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="bouton-menu-mobile"><i class="fa-solid fa-bars"></i></button>
+          <div class="barre-recherche">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" placeholder="Rechercher..." disabled style="cursor: not-allowed; opacity: 0.5;">
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="btn-icone" ><i class="fa-regular fa-bell"></i></button>
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=60" alt="Avatar" class="avatar-petit">
+        </div>
+      </header>
+
+      <div class="contenu-principal">
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 26px; font-weight: 700; color: var(--blanc);">
+            <i class="fa-solid fa-sliders" style="color: var(--rouge-mada);"></i> Paramètres du Compte
+          </h1>
+          <p style="color: var(--gris-clair); font-size: 14px; margin-top: 6px;">Gérez vos informations personnelles et vos préférences.</p>
+        </div>
+
+        <form id="formulaireParametres" >
+          <!-- Bloc 1: Informations du profil -->
+          <div class="boite-parametres">
+            <h3 class="parametre-titre"><i class="fa-regular fa-user"></i> Informations du profil</h3>
+            <div class="form-ligne">
+              <div class="form-colonne">
+                <label for="nomComplet">Nom complet</label>
+                <input type="text" id="nomComplet" value="Théodoric" required>
+              </div>
+              <div class="form-colonne">
+                <label for="nomUtilisateur">Nom d'utilisateur</label>
+                <input type="text" id="nomUtilisateur" value="theodoric" required>
+              </div>
+            </div>
+            <div class="form-ligne">
+              <div class="form-colonne">
+                <label for="email">Adresse email</label>
+                <input type="email" id="email" value="theodoric@MADAMOV.mg" required>
+              </div>
+              <div class="form-colonne">
+                <label for="langue">Langue d'affichage</label>
+                <select id="langue">
+                  <option value="fr" selected>Français</option>
+                  <option value="mg">Malagasy</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloc 2: Sécurité -->
+          <div class="boite-parametres">
+            <h3 class="parametre-titre"><i class="fa-solid fa-lock"></i> Sécurité du compte</h3>
+            <div class="form-ligne">
+              <div class="form-colonne">
+                <label for="nouveauMdp">Nouveau mot de passe</label>
+                <input type="password" id="nouveauMdp" placeholder="Laisser vide si inchangé">
+              </div>
+              <div class="form-colonne">
+                <label for="confirmerMdp">Confirmer le nouveau mot de passe</label>
+                <input type="password" id="confirmerMdp" placeholder="Laisser vide si inchangé">
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloc 3: Abonnement -->
+          <div class="boite-parametres">
+            <h3 class="parametre-titre"><i class="fa-solid fa-credit-card"></i> Abonnement & Paiements</h3>
+            <div class="carte-premium">
+              <i class="fa-solid fa-gem carte-premium-decor"></i>
+              <div style="font-weight: 700; font-size: 18px; margin-bottom: 6px;">Formule Premium Actuelle</div>
+              <div style="font-size: 13px; opacity: 0.9; margin-bottom: 15px;">Accès illimité à tous les films, séries et animés en 4K UHD.</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <span style="background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Renouvellement le : 19 Juillet 2026</span>
+                <button type="button" class="bouton-principal" style="background: var(--rouge-mada); font-size: 12px; padding: 6px 14px; border-radius: 6px; width: auto;" >Résilier l'abonnement</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bouton enregistrer -->
+          <div style="margin-top: 20px;">
+            <button type="submit" class="btn-enregistrer">
+              <i class="fa-solid fa-check"></i> Enregistrer les modifications
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      // Charger les données de l'utilisateur si existantes dans localStorage
+      const nom = localStorage.getItem("nomCompletUtilisateur");
+      const email = localStorage.getItem("emailUtilisateur");
+      const username = localStorage.getItem("nomUtilisateur");
+      
+      if (nom) document.getElementById("nomComplet").value = nom;
+      if (email) document.getElementById("email").value = email;
+      if (username) {
+        document.getElementById("nomUtilisateur").value = username;
+        document.getElementById("nomUtilisateurConnecte").textContent = username;
+      }
+    });
+
+    function enregistrerParametres(event) {
+      event.preventDefault();
+      
+      const nom = document.getElementById("nomComplet").value;
+      const email = document.getElementById("email").value;
+      const username = document.getElementById("nomUtilisateur").value;
+      const nouveauMdp = document.getElementById("nouveauMdp").value;
+      const confirmerMdp = document.getElementById("confirmerMdp").value;
+
+      if (nouveauMdp && nouveauMdp !== confirmerMdp) {
+        alert("Erreur : Les mots de passe de confirmation ne correspondent pas.");
+        return;
+      }
+
+      // Enregistrer dans localStorage pour simuler
+      localStorage.setItem("nomCompletUtilisateur", nom);
+      localStorage.setItem("emailUtilisateur", email);
+      localStorage.setItem("nomUtilisateur", username);
+
+      alert("Vos paramètres ont été enregistrés avec succès !");
+      document.getElementById("nomUtilisateurConnecte").textContent = username;
+      
+      if (nouveauMdp) {
+        document.getElementById("nouveauMdp").value = "";
+        document.getElementById("confirmerMdp").value = "";
+      }
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADAMOV - Films par Date</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    /* Timeline des années */
+    .timeline-annees {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .bouton-annee {
+      padding: 8px 18px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 30px;
+      background: transparent;
+      color: var(--gris-clair);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bouton-annee:hover { border-color: var(--rouge-mada); color: var(--rouge-mada); }
+    .bouton-annee.actif { background: var(--rouge-mada); border-color: var(--rouge-mada); color: #fff; }
+
+    /* Sélecteur d'ordre de tri */
+    .barre-tri {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      background: var(--gris-fonce);
+      border-radius: 12px;
+      padding: 12px 18px;
+    }
+    .barre-tri label { color: var(--gris-clair); font-size: 13px; }
+    .barre-tri select {
+      background: var(--fond-sombre);
+      color: var(--blanc);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* Grille de films */
+    .grille-films-date {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 18px;
+    }
+    .carte-film-date {
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s;
+      background: var(--gris-fonce);
+    }
+    .carte-film-date:hover { transform: scale(1.04); }
+    .carte-film-date img { width: 100%; height: 230px; object-fit: cover; display: block; }
+    .info-film-date { padding: 10px 12px; }
+    .info-film-date h4 { font-size: 13px; font-weight: 600; color: var(--blanc); margin: 0 0 6px; }
+    .info-film-date .annee-badge {
+      display: inline-block;
+      background: rgba(200,30,30,0.2);
+      color: var(--rouge-mada);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body class="utilisateur-theme">
+
+  <div class="page-conteneur">
+
+    <!-- BARRE LATÉRALE -->
+    <aside class="barre-laterale">
+      <div>
+        <div class="logo">
+          <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
+          MADAMOV
+        </div>
+        <div class="profil-section">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar" class="avatar-grand">
+          <h4 id="nomUtilisateurConnecte">Théodoric</h4>
+          <span class="badge-premium">Premium</span>
+        </div>
+        <nav style="margin-top: 20px;">
+          <p class="menu-titre">Menu principal</p>
+          <ul class="menu-liens">
+            <li><a href="index.html"><i class="fa-solid fa-house-play"></i> <span>Films</span></a></li>
+            <li class="sous-menu"><a href="par-genre.html"><i class="fa-solid fa-masks-theater"></i> <span>Par genre</span></a></li>
+            <li class="sous-menu"><a href="par-categorie.html"><i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span></a></li>
+            <li class="sous-menu actif"><a href="par-date.html"><i class="fa-solid fa-calendar-days"></i> <span>Par date</span></a></li>
+          </ul>
+        </nav>
+      </div>
+      <div>
+        <div class="baobab-silhouettes"></div>
+        <ul class="menu-liens" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 10px;">
+          <li><a href="parametres.html"><i class="fa-solid fa-sliders"></i> <span>Paramètres</span></a></li>
+          <li><a href="../view/auth/connexion.html" ><i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span></a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ZONE PRINCIPALE -->
+    <main class="zone-principale">
+      <header class="en-tete" style="background: var(--fond-sombre);">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="bouton-menu-mobile"><i class="fa-solid fa-bars"></i></button>
+          <div class="barre-recherche">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="champRecherche" placeholder="Rechercher un film..." oninput="filtrerParRecherche()">
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button class="btn-icone"><i class="fa-regular fa-bell"></i><span class="badge-notif">3</span></button>
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=60" alt="Avatar" class="avatar-petit">
+        </div>
+      </header>
+
+      <div class="contenu-principal">
+        <!-- Titre -->
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 26px; font-weight: 700; color: var(--blanc);">
+            <i class="fa-solid fa-calendar-days" style="color: var(--rouge-mada);"></i> Par Date de Sortie
+          </h1>
+          <p style="color: var(--gris-clair); font-size: 14px; margin-top: 6px;">Filtrez les films par année de sortie.</p>
+        </div>
+
+        <!-- Boutons d'années -->
+        <div class="timeline-annees" id="timelineAnnees"></div>
+
+        <!-- Barre de tri -->
+        <div class="barre-tri">
+          <label><i class="fa-solid fa-arrow-up-wide-short"></i> Trier par :</label>
+          <select id="selectTri" >
+            <option value="recent">Plus récent d'abord</option>
+            <option value="ancien">Plus ancien d'abord</option>
+            <option value="titre">Titre (A → Z)</option>
+          </select>
+          <span style="margin-left: auto; color: var(--gris-clair); font-size: 13px;">
+            <span id="compteurFilms">0</span> films trouvés
+          </span>
+        </div>
+
+        <!-- Grille de films -->
+        <div class="grille-films-date" id="grilleFilmsDate"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Catalogue complet de films avec dates (le backend fournira les vraies données)
+    const tousLesFilms = [
+      { titre: "Dune: Part 2", annee: 2024, image: "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" },
+      { titre: "John Wick 4", annee: 2023, image: "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" },
+      { titre: "Oppenheimer", annee: 2023, image: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" },
+      { titre: "Barbie", annee: 2023, image: "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7IS.jpg" },
+      { titre: "The Batman", annee: 2022, image: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg" },
+      { titre: "Top Gun: Maverick", annee: 2022, image: "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDabo8diEhkHPm3.jpg" },
+      { titre: "Black Panther: Wakanda Forever", annee: 2022, image: "https://image.tmdb.org/t/p/w500/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" },
+      { titre: "The Last of Us", annee: 2021, image: "https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg" },
+      { titre: "Avengers: Endgame", annee: 2019, image: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
+      { titre: "Parasite", annee: 2019, image: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg" },
+      { titre: "La La Land", annee: 2016, image: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg" }
+    ];
+
+    let anneeActive = "Tous";
+
+    // Générer les boutons d'années dynamiquement
+    function genererBoutonsAnnees() {
+      const anneesUniques = ["Tous", ...new Set(tousLesFilms.map(f => f.annee).sort((a, b) => b - a))];
+      const conteneur = document.getElementById("timelineAnnees");
+      conteneur.innerHTML = anneesUniques.map(annee => `
+        <button class="bouton-annee ${annee === 'Tous' ? 'actif' : ''}" >
+          ${annee === 'Tous' ? '<i class="fa-solid fa-infinity" style="margin-right:6px;"></i>Tous' : annee}
+        </button>
+      `).join("");
+    }
+
+    // Sélectionner une année
+    function selectionnerAnnee(annee, bouton) {
+      anneeActive = annee;
+      document.querySelectorAll(".bouton-annee").forEach(b => b.classList.remove("actif"));
+      bouton.classList.add("actif");
+      afficherFilmesFiltres();
+    }
+
+    // Trier les films selon la sélection
+    function trierFilms() {
+      afficherFilmesFiltres();
+    }
+
+    // Filtrer et afficher les films
+    function afficherFilmesFiltres() {
+      // Filtrer par année sélectionnée
+      let filmsFiltres = anneeActive === "Tous"
+        ? [...tousLesFilms]
+        : tousLesFilms.filter(f => f.annee === parseInt(anneeActive));
+
+      // Appliquer le tri
+      const triChoisi = document.getElementById("selectTri").value;
+      if (triChoisi === "recent") filmsFiltres.sort((a, b) => b.annee - a.annee);
+      else if (triChoisi === "ancien") filmsFiltres.sort((a, b) => a.annee - b.annee);
+      else if (triChoisi === "titre") filmsFiltres.sort((a, b) => a.titre.localeCompare(b.titre));
+
+      // Mettre à jour le compteur
+      document.getElementById("compteurFilms").textContent = filmsFiltres.length;
+
+      // Afficher la grille
+      const conteneur = document.getElementById("grilleFilmsDate");
+      conteneur.innerHTML = filmsFiltres.map(film => `
+        <div class="carte-film-date" >
+          <img src="${film.image}" alt="${film.titre}" onerror="this.src='https://via.placeholder.com/160x230/1a1a2e/fff?text=${encodeURIComponent(film.titre)}'">
+          <div class="info-film-date">
+            <h4>${film.titre}</h4>
+            <span class="annee-badge"><i class="fa-regular fa-calendar" style="margin-right:4px;"></i>${film.annee}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // Filtrer par recherche textuelle
+    function filtrerParRecherche() {
+      const texte = document.getElementById("champRecherche").value.toLowerCase();
+      document.querySelectorAll(".carte-film-date").forEach(carte => {
+        const titre = carte.querySelector("h4").textContent.toLowerCase();
+        carte.style.display = titre.includes(texte) ? "" : "none";
+      });
+    }
+
+    // Initialisation
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("nomUtilisateurConnecte").textContent = localStorage.getItem("nomUtilisateur") || "Théodoric";
+      genererBoutonsAnnees();
+      afficherFilmesFiltres();
+    });
+  </script>
+</body>
+</html>
+

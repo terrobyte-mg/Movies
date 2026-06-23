@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADAMOV Admin - Profil</title>
+  <!-- FontAwesome CDN pour les icônes premium -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Style commun -->
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    .boite-parametres {
+      background: var(--gris-fonce);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .parametre-titre {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--blanc);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .parametre-titre i {
+      color: var(--rouge-mada);
+    }
+    .form-ligne {
+      display: flex;
+      gap: 18px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .form-colonne {
+      flex: 1;
+      min-width: 250px;
+    }
+    .form-colonne label {
+      display: block;
+      font-size: 13px;
+      color: var(--gris-clair);
+      margin-bottom: 6px;
+    }
+    .form-colonne input, .form-colonne select {
+      width: 100%;
+      background: var(--fond-sombre);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--blanc);
+      font-family: inherit;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .form-colonne input:focus {
+      border-color: var(--vert-clair);
+      outline: none;
+    }
+    .btn-enregistrer {
+      background: var(--vert-clair);
+      color: var(--blanc);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .btn-enregistrer:hover {
+      background: var(--vert-mada);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-conteneur">
+    
+    <!-- BARRE LATÉRALE ADMINISTRATIVE GAUCHE -->
+    <aside class="barre-laterale">
+      <div>
+        <div class="logo">
+          <i class="fa-solid fa-clapperboard" style="color: var(--rouge-mada);"></i>
+          MADAMOV <span>ADMIN</span>
+        </div>
+        
+        <!-- Profil Admin -->
+        <div class="profil-section">
+          <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar Administrateur" class="avatar-grand">
+          <h4 id="nomAdminConnecte">Théodoric</h4>
+          <p class="badge-premium" style="margin-top: 6px;">Super Administrateur</p>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <nav>
+          <p class="menu-titre">Tableau de bord</p>
+          <ul class="menu-liens">
+            <li>
+              <a href="index.html">
+                <i class="fa-solid fa-house-chimney"></i> <span>Tableau de bord</span>
+              </a>
+            </li>
+          </ul>
+
+          <p class="menu-titre">Gestion du contenu</p>
+          <ul class="menu-liens">
+            <li>
+              <a href="films.html">
+                <i class="fa-solid fa-film"></i> <span>Film</span>
+              </a>
+            </li>
+            <li>
+              <a href="series.html">
+                <i class="fa-solid fa-tv"></i> <span>Série</span>
+              </a>
+            </li>
+            <li>
+              <a href="animes.html">
+                <i class="fa-solid fa-ghost"></i> <span>Animé</span>
+              </a>
+            </li>
+            <li>
+              <a href="index.html?onglet=categories">
+                <i class="fa-solid fa-tags"></i> <span>Catégories</span>
+              </a>
+            </li>
+          </ul>
+
+          <p class="menu-titre">Utilisateurs</p>
+          <ul class="menu-liens">
+            <li>
+              <a href="utilisateurs.html">
+                <i class="fa-solid fa-users"></i> <span>Utilisateurs</span>
+              </a>
+            </li>
+          </ul>
+
+          <p class="menu-titre">Paramètres</p>
+          <ul class="menu-liens">
+            <li class="actif">
+              <a href="profil.html">
+                <i class="fa-solid fa-user-gear"></i> <span>Profil Admin</span>
+              </a>
+            </li>
+            <li>
+              <a href="inscription.html">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Déconnexion</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div>
+        <div class="baobab-silhouettes"></div>
+        <div style="font-size: 11px; text-align: center; color: var(--gris-clair); padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05); font-weight: 500;">
+          © 2026 MADAMOV Admin Panel.<br>Tous droits réservés.
+        </div>
+      </div>
+    </aside>
+
+    <!-- ZONE DE CONTENU PRINCIPALE DROITE -->
+    <main class="zone-principale">
+      <!-- En-tête -->
+      <header class="en-tete">
+        <div class="recherche-barre">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="Rechercher..." disabled style="cursor: not-allowed; opacity: 0.5;">
+        </div>
+        <div class="en-tete-droite">
+          <button class="btn-icone" ><i class="fa-regular fa-bell"></i></button>
+          <div class="profil-utilisateur">
+            <span style="font-weight: 700; font-size: 14px;">Admin</span>
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar mini" class="avatar-petit">
+          </div>
+        </div>
+      </header>
+
+      <div class="contenu-principal">
+        <!-- Titre -->
+        <div style="margin-bottom: 24px;">
+          <h1 style="font-size: 26px; font-weight: 700; color: var(--blanc);">
+            <i class="fa-solid fa-user-gear" style="color: var(--rouge-mada); margin-right: 8px;"></i> Profil Administrateur
+          </h1>
+          <p style="color: var(--gris-clair); font-size: 14px; margin-top: 6px;">Configurez vos informations d'administration et de sécurité.</p>
+        </div>
+
+        <form id="formulaireProfilAdmin" >
+          <!-- Bloc 1: Profil -->
+          <div class="boite-parametres">
+            <h3 class="parametre-titre"><i class="fa-regular fa-user"></i> Informations personnelles</h3>
+            <div class="form-ligne">
+              <div class="form-colonne">
+                <label for="nomCompletAdmin">Nom complet</label>
+                <input type="text" id="nomCompletAdmin" value="Théodoric" required>
+              </div>
+              <div class="form-colonne">
+                <label for="nomUtilisateurAdmin">Nom d'utilisateur</label>
+                <input type="text" id="nomUtilisateurAdmin" value="theodoric" required>
+              </div>
+            </div>
+            <div class="form-ligne">
+              <div class="form-colonne">
+                <label for="emailAdmin">Email</label>
+                <input type="email" id="emailAdmin" value="theodoric@MADAMOV.mg" required>
+              </div>
+              <div class="form-colonne">
+                <label for="roleAdmin">Rôle administratif</label>
+                <input type="text" id="roleAdmin" value="Super Administrateur" disabled style="background-color:rgba(255,255,255,0.02); color:var(--gris-clair); cursor:not-allowed;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloc 2: Sécurité -->
+          <div class="boite-parametres">
+            <h3 class="parametre-titre"><i class="fa-solid fa-lock"></i> Modifier le mot de passe</h3>
+            <div class="form-ligne">
+              <div class="form-colonne">
+                <label for="nouveauMdpAdmin">Nouveau mot de passe</label>
+                <input type="password" id="nouveauMdpAdmin" placeholder="Laisser vide si inchangé">
+              </div>
+              <div class="form-colonne">
+                <label for="confirmerMdpAdmin">Confirmer le mot de passe</label>
+                <input type="password" id="confirmerMdpAdmin" placeholder="Laisser vide si inchangé">
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 20px;">
+            <button type="submit" class="btn-enregistrer">
+              <i class="fa-solid fa-check"></i> Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const nom = localStorage.getItem("nomCompletAdmin") || "Théodoric";
+      const email = localStorage.getItem("emailAdmin") || "theodoric@MADAMOV.mg";
+      const username = localStorage.getItem("nomUtilisateurAdmin") || "theodoric";
+
+      document.getElementById("nomCompletAdmin").value = nom;
+      document.getElementById("emailAdmin").value = email;
+      document.getElementById("nomUtilisateurAdmin").value = username;
+      document.getElementById("nomAdminConnecte").textContent = nom;
+    });
+
+    function enregistrerProfilAdmin(event) {
+      event.preventDefault();
+      const nom = document.getElementById("nomCompletAdmin").value;
+      const email = document.getElementById("emailAdmin").value;
+      const username = document.getElementById("nomUtilisateurAdmin").value;
+      const mdp = document.getElementById("nouveauMdpAdmin").value;
+      const confMdp = document.getElementById("confirmerMdpAdmin").value;
+
+      if (mdp && mdp !== confMdp) {
+        alert("Erreur : La confirmation du mot de passe ne correspond pas.");
+        return;
+      }
+
+      localStorage.setItem("nomCompletAdmin", nom);
+      localStorage.setItem("emailAdmin", email);
+      localStorage.setItem("nomUtilisateurAdmin", username);
+
+      alert("Profil administrateur mis à jour avec succès !");
+      document.getElementById("nomAdminConnecte").textContent = nom;
+
+      if (mdp) {
+        document.getElementById("nouveauMdpAdmin").value = "";
+        document.getElementById("confirmerMdpAdmin").value = "";
+      }
+    }
+  </script>
+</body>
+</html>
+
