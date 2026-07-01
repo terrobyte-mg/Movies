@@ -1,0 +1,54 @@
+/* ==========================================================================
+   POLICE LOCALE — Outfit
+   Fichiers .woff2 hébergés localement dans /movie/view/assets/fonts/
+   font-display: swap — affiche le texte immédiatement avec la police système
+   le temps que Outfit se charge, puis substitue sans rechargement visible.
+========================================================================== */
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('outfit-v15-latin-300.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('outfit-v15-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('outfit-v15-latin-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('outfit-v15-latin-600.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('outfit-v15-latin-700.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('outfit-v15-latin-800.woff2') format('woff2');
+}

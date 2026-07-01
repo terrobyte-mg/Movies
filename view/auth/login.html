@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies  - Connexion</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/movie/view/assets/fonts/fonts.css">
     <link rel="stylesheet" href="/movie/style.css">
     <link rel="stylesheet" href="/movie/view/auth/auth.css">
     <script src="/movie/view/auth/auth.js" defer></script>
@@ -16,16 +16,13 @@
         <!-- Logo Movies  -->
         <div style="text-align: center; margin-bottom: 25px;">
             <div class="logo" style="justify-content: center; margin-bottom: 12px;">
-                <span class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></span>
+                <svg class="circle-play-logo" style="color: var(--rouge-mada)"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
                 Movies
             </div>
             <p style="font-size: 13px; color: var(--gris-clair); max-width: 380px; margin: 0 auto; line-height: 1.5;">
-                Reconnectez-vous pour accéder à votre catalogue de films préférés.
+                Entrez vos identifiants pour accéder à votre compte.
             </p>
         </div>
-
-        <h2 class="titre-form">Connexion</h2>
-        <p class="soustitre-form">Entrez vos identifiants pour accéder à votre compte.</p>
 
         <!-- Formulaire de connexion -->
         <form method="POST" id="loginForm">
@@ -34,18 +31,18 @@
             <div class="form-groupe">
                 <label for="identifiant">Email</label>
                 <div class="input-icone">
-                    <i class="fa-regular fa-user"></i>
+                    <svg class="user-input"><use href="/movie/view/assets/icons.svg#user"></use></svg>
                     <input type="email" id="identifiant" name="email_utilisateur" placeholder="Votre email" required>
                 </div>
             </div>
 
             <!-- Mot de passe -->
             <div class="form-groupe">
-                <label for="motDePasse">Mot de passe</label>
+                <label for="mot_de_passe">Mot de passe</label>
                 <div class="input-icone">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="motDePasse" name="mot_de_passe" placeholder="Votre mot de passe" required>
-                    <i class="fa-regular fa-eye toggle-mdp" onclick="basculerMotDePasse('motDePasse')"></i>
+                    <svg class="user-input"><use href="/movie/view/assets/icons.svg#lock"></use></svg>
+                    <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Votre mot de passe" required>
+                    <svg class="eye-icon toggle-mdp" onclick="basculerMotDePasse('mot_de_passe', 'icon-eye')"><use id="icon-eye" href="/movie/view/assets/icons.svg#eye"></use></svg>
                 </div>
             </div>
 
@@ -56,7 +53,8 @@
 
             <!-- Bouton de connexion -->
             <button type="submit" class="bouton-principal">
-                <i class="fa-solid fa-right-to-bracket"></i> <span>Se connecter</span>
+                <svg class="icon-bouton-principale"><use href="/movie/view/assets/icons.svg#right-to-bracket"></use></svg>
+                <span>Se connecter</span>
             </button>
 
         </form>
@@ -74,22 +72,6 @@
         </footer>
 
     </div>
-
-    <script>
-        // Basculer affichage du mot de passe
-        function basculerMotDePasse(idChamp) {
-            const input = document.getElementById(idChamp);
-            const icone = input.nextElementSibling;
-            if (input.type === "password") {
-                input.type = "text";
-                icone.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                input.type = "password";
-                icone.classList.replace("fa-eye-slash", "fa-eye");
-            }
-        }
-
-    </script>
 
 </body>
 </html>

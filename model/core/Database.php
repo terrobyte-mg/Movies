@@ -26,7 +26,7 @@ class Database{
             );
 
         } catch (PDOException $e) {
-            error_log("[" . date('d-m-y h-i-s') . "] Error connexion: " . $e->getMessage());
+            error_log("[" . date('d-M-Y H-i-s') . "] Error connexion: " . $e->getMessage());
             die("Erreur : Impossible de se connecter à la base de données.\n");
         }
 

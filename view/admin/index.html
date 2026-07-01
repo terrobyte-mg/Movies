@@ -7,7 +7,7 @@
   <!-- FontAwesome CDN pour les icônes premium -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Style commun -->
-  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="/movie/style.css">
 </head>
 <body>
 
@@ -47,19 +47,9 @@
                 <i class="fa-solid fa-film"></i> <span>Film</span>
               </a>
             </li>
-            <li id="lienMenuSeries">
-              <a href="series.html">
-                <i class="fa-solid fa-tv"></i> <span>Série</span>
-              </a>
-            </li>
-            <li id="lienMenuAnimes">
-              <a href="animes.html">
-                <i class="fa-solid fa-ghost"></i> <span>Animé</span>
-              </a>
-            </li>
             <li id="lienMenuCategories">
-              <a href="#" >
-                <i class="fa-solid fa-tags"></i> <span>Catégories</span>
+              <a href="/movie/public/index.php?action=admin-utilisateurs" >
+                <i class="fa-solid fa-user"></i> <span>Utilisateurs</span>
               </a>
             </li>
           </ul>
@@ -81,7 +71,7 @@
               </a>
             </li>
             <li>
-              <a href="inscription.html">
+              <a href="/movie/public/index.php?action=logout">
                 <i class="fa-solid fa-right-from-bracket"></i> <span>Déconnexion</span>
               </a>
             </li>
@@ -237,28 +227,6 @@
                   </div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color: var(--vert-clair);"></i>
-              </div>
-
-              <div class="carte-stat curseur-main"  style="justify-content: space-between; padding: 16px; margin-bottom: 0;">
-                <div style="display: flex; align-items: center; gap: 14px;">
-                  <div class="icone-cercle rouge" style="width:40px; height:40px; font-size:16px;"><i class="fa-solid fa-tv"></i></div>
-                  <div>
-                    <h4 style="font-size: 14px; font-weight: 700; color: var(--blanc); margin: 0;">Toutes les séries</h4>
-                    <p style="font-size: 11px; color: var(--gris-clair); margin: 2px 0 0 0;">Accédez à toutes les séries</p>
-                  </div>
-                </div>
-                <i class="fa-solid fa-chevron-right" style="color: var(--rouge-mada);"></i>
-              </div>
-
-              <div class="carte-stat curseur-main"  style="justify-content: space-between; padding: 16px; margin-bottom: 0;">
-                <div style="display: flex; align-items: center; gap: 14px;">
-                  <div class="icone-cercle violet" style="width:40px; height:40px; font-size:16px;"><i class="fa-solid fa-tags"></i></div>
-                  <div>
-                    <h4 style="font-size: 14px; font-weight: 700; color: var(--blanc); margin: 0;">Tous les genres</h4>
-                    <p style="font-size: 11px; color: var(--gris-clair); margin: 2px 0 0 0;">Animé, Série, Film</p>
-                  </div>
-                </div>
-                <i class="fa-solid fa-chevron-right" style="color: #8b5cf6;"></i>
               </div>
             </div>
           </div>

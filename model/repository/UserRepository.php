@@ -104,4 +104,76 @@ class UserRepository {
 
     }
 
+    public function out(): void {
+        $this->updateIsActif($_SESSION['user']['id'], false);
+    }
+
+    public function usernameExists(string $username, int $excludeUserId = 0): bool {
+        try {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM utilisateurs WHERE BINARY nom_utilisateur = :username AND id != :excludeId");
+            $stmt->execute([
+                "username" => $username,
+                "excludeId" => $excludeUserId
+            ]);
+            return (int) $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error usernameExists: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function emailExistsExclude(string $email, int $excludeUserId): bool {
+        try {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM utilisateurs WHERE BINARY email = :email AND id != :excludeId");
+            $stmt->execute([
+                "email" => $email,
+                "excludeId" => $excludeUserId
+            ]);
+            return (int) $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error emailExistsExclude: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateProfile(int $userId, string $username, string $email, ?string $photoUrl, ?string $passwordHash = null): bool {
+        try {
+            if ($passwordHash) {
+                $stmt = $this->pdo->prepare("UPDATE utilisateurs SET nom_utilisateur = :username, email = :email, url_photo_profil = :photo, mot_de_passe_hash = :password WHERE id = :id");
+                return $stmt->execute([
+                    "username" => $username,
+                    "email" => $email,
+                    "photo" => $photoUrl,
+                    "password" => $passwordHash,
+                    "id" => $userId
+                ]);
+            } else {
+                $stmt = $this->pdo->prepare("UPDATE utilisateurs SET nom_utilisateur = :username, email = :email, url_photo_profil = :photo WHERE id = :id");
+                return $stmt->execute([
+                    "username" => $username,
+                    "email" => $email,
+                    "photo" => $photoUrl,
+                    "id" => $userId
+                ]);
+            }
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error updateProfile: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteUser(int $userId): bool
+    {
+        try {
+            // Suppression des notes laissées par l'utilisateur
+            $this->pdo->prepare("DELETE FROM notes_contenus WHERE utilisateur_id = ?")->execute([$userId]);
+
+            return $this->pdo->prepare("DELETE FROM utilisateurs WHERE id = ?")
+                ->execute([$userId]);
+        } catch (PDOException $e) {
+            error_log("Delete user error: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }

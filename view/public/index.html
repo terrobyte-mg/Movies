@@ -1,0 +1,2772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MADAMOV — Le Cinéma Gratuit en Ligne</title>
+
+    <!-- Police locale — aucune requête externe -->
+    <link rel="stylesheet" href="/movie/view/assets/fonts/fonts.css">
+
+    <style>
+        /* ==========================================================================
+           VARIABLES CSS — CHARTE GRAPHIQUE MADAMOV
+           Centralisées ici pour un accès uniforme dans tout le fichier.
+           Reprises fidèlement depuis style.css du projet.
+        ========================================================================== */
+        :root {
+            /* Palette nationale Madagascar + ambiance cinéma */
+            --vert-mada:    #0a5c36;   /* Vert forêt profond — fond sidebar, accents */
+            --vert-clair:   #2e7d32;   /* Vert éclatant — boutons principaux, badges */
+            --rouge-mada:   #d32f2f;   /* Rouge vif — CTA, survols actifs, highlights */
+            --rouge-sombre: #b71c1c;   /* Rouge sombre — état :hover des boutons rouges */
+            --blanc:        #ffffff;
+            --noir:         #000000;
+
+            /* Thème sombre cinéma */
+            --fond-sombre:  #0d0f0e;   /* Fond général de la page */
+            --gris-fonce:   #141816;   /* Fonds des cartes et conteneurs */
+            --gris-moyen:   #252a28;   /* Bordures, séparateurs */
+            --gris-hover:   #2e3532;   /* Éléments au survol */
+            --gris-clair:   #9aa5a0;   /* Textes secondaires, labels */
+
+            /* Système typographique */
+            --police: 'Outfit', sans-serif;
+
+            /* Ombres réutilisables */
+            --ombre-douce: 0 4px 20px rgba(0,0,0,0.3);
+            --ombre-forte: 0 8px 30px rgba(0,0,0,0.5);
+
+            /* Transition fluide universelle */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Rayon de bordure commun */
+            --rayon:  12px;
+        }
+
+        /* ==========================================================================
+           RESET & BASE
+           On neutralise les marges/paddings navigateur et on pose le fond sombre.
+        ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Navigation par ancre fluide (liens du header) */
+        }
+
+        body {
+            font-family: var(--police);
+            background-color: var(--fond-sombre);
+            color: var(--blanc);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        /* Classe utilitaire : révèle les éléments lors de l'animation scroll */
+        .visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+
+        /* ==========================================================================
+           HEADER (EN-TÊTE FIXE)
+           Barre de navigation qui reste en haut lors du défilement.
+           Utilise flexbox pour aligner logo à gauche, nav au centre, boutons à droite.
+        ========================================================================== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000; /* Au-dessus de tout le contenu */
+            padding: 0 40px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* Fond semi-transparent avec flou — effet "verre dépoli" cinéma */
+            background: rgba(13, 15, 14, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: var(--transition);
+        }
+
+        /* Le header s'assombrit légèrement quand on scrolle (géré en JS) */
+        .header.scrolled {
+            background: rgba(13, 15, 14, 0.97);
+            box-shadow: var(--ombre-forte);
+        }
+
+        /* ---- Logo ---- */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        /* Le "O" rouge dans MADA[M]OV */
+        .logo .logo-accent {
+            color: var(--rouge-mada);
+        }
+
+        /*icons*/
+
+        .circle-play-header {
+            color: var(--rouge-mada);
+            height: 22px;
+            width: 22px;
+        }
+
+        .user-plus-header {
+            height: 14px;
+            width: 14px;
+        }
+
+        .bars-header {
+            color: var(--blanc);
+            height: 32px;
+            width: 32px;
+            display: flex;
+        }
+
+        /* ---- Navigation centrale ---- */
+        .nav-centrale {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            list-style: none;
+        }
+
+        .nav-centrale li a {
+            padding: 8px 16px;
+            border-radius: var(--rayon);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gris-clair);
+            transition: var(--transition);
+            display: contents;
+        }
+
+        .nav-centrale li a:hover {
+            color: var(--blanc);
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* ---- Boutons d'action à droite ---- */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-connexion {
+            padding: 9px 20px;
+            border-radius: var(--rayon);
+            border: 1px solid var(--gris-moyen);
+            background: transparent;
+            color: var(--blanc);
+            font-family: var(--police);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-connexion:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--gris-clair);
+        }
+
+        .btn-inscription {
+            padding: 9px 22px;
+            border-radius: var(--rayon);
+            border: none;
+            background: var(--rouge-mada);
+            color: var(--blanc);
+            font-family: var(--police);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-inscription:hover {
+            background: var(--rouge-sombre);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(211,47,47,0.35);
+        }
+
+        /* Bouton menu hamburger (mobile uniquement) */
+        .btn-menu-mobile {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--blanc);
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+
+        /* ==========================================================================
+           HERO SECTION
+           Section principale "above the fold" — première chose que voit le visiteur.
+           Plein écran, centrée, avec un fond en dégradé inspiré du drapeau malgache.
+        ========================================================================== */
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 24px 60px;
+            overflow: hidden;
+        }
+
+        /* Fond : dégradé diagonal vert/rouge comme dans .page-inscription du style.css */
+        .hero-fond {
+            position: absolute;
+            inset: 0;
+            background:
+                    linear-gradient(135deg, rgba(10,92,54,0.9) 0%, rgba(10,92,54,0.9) 42%, transparent 42.1%),
+                    linear-gradient(315deg, rgba(211,47,47,0.85) 0%, rgba(211,47,47,0.85) 8%, transparent 8.1%);
+            z-index: 0;
+        }
+
+        /* Grille de "film strips" : lignes verticales décoratives en arrière-plan */
+        .hero-strips {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            /* Motif répété de lignes verticales evoquant la pellicule cinéma */
+            background-image: repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 98px,
+                    rgba(255,255,255,0.02) 98px,
+                    rgba(255,255,255,0.02) 100px
+            );
+        }
+
+        /* Points perforés évoquant les bords d'une pellicule */
+        .hero-perfs {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px 0;
+            opacity: 0.12;
+        }
+
+        .hero-perfs.gauche { left: 0; }
+        .hero-perfs.droite { right: 0; }
+
+        .perf {
+            width: 18px;
+            height: 26px;
+            border: 2px solid var(--blanc);
+            border-radius: 4px;
+        }
+
+        /* Dégradé bas-de-page pour faire la transition avec la section suivante */
+        .hero-fade {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to bottom, transparent, var(--fond-sombre));
+            z-index: 2;
+        }
+
+        /* Contenu de la hero — au-dessus du fond */
+        .hero-contenu {
+            position: relative;
+            z-index: 3;
+            max-width: 820px;
+        }
+
+        /* Badge "Gratuit & Illimité" au-dessus du titre */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(211,47,47,0.15);
+            border: 1px solid rgba(211,47,47,0.3);
+            color: #ff6b6b;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 7px 18px;
+            border-radius: 30px;
+            margin-bottom: 28px;
+        }
+
+        /* Titre principal — typographie massive */
+        .hero-titre {
+            font-size: clamp(38px, 7vw, 80px); /* Responsive via clamp() */
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        /* "MADAMOV" en rouge dans le titre pour renforcer la marque */
+        .hero-titre .marque {
+            color: var(--rouge-mada);
+        }
+
+        /* Sous-titre / proposition de valeur */
+        .hero-description {
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.75);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.65;
+        }
+
+        /* Groupe de boutons CTA */
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Bouton CTA principal — très visible, rouge */
+        .btn-cta-principal {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 17px 36px;
+            border-radius: 40px;
+            border: none;
+            background: var(--rouge-mada);
+            color: var(--blanc);
+            font-family: var(--police);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 6px 24px rgba(211,47,47,0.4);
+        }
+
+        .btn-cta-principal:hover {
+            background: var(--rouge-sombre);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(211,47,47,0.5);
+        }
+
+        /* Bouton CTA secondaire — contour blanc */
+        .btn-cta-secondaire {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.06);
+            color: var(--blanc);
+            font-family: var(--police);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-cta-secondaire:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Petite note "Aucune carte bancaire requise" */
+        .hero-note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--gris-clair);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .hero-note svg {
+            color: var(--vert-clair);
+        }
+
+        /* Compteurs de statistiques (films, utilisateurs, etc.) */
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat-item {
+            text-align: center;
+        }
+
+        .hero-stat-nombre {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--blanc);
+            display: block;
+        }
+
+        .hero-stat-label {
+            font-size: 12px;
+            color: var(--gris-clair);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        /* Séparateur vertical entre les stats */
+        .hero-stats .sep {
+            width: 1px;
+            height: 50px;
+            background: var(--gris-moyen);
+            align-self: center;
+        }
+
+
+        /* ==========================================================================
+           SECTION FONCTIONNALITÉS
+           Trois colonnes présentant les atouts majeurs de MADAMOV.
+           Révélées au scroll via la classe .visible ajoutée en JS.
+        ========================================================================== */
+        .section-fonctionnalites {
+            padding: 100px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* En-tête commun à toutes les sections */
+        .section-entete {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-surtitre {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--vert-clair);
+            margin-bottom: 12px;
+        }
+
+        .section-titre {
+            font-size: clamp(26px, 4vw, 42px);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: var(--gris-clair);
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.65;
+        }
+
+        /* Grille de 3 cartes de fonctionnalités */
+        .grille-fonctionnalites {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        /* Carte individuelle de fonctionnalité */
+        .carte-fonctionnalite {
+            background: var(--gris-fonce);
+            border: 1px solid var(--gris-moyen);
+            border-radius: 20px;
+            padding: 36px 30px;
+            transition: var(--transition);
+            /* Animation d'entrée au scroll : part de bas, monte */
+            opacity: 0;
+            transform: translateY(30px);
+            /* Délai progressif : chaque carte se décale de 100ms (géré via style inline en JS) */
+        }
+
+        .carte-fonctionnalite:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,255,255,0.12);
+            box-shadow: var(--ombre-forte);
+        }
+
+        /* Icône de la carte — cercle coloré */
+        .carte-fonct-icone {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 24px;
+        }
+
+        /* Variantes de couleur pour les icônes */
+        .carte-fonct-icone.rouge   { background: rgba(211,47,47,0.12);  color: var(--rouge-mada); }
+        .carte-fonct-icone.vert    { background: rgba(46,125,50,0.12);   color: var(--vert-clair); }
+        .carte-fonct-icone.jaune   { background: rgba(245,158,11,0.12);  color: #f59e0b; }
+
+        .carte-fonct-titre {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .carte-fonct-texte {
+            font-size: 14px;
+            color: var(--gris-clair);
+            line-height: 1.65;
+        }
+
+        /* Puce de liste dans la carte */
+        .carte-fonct-liste {
+            list-style: none;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .carte-fonct-liste li {
+            font-size: 13px;
+            color: var(--gris-clair);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .carte-fonct-liste li svg {
+            color: var(--vert-clair);
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+
+        /* ==========================================================================
+           SECTION GENRES
+           Présentation des 5 grandes catégories de films.
+           Bandeau horizontal de badges cliquables.
+        ========================================================================== */
+        .section-genres {
+            padding: 80px 40px;
+            background: linear-gradient(180deg, var(--fond-sombre) 0%, var(--gris-fonce) 50%, var(--fond-sombre) 100%);
+        }
+
+        .section-genres-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Rangée de genres — scroll horizontal sur mobile */
+        .rangee-genres {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .badge-genre {
+            color: aliceblue;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border-radius: 40px;
+            border: 1px solid var(--gris-moyen);
+            background: var(--gris-fonce);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            /* Animation entrée scroll */
+            opacity: 0;
+            transform: scale(0.9);
+            /* Délai progressif via attribut style en JS */
+        }
+
+        .badge-genre:hover {
+            border-color: var(--rouge-mada);
+            background: rgba(211,47,47,0.08);
+            color: var(--blanc);
+            transform: scale(1.04);
+            box-shadow: 0 4px 16px rgba(211,47,47,0.2);
+        }
+
+        .badge-genre svg {
+            font-size: 18px;
+        }
+
+        /* Couleurs thématiques des icônes de genre */
+        .badge-genre.action svg { color: var(--rouge-mada); }
+        .badge-genre.comedie svg { color: #f59e0b; }
+        .badge-genre.drame svg { color: #8b5cf6; }
+        .badge-genre.animation svg { color: var(--vert-clair); }
+        .badge-genre.thriller svg { color: #06b6d4; }
+
+
+        /* ==========================================================================
+           SECTION CATALOGUE (APERÇU)
+           Grille de cartes de films — données simulées (mock).
+           Chaque interaction déclenche la modale d'inscription.
+        ========================================================================== */
+        .section-catalogue {
+            padding: 100px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Grille responsive des cartes films */
+        .grille-films {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 10px;
+        }
+
+        /* Carte film individuelle */
+        .carte-film {
+            background: var(--gris-fonce);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--gris-moyen);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            /* Animation d'entrée scroll */
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .carte-film:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: var(--rouge-mada);
+            box-shadow: 0 12px 40px rgba(211,47,47,0.25);
+        }
+
+        /* Conteneur de l'affiche — ratio 2:3 comme un vrai poster */
+        .film-affiche-wrapper {
+            position: relative;
+            aspect-ratio: 2/3;
+            overflow: hidden;
+            background: var(--gris-moyen);
+        }
+
+        .film-affiche {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .carte-film:hover .film-affiche {
+            transform: scale(1.06);
+            opacity: 0.6;
+        }
+
+        /* Overlay "Regarder" — apparaît au survol */
+        .film-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .carte-film:hover .film-overlay {
+            opacity: 1;
+        }
+
+        .film-overlay-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--rouge-mada);
+            border: none;
+            color: var(--blanc);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(211,47,47,0.5);
+            transition: var(--transition);
+            pointer-events: none; /* Le clic est capté par .carte-film */
+        }
+
+        /* Badges superposés sur l'affiche (genre, qualité) */
+        .film-badges-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 2;
+        }
+
+        .badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .badge-rouge  { background: rgba(211,47,47,0.9);    color: var(--blanc); }
+        .badge-vert   { background: rgba(46,125,50,0.9);     color: var(--blanc); }
+        .badge-gris   { background: rgba(37,42,40,0.9);      color: var(--gris-clair); border: 1px solid var(--gris-moyen); }
+        .badge-jaune  { background: rgba(245,158,11,0.9);   color: var(--noir); }
+
+        /* Infos textuelles sous l'affiche */
+        .film-infos {
+            padding: 14px;
+        }
+
+        .film-titre {
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 6px;
+        }
+
+        /* Ligne genre + note */
+        .film-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gris-clair);
+        }
+
+        /* Note avec étoile dorée */
+        .film-note {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 700;
+            color: #f59e0b;
+        }
+
+        /* Ligne d'étoiles interactives sous les infos */
+        .film-etoiles {
+            display: flex;
+            gap: 3px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--gris-moyen);
+        }
+
+        .film-etoiles svg {
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        /* Au survol de chaque étoile, toutes les étoiles précédentes s'allument */
+        .film-etoiles:hover svg {
+            color: #f59e0b;
+        }
+
+        /* Bouton CTA centré sous la grille — mène à l'inscription */
+        .catalogue-cta {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+
+        /* ==========================================================================
+           SECTION COMMENT ÇA MARCHE
+           3 étapes numérotées pour guider le visiteur.
+        ========================================================================== */
+        .section-etapes {
+            padding: 100px 40px;
+            background: linear-gradient(180deg, var(--fond-sombre) 0%, var(--gris-fonce) 100%);
+        }
+
+        .section-etapes-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .grille-etapes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .carte-etape {
+            position: relative;
+            padding: 30px;
+            border-radius: 20px;
+            background: var(--gris-fonce);
+            border: 1px solid var(--gris-moyen);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .carte-etape:hover {
+            border-color: var(--vert-clair);
+            transform: translateY(-4px);
+        }
+
+        /* Grand numéro décoratif en arrière-plan de la carte */
+        .etape-numero {
+            position: absolute;
+            top: -36px;
+            left: 8px;
+            font-size: 70px;
+            font-weight: 800;
+            color: rgba(255,255,255,0.03);
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .etape-titre {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .etape-texte {
+            font-size: 14px;
+            color: var(--gris-clair);
+            line-height: 1.65;
+        }
+
+        /* Flèche entre les étapes (masquée sur mobile) */
+        .etape-fleche {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gris-moyen);
+            font-size: 24px;
+            align-self: center;
+        }
+
+
+        /* ==========================================================================
+           SECTION CTA FINAL
+           Bloc d'appel à l'action en bas de page — fond vert foncé + bord rouge.
+        ========================================================================== */
+        .section-cta-final {
+            padding: 100px 40px;
+            text-align: center;
+        }
+
+        .boite-cta-final {
+            max-width: 700px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(10,92,54,0.4) 0%, rgba(13,15,14,0.95) 60%);
+            border: 1px solid rgba(10,92,54,0.5);
+            border-radius: 28px;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+            /* Animation entrée scroll */
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Cercle décoratif rouge en haut à droite */
+        .boite-cta-final::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(211,47,47,0.15) 0%, transparent 70%);
+        }
+
+        .cta-final-titre {
+            font-size: clamp(24px, 4vw, 38px);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .cta-final-desc {
+            font-size: 16px;
+            color: var(--gris-clair);
+            margin-bottom: 36px;
+            line-height: 1.65;
+        }
+
+
+        /* ==========================================================================
+           FOOTER
+           Pied de page minimaliste avec liens et copyright.
+        ========================================================================== */
+        .footer {
+            border-top: 1px solid var(--gris-moyen);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .footer-contenu {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-liens {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .footer-liens a {
+            font-size: 13px;
+            color: var(--gris-clair);
+            transition: var(--transition);
+        }
+
+        .footer-liens a:hover {
+            color: var(--blanc);
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: var(--gris-clair);
+        }
+
+
+        /* ==========================================================================
+           MODALE D'INSCRIPTION (INTERCEPTEUR)
+           Cachée par défaut. S'affiche quand un visiteur anonyme tente d'interagir
+           avec une carte film (regarder, noter, ajouter aux favoris).
+           Reprend fidèlement .boite-inscription du style.css de base.
+        ========================================================================== */
+
+        /* Fond obscurcissant derrière la modale */
+        .modale-fond {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            /* Cachée par défaut */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+            overflow-y: auto;
+        }
+
+        /* Quand la modale est active */
+        .modale-fond.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Boîte de la modale — légèrement animée à l'apparition */
+        .modale-boite {
+            background: rgba(13,18,16,0.98);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 45px 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--ombre-forte);
+            position: relative;
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin: auto;
+        }
+
+        .modale-fond.active .modale-boite {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Bouton de fermeture (×) en haut à droite */
+        .modale-fermer {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--gris-moyen);
+            color: var(--gris-clair);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modale-fermer:hover {
+            background: var(--rouge-mada);
+            color: var(--blanc);
+        }
+
+        /* Icône centrale de la modale */
+        .modale-icone {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(211,47,47,0.12);
+            border: 2px solid rgba(211,47,47,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--rouge-mada);
+            margin: 0 auto 24px;
+        }
+
+        .modale-titre {
+            font-size: 26px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .modale-sous-titre {
+            font-size: 14px;
+            color: var(--gris-clair);
+            text-align: center;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        /* Contexte film : affiche + titre du film cliqué */
+        .modale-film-contexte {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--gris-moyen);
+            border-radius: var(--rayon);
+            padding: 12px 16px;
+            margin-bottom: 28px;
+        }
+
+        .modale-film-contexte img {
+            width: 40px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .modale-film-nom {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .modale-film-genre {
+            font-size: 12px;
+            color: var(--gris-clair);
+        }
+
+        /* Boutons de la modale */
+        .modale-btn-inscription {
+            width: 100%;
+            padding: 15px;
+            border-radius: var(--rayon);
+            border: none;
+            background: var(--vert-clair);
+            color: var(--blanc);
+            font-family: var(--police);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .modale-btn-inscription:hover {
+            background: var(--vert-mada);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46,125,50,0.35);
+        }
+
+        .modale-btn-connexion {
+            width: 100%;
+            padding: 13px;
+            border-radius: var(--rayon);
+            border: 1px solid var(--gris-moyen);
+            background: transparent;
+            color: var(--blanc);
+            font-family: var(--police);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modale-btn-connexion:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--gris-clair);
+        }
+
+        /* Avantages listés dans la modale */
+        .modale-avantages {
+            list-style: none;
+            margin: 24px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modale-avantages li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--gris-clair);
+        }
+
+        .modale-avantages li svg {
+            color: var(--vert-clair);
+            flex-shrink: 0;
+        }
+
+
+        /* ==========================================================================
+           TOAST NOTIFICATION
+           Petit bandeau qui apparaît brièvement pour confirmer une action.
+        ========================================================================== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--gris-fonce);
+            border: 1px solid var(--gris-moyen);
+            color: var(--blanc);
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: var(--ombre-forte);
+            z-index: 3000;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .toast.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast i { color: var(--vert-clair); }
+
+
+        /* ==========================================================================
+           RESPONSIVE — TABLETTES ET MOBILE
+           Adaptations pour les écrans inférieurs à 768px.
+        ========================================================================== */
+        @media (max-width: 992px) {
+            .header {
+                padding: 0 24px;
+            }
+
+            .nav-centrale {
+                display: none; /* La nav centrale se replie sur mobile */
+            }
+
+            .btn-menu-mobile {
+                display: block;
+            }
+
+            .hero-stats .sep {
+                display: none;
+            }
+
+            .hero-stats {
+                gap: 28px;
+            }
+
+            .etape-fleche {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                height: 60px;
+            }
+
+            .section-fonctionnalites,
+            .section-catalogue,
+            .section-cta-final {
+                padding: 60px 20px;
+            }
+
+            .section-genres,
+            .section-etapes {
+                padding: 60px 20px;
+            }
+
+            .footer-contenu {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modale-boite {
+                padding: 32px 24px;
+            }
+
+            .hero-titre {
+                letter-spacing: -1px;
+            }
+        }
+
+        @media (max-width: 560px) {
+
+            .header .btn-inscription {
+                display: none;
+            }
+
+        }
+
+        @media (max-width: 480px) {
+
+            .btn-cta-principal {
+                font-size: 14px;
+                line-height: 1;
+            }
+
+            .header .btn-connexion {
+                display: none;
+            }
+
+            .grille-films {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+
+            .hero-perfs {
+                display: none; /* Les perfs cinéma sont masquées sur très petit écran */
+            }
+
+            .boite-cta-final {
+                padding: 40px 24px;
+            }
+        }
+
+        /* ==========================================================================
+           ANIMATION KEYFRAMES
+        ========================================================================== */
+
+        /* Rebond de la flèche "voir plus" dans la hero */
+        @keyframes rebond {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(8px); }
+        }
+
+        .hero-scroll-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            z-index: 3;
+            color: var(--gris-clair);
+            animation: rebond 2s infinite;
+            cursor: pointer;
+        }
+
+        /* Pulsation lente sur le badge hero */
+        @keyframes pulsation {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(211,47,47,0.3); }
+            50%       { box-shadow: 0 0 0 8px rgba(211,47,47,0); }
+        }
+
+        .hero-badge {
+            animation: pulsation 2.5s infinite;
+        }
+
+        .film-badge {
+            position: relative;
+            height: 12px;
+            width: 12px;
+            bottom: 1px;
+        }
+
+        .btn-circle-play {
+            position: relative;
+            height: 16px;
+            width: 16px;
+            bottom: 1px;
+        }
+
+        .xmark-modale {
+            height: 16px;
+            width: 16px;
+        }
+
+        .circle-play-modale {
+            height: 28px;
+            width: 28px;
+        }
+
+        .check-circle-modale {
+            height: 13px;
+            width: 13px;
+        }
+
+        .user-plus-modale {
+            width: 15px;
+            height: 15px;
+        }
+
+        .right-to-bracket-modale {
+            width: 14px;
+            height: 14px;
+        }
+
+        .film-btn-cta-secondary {
+            width: 16px;
+            height: 16px;
+        }
+
+        .shield-halved-hero-note {
+            width: 13px;
+            height: 13px;
+        }
+
+        .chevron-down-hero-scroll-hint {
+            width: 24px;
+            height: 24px;
+        }
+
+        .icon-carte-fonctionalite {
+            width: 26px;
+            height: 26px;
+        }
+
+        .icon-rangee-genre {
+            width: 18px;
+            height: 18px;
+        }
+
+        .play-film-overlay {
+            width: 20px;
+            height: 20px;
+        }
+
+        .star-film-meta {
+            position: relative;
+            width: 12px;
+            height: 12px;
+        }
+
+        .icons-etoile {
+            width: 14px;
+            height: 14px;
+        }
+
+        .circle-play-logo {
+            width: 18px;
+            height: 18px;
+            color: var(--rouge-mada);
+        }
+
+        .film-play-modale {
+            height: 28px;
+            width: 28px;
+        }
+
+        /* ==========================================================================
+   MENU MOBILE — Drawer latéral
+   S'ouvre depuis le bouton hamburger. Glisse depuis la droite.
+   Overlay sombre derrière pour fermer au clic extérieur.
+========================================================================== */
+
+        /* Fond obscurcissant (même principe que la modale) */
+        .menu-mobile-fond {
+            position: fixed;
+            inset: 0;
+            z-index: 1500;
+            background: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+        .menu-mobile-fond.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Drawer : panneau latéral qui glisse depuis la droite */
+        .menu-mobile-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1600;
+            width: 280px;
+            background: linear-gradient(180deg, #0d1210 0%, #0a0c0b 100%);
+            border-left: 1px solid var(--gris-moyen);
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
+        }
+        .menu-mobile-drawer.active {
+            transform: translateX(0);
+        }
+
+        /* En-tête du drawer : logo + bouton fermer */
+        .menu-mobile-entete {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gris-moyen);
+        }
+
+        /* Bouton × pour fermer le drawer */
+        .menu-mobile-fermer {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--gris-moyen);
+            color: var(--gris-clair);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .menu-mobile-fermer:hover {
+            background: var(--rouge-mada);
+            color: var(--blanc);
+        }
+
+        /* Liens de navigation dans le drawer */
+        .menu-mobile-liens {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+        .menu-mobile-liens li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 16px;
+            border-radius: var(--rayon);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gris-clair);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .menu-mobile-liens li a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--blanc);
+        }
+
+        /* Icônes des liens du drawer */
+        .menu-mobile-liens li a svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Boutons d'action en bas du drawer */
+        .menu-mobile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gris-moyen);
+            margin-top: auto;
+        }
+        .menu-mobile-actions .btn-connexion,
+        .menu-mobile-actions .btn-inscription {
+            width: 100%;
+            justify-content: center;
+            padding: 13px 20px;
+            font-size: 15px;
+        }
+        .menu-mobile-actions .btn-inscription {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+<!-- ======================================================================
+     HEADER — Barre de navigation fixe
+     Contient : Logo MADAMOV | Nav centrale | Boutons connexion/inscription
+====================================================================== -->
+<header class="header" id="mainHeader">
+
+    <!-- Logo : icône play + texte MADA avec "M" rouge -->
+    <a href="#" class="logo" aria-label="MADAMOV - Accueil">
+        <svg class="circle-play-header"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+        MADA<span class="logo-accent">MOV</span>
+    </a>
+
+    <!-- Navigation centrale avec ancres vers les sections de la page -->
+    <ul class="nav-centrale" role="listbox" aria-label="Navigation principale">
+        <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+        <li><a href="#genres">Genres</a></li>
+        <li><a href="#catalogue">Découvrir</a></li>
+        <li><a href="#comment">Comment ça marche</a></li>
+    </ul>
+
+    <!-- Actions utilisateur (droite du header) -->
+    <div class="header-actions">
+        <a href="/movie/public/index.php?action=login">
+            <button class="btn-connexion" aria-label="Se connecter">Se connecter</button>
+        </a>
+        <!-- Ce bouton déclenche la modale d'inscription via JS -->
+        <a href="/movie/public/index.php?action=signup">
+            <button class="btn-inscription" aria-label="S'inscrire gratuitement">
+                <svg class="user-plus-header"><use href="/movie/view/assets/icons.svg#user-plus"></use></svg>
+                S'inscrire
+            </button>
+        </a>
+        <!-- Bouton hamburger mobile (la nav est cachée sur mobile) -->
+        <button class="btn-menu-mobile" aria-label="Menu mobile" id="btnMenuMobile">
+            <svg class="bars-header"><use href="/movie/view/assets/icons.svg#bars"></use></svg>
+        </button>
+    </div>
+</header>
+
+
+<!-- ======================================================================
+     HERO SECTION — Première impression du visiteur
+     Plein écran, fond diagonal vert/rouge (style drapeau malgache),
+     motif pellicule cinéma, titre accrocheur, et gros bouton CTA.
+====================================================================== -->
+<section class="hero" id="accueil" aria-label="Section principale">
+
+    <!-- Fond décoratif : dégradé diagonal + lignes pellicule -->
+    <div class="hero-fond" aria-hidden="true"></div>
+    <div class="hero-strips" aria-hidden="true"></div>
+
+    <!-- Perforations gauche (évoquent les bords d'une pellicule 35mm) -->
+    <div class="hero-perfs gauche" aria-hidden="true">
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+    </div>
+
+    <!-- Perforations droite -->
+    <div class="hero-perfs droite" aria-hidden="true">
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+        <div class="perf"></div>
+    </div>
+
+    <!-- Dégradé de transition bas-de-section -->
+    <div class="hero-fade" aria-hidden="true"></div>
+
+    <!-- Contenu principal centré -->
+    <div class="hero-contenu">
+
+        <!-- Badge accrocheur au-dessus du titre -->
+        <div class="hero-badge">
+            <svg class="film-badge"><use href="/movie/view/assets/icons.svg#film"></use></svg>
+            <p style="text-align: center">Gratuit &amp; Illimité — 100 % en ligne</p>
+        </div>
+
+        <!-- Titre principal -->
+        <h1 class="hero-titre">
+            Le meilleur du <br>cinéma mondial sur<br>
+            <span class="marque">MADAMOV</span>
+        </h1>
+
+        <!-- Proposition de valeur -->
+        <p class="hero-description">
+            Regardez des centaines de films en streaming, notez vos favoris et
+            construisez votre Watchlist personnalisée. L'accès est totalement
+            gratuit — inscrivez-vous en 30 secondes.
+        </p>
+
+        <!-- Boutons CTA -->
+        <div class="hero-cta">
+            <!-- Bouton principal : ouvre la modale d'inscription -->
+            <button
+                    class="btn-cta-principal"
+                    onclick="ouvrirModale(null, 'hero')"
+                    aria-label="Créer un compte gratuit">
+                <svg class="btn-circle-play"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+                Créer un compte gratuit
+            </button>
+            <!-- Bouton secondaire : descend vers le catalogue -->
+            <button
+                    class="btn-cta-secondaire"
+                    onclick="document.getElementById('catalogue').scrollIntoView({behavior:'smooth'})"
+                    aria-label="Voir le catalogue">
+                <svg class="film-btn-cta-secondary"><use href="/movie/view/assets/icons.svg#film"></use></svg>
+                Voir le catalogue
+            </button>
+        </div>
+
+        <!-- Rassurance : pas de CB requise -->
+        <p class="hero-note">
+            <svg class="shield-halved-hero-note"><use href="/movie/view/assets/icons.svg#shield-halved"></use></svg>
+            Inscription gratuite · Aucune carte bancaire · Accès immédiat
+        </p>
+
+        <!-- Statistiques clés pour crédibiliser la plateforme -->
+        <div class="hero-stats" aria-label="Statistiques MADAMOV">
+            <div class="hero-stat-item">
+                <span class="hero-stat-nombre">500+</span>
+                <span class="hero-stat-label">Films disponibles</span>
+            </div>
+            <div class="sep" aria-hidden="true"></div>
+            <div class="hero-stat-item">
+                <span class="hero-stat-nombre">5</span>
+                <span class="hero-stat-label">Grandes catégories</span>
+            </div>
+            <div class="sep" aria-hidden="true"></div>
+            <div class="hero-stat-item">
+                <span class="hero-stat-nombre">12k+</span>
+                <span class="hero-stat-label">Utilisateurs actifs</span>
+            </div>
+            <div class="sep" aria-hidden="true"></div>
+            <div class="hero-stat-item">
+                <span class="hero-stat-nombre">4K</span>
+                <span class="hero-stat-label">Qualité Ultra HD</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flèche de défilement — invite à scroller -->
+    <div class="hero-scroll-hint" onclick="document.getElementById('fonctionnalites').scrollIntoView({behavior:'smooth'})" aria-hidden="true">
+        <svg class="chevron-down-hero-scroll-hint"><use href="/movie/view/assets/icons.svg#chevron-down"></use></svg>
+    </div>
+
+</section>
+
+
+<!-- ======================================================================
+     SECTION FONCTIONNALITÉS — Les 3 atouts majeurs
+     Chaque carte s'anime au scroll via IntersectionObserver (JS).
+====================================================================== -->
+<section class="section-fonctionnalites" id="fonctionnalites" aria-label="Fonctionnalités de MADAMOV">
+
+    <div class="section-entete">
+        <p class="section-surtitre">Pourquoi MADAMOV ?</p>
+        <h2 class="section-titre">Tout ce dont vous avez besoin<br>pour vivre du cinéma</h2>
+        <p class="section-description">
+            Une plateforme pensée pour tout le monde.
+            Gratuit, simple et immersif.
+        </p>
+    </div>
+
+    <div class="grille-fonctionnalites">
+
+        <!-- Fonctionnalité 1 : Streaming gratuit -->
+        <div class="carte-fonctionnalite" data-delai="0">
+            <div class="carte-fonct-icone rouge">
+                <svg class="icon-carte-fonctionalite"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+            </div>
+            <h3 class="carte-fonct-titre">Streaming 100 % gratuit</h3>
+            <p class="carte-fonct-texte">
+                Regardez des films directement dans votre navigateur, sans téléchargement,
+                sans abonnement. Qualité HD et 4K disponible.
+            </p>
+            <ul class="carte-fonct-liste">
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Lecture instantanée dans le navigateur</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> +5 genres : Action, Drame, Comédie, Animation, Thriller…</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Qualité HD / 4K Ultra HD</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Bande-annonce disponible pour chaque film</li>
+            </ul>
+        </div>
+
+        <!-- Fonctionnalité 2 : Watchlist et favoris -->
+        <div class="carte-fonctionnalite" data-delai="120">
+            <div class="carte-fonct-icone vert">
+                <svg class="icon-carte-fonctionalite"><use href="/movie/view/assets/icons.svg#heart"></use></svg>
+            </div>
+            <h3 class="carte-fonct-titre">Watchlist personnalisée</h3>
+            <p class="carte-fonct-texte">
+                Sauvegardez les films qui vous intéressent, gérez vos préférences
+                et retrouvez votre liste à chaque connexion.
+            </p>
+            <ul class="carte-fonct-liste">
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Ajout aux favoris en un clic</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Liste "À regarder plus tard"</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Profil utilisateur personnalisé</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Historique de visionnage</li>
+            </ul>
+        </div>
+
+        <!-- Fonctionnalité 3 : Notation et avis -->
+        <div class="carte-fonctionnalite" data-delai="240">
+            <div class="carte-fonct-icone jaune">
+                <svg class="icon-carte-fonctionalite"><use href="/movie/view/assets/icons.svg#star"></use></svg>
+            </div>
+            <h3 class="carte-fonct-titre">Notez &amp; partagez votre avis</h3>
+            <p class="carte-fonct-texte">
+                Donnez une note aux films que vous avez regardés et lisez les avis
+                de la communauté pour guider vos prochains choix.
+            </p>
+            <ul class="carte-fonct-liste">
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Notation de 1 à 5 étoiles</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Section commentaires par film</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Note moyenne communautaire</li>
+                <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check"></use></svg> Aimer / ne pas aimer un film</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ======================================================================
+     SECTION GENRES — Les 5 grandes catégories
+     Badges cliquables qui déclenchent la modale si le visiteur n'est pas connecté.
+====================================================================== -->
+<section class="section-genres" id="genres" aria-label="Genres de films disponibles">
+    <div class="section-genres-inner">
+
+        <div class="section-entete">
+            <p class="section-surtitre">Explorer par catégorie</p>
+            <h2 class="section-titre">5 univers cinématographiques<br>à portée de clic</h2>
+        </div>
+
+        <!-- Rangée des 5 genres — chaque badge déclenche la modale -->
+        <div class="rangee-genres">
+            <button class="badge-genre action" onclick="ouvrirModale(null, 'genre-action')" data-delai="0">
+                <svg class="icon-rangee-genre"><use href="/movie/view/assets/icons.svg#burst"></use></svg> Action
+            </button>
+            <button class="badge-genre comedie"   onclick="ouvrirModale(null, 'genre-comédie')"   data-delai="80">
+                <svg class="icon-rangee-genre"><use href="/movie/view/assets/icons.svg#face-laugh-squint"></use></svg> Comédie
+            </button>
+            <button class="badge-genre drame"     onclick="ouvrirModale(null, 'genre-drame')"     data-delai="160">
+                <svg class="icon-rangee-genre"><use href="/movie/view/assets/icons.svg#mask-theater"></use></svg> Drame
+            </button>
+            <button class="badge-genre animation" onclick="ouvrirModale(null, 'genre-animation')" data-delai="240">
+                <svg class="icon-rangee-genre"><use href="/movie/view/assets/icons.svg#wand-magic-sparkle"></use></svg> Animation
+            </button>
+            <button class="badge-genre thriller"  onclick="ouvrirModale(null, 'genre-thriller')"  data-delai="320">
+                <svg class="icon-rangee-genre"><use href="/movie/view/assets/icons.svg#skull"></use></svg> Thriller
+            </button>
+        </div>
+
+        <p style="text-align: center; color: var(--gris-clair); font-size: 13px; margin-top: 20px; font-style: italic;">
+            Sci-Fi, Horreur, Fantastique, Aventure... Découvrez plus de 10 genres exclusifs après votre inscription.
+        </p>
+
+    </div>
+</section>
+
+
+<!-- ======================================================================
+     SECTION CATALOGUE — Aperçu des films disponibles
+     Données simulées (mock). Chaque carte déclenche la modale au clic.
+     Les étoiles de notation déclenchent aussi la modale.
+====================================================================== -->
+<section class="section-catalogue" id="catalogue" aria-label="Aperçu du catalogue">
+
+    <div class="section-entete">
+        <p class="section-surtitre">Catalogue</p>
+        <h2 class="section-titre">Films en vedette</h2>
+        <p class="section-description">
+            Un avant-goût de ce qui vous attend. Inscrivez-vous pour accéder
+            à l'intégralité du catalogue en illimité.
+        </p>
+    </div>
+
+    <!--
+      Grille de films simulés.
+      Chaque .carte-film a un attribut data-film (JSON stringifié)
+      contenant les infos affichées dans la modale.
+      Chaque carte appelle ouvrirModale(this) au clic.
+    -->
+    <div class="grille-films" id="grilleFilmsLanding">
+
+        <!-- Film 1 -->
+        <div class="carte-film"
+             data-film='{"titre":"Avatar 3","genre":"Sci-fi","note":"9.2","poster":"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=400"}'
+             onclick="ouvrirModale(this, 'catalogue')"
+             role="button" tabindex="0"
+             aria-label="Regarder Avatar 3">
+            <div class="film-affiche-wrapper">
+                <img class="film-affiche"
+                     src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=400"
+                     alt="Affiche Avatar 3" loading="lazy">
+                <div class="film-overlay">
+                    <div class="film-overlay-btn">
+                        <svg class="play-film-overlay"><use href="/movie/view/assets/icons.svg#play"></use></svg>
+                    </div>
+                </div>
+                <div class="film-badges-overlay">
+                    <span class="badge badge-rouge">Sci-fi</span>
+                    <span class="badge badge-gris">4K</span>
+                </div>
+            </div>
+            <div class="film-infos">
+                <div class="film-titre">Avatar 3 (2026)</div>
+                <div class="film-meta">
+                    <span>James Cameron</span>
+                    <span class="film-note"><svg class="star-film-meta"><use href="/movie/view/assets/icons.svg#star"></use></svg> 4.6</span>
+                </div>
+                <div class="film-etoiles" onclick="intercepterNotation(event)">
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>1 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>2 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>3 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>4 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>5 étoile</title></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Film 2 -->
+        <div class="carte-film"
+             data-film='{"titre":"Le Labyrinthe","genre":"Thriller","note":"8.7","poster":"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=400"}'
+             onclick="ouvrirModale(this, 'catalogue')"
+             role="button" tabindex="0"
+             aria-label="Regarder Le Labyrinthe">
+            <div class="film-affiche-wrapper">
+                <img class="film-affiche"
+                     src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=400"
+                     alt="Affiche Le Labyrinthe" loading="lazy">
+                <div class="film-overlay">
+                    <div class="film-overlay-btn">
+                        <svg class="play-film-overlay"><use href="/movie/view/assets/icons.svg#play"></use></svg>
+                    </div>
+                </div>
+                <div class="film-badges-overlay">
+                    <span class="badge badge-gris">Thriller</span>
+                </div>
+            </div>
+            <div class="film-infos">
+                <div class="film-titre">Le Labyrinthe</div>
+                <div class="film-meta">
+                    <span>Wes Ball</span>
+                    <span class="film-note"><svg class="star-film-meta"><use href="/movie/view/assets/icons.svg#star"></use></svg> 4.3</span>
+                </div>
+                <div class="film-etoiles" onclick="intercepterNotation(event)">
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>1 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>2 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>3 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>4 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>5 étoile</title></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Film 3 -->
+        <div class="carte-film"
+             data-film='{"titre":"Moana 3","genre":"Animation","note":"9.5","poster":"https://images.unsplash.com/photo-1682695796954-bad0d0f59ff1?q=80&w=400"}'
+             onclick="ouvrirModale(this, 'catalogue')"
+             role="button" tabindex="0"
+             aria-label="Regarder Moana 3">
+            <div class="film-affiche-wrapper">
+                <img class="film-affiche"
+                     src="https://images.unsplash.com/photo-1682695796954-bad0d0f59ff1?q=80&w=400"
+                     alt="Affiche Moana 3" loading="lazy">
+                <div class="film-overlay">
+                    <div class="film-overlay-btn">
+                        <svg class="play-film-overlay"><use href="/movie/view/assets/icons.svg#play"></use></svg>
+                    </div>
+                </div>
+                <div class="film-badges-overlay">
+                    <span class="badge badge-vert">Animation</span>
+                </div>
+            </div>
+            <div class="film-infos">
+                <div class="film-titre">Moana 3</div>
+                <div class="film-meta">
+                    <span>Disney</span>
+                    <span class="film-note"><svg class="star-film-meta"><use href="/movie/view/assets/icons.svg#star"></use></svg> 4.7</span>
+                </div>
+                <div class="film-etoiles" onclick="intercepterNotation(event)">
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>1 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>2 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>3 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>4 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>5 étoile</title></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Film 4 -->
+        <div class="carte-film"
+             data-film='{"titre":"Joker 2","genre":"Drame","note":"7.8","poster":"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=400"}'
+             onclick="ouvrirModale(this, 'catalogue')"
+             role="button" tabindex="0"
+             aria-label="Regarder Joker 2">
+            <div class="film-affiche-wrapper">
+                <img class="film-affiche"
+                     src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=400"
+                     alt="Affiche Joker 2" loading="lazy">
+                <div class="film-overlay">
+                    <div class="film-overlay-btn">
+                        <svg class="play-film-overlay"><use href="/movie/view/assets/icons.svg#play"></use></svg>
+                    </div>
+                </div>
+                <div class="film-badges-overlay">
+                    <span class="badge badge-rouge">Drame</span>
+                </div>
+            </div>
+            <div class="film-infos">
+                <div class="film-titre">Joker 2</div>
+                <div class="film-meta">
+                    <span>Todd Phillips</span>
+                    <span class="film-note"><svg class="star-film-meta"><use href="/movie/view/assets/icons.svg#star"></use></svg> 3.9</span>
+                </div>
+                <div class="film-etoiles" onclick="intercepterNotation(event)">
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>1 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>2 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>3 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>4 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>5 étoile</title></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Film 5 -->
+        <div class="carte-film"
+             data-film='{"titre":"Mission Impossible 8","genre":"Action","note":"8.4","poster":"https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400"}'
+             onclick="ouvrirModale(this, 'catalogue')"
+             role="button" tabindex="0"
+             aria-label="Regarder Mission Impossible 8">
+            <div class="film-affiche-wrapper">
+                <img class="film-affiche"
+                     src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400"
+                     alt="Affiche Mission Impossible 8" loading="lazy">
+                <div class="film-overlay">
+                    <div class="film-overlay-btn">
+                        <svg class="play-film-overlay"><use href="/movie/view/assets/icons.svg#play"></use></svg>
+                    </div>
+                </div>
+                <div class="film-badges-overlay">
+                    <span class="badge badge-rouge">Action</span>
+                    <span class="badge badge-gris">4K</span>
+                </div>
+            </div>
+            <div class="film-infos">
+                <div class="film-titre">Mission Impossible 8</div>
+                <div class="film-meta">
+                    <span>McQuarrie</span>
+                    <span class="film-note"><svg class="star-film-meta"><use href="/movie/view/assets/icons.svg#star"></use></svg> 4.2</span>
+                </div>
+                <div class="film-etoiles" onclick="intercepterNotation(event)">
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>1 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>2 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>3 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>4 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>5 étoile</title></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Film 6 -->
+        <div class="carte-film"
+             data-film='{"titre":"La Mélodie Oubliée","genre":"Comédie","note":"8.1","poster":"https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=400"}'
+             onclick="ouvrirModale(this, 'catalogue')"
+             role="button" tabindex="0"
+             aria-label="Regarder La Mélodie Oubliée">
+            <div class="film-affiche-wrapper">
+                <img class="film-affiche"
+                     src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?q=80&w=400"
+                     alt="Affiche La Mélodie Oubliée" loading="lazy">
+                <div class="film-overlay">
+                    <div class="film-overlay-btn">
+                        <svg class="play-film-overlay"><use href="/movie/view/assets/icons.svg#play"></use></svg>
+                    </div>
+                </div>
+                <div class="film-badges-overlay">
+                    <span class="badge badge-jaune">Comédie</span>
+                </div>
+            </div>
+            <div class="film-infos">
+                <div class="film-titre">La Mélodie Oubliée</div>
+                <div class="film-meta">
+                    <span>Noah Baumbach</span>
+                    <span class="film-note"><svg class="star-film-meta"><use href="/movie/view/assets/icons.svg#star"></use></svg> 4.0</span>
+                </div>
+                <div class="film-etoiles" onclick="intercepterNotation(event)">
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>1 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>2 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>3 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>4 étoile</title></svg>
+                    <svg class="icons-etoile"><use href="/movie/view/assets/icons.svg#star"></use><title>5 étoile</title></svg>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /grille-films -->
+
+    <!-- CTA centré sous la grille -->
+    <div class="catalogue-cta">
+        <p style="color: var(--gris-clair); font-size: 14px; margin-bottom: 20px;">
+            Vous ne voyez qu'un aperçu — <strong style="color: var(--blanc);">500+ films</strong> vous attendent
+        </p>
+        <button
+                class="btn-cta-principal"
+                onclick="ouvrirModale(null, 'catalogue-cta')"
+                style="margin: 0 auto; width: fit-content;">
+            <svg class="btn-circle-play"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+            Accéder à tout le catalogue
+        </button>
+    </div>
+
+</section>
+
+
+<!-- ======================================================================
+     SECTION COMMENT ÇA MARCHE — 3 étapes pour démarrer
+====================================================================== -->
+<section class="section-etapes" id="comment" aria-label="Comment utiliser MADAMOV">
+    <div class="section-etapes-inner">
+
+        <div class="section-entete">
+            <p class="section-surtitre">Démarrer en 3 étapes</p>
+            <h2 class="section-titre">Simple comme regarder un film</h2>
+            <p class="section-description">
+                Pas besoin de carte bancaire, pas d'installation. Trois étapes et c'est parti.
+            </p>
+        </div>
+
+        <div class="grille-etapes">
+
+            <!-- Étape 1 -->
+            <div class="carte-etape" data-delai="0">
+                <div class="etape-numero" aria-hidden="true">01</div>
+                <h3 class="etape-titre">Créez votre compte</h3>
+                <p class="etape-texte">
+                    Inscrivez-vous gratuitement en 30 secondes : un email, un mot de passe,
+                    et vous êtes prêt. Aucune information bancaire requise.
+                </p>
+            </div>
+
+            <!-- Flèche décorative (masquée sur mobile) -->
+            <div class="etape-fleche" aria-hidden="true">
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+            <!-- Étape 2 -->
+            <div class="carte-etape" data-delai="150">
+                <div class="etape-numero" aria-hidden="true">02</div>
+                <h3 class="etape-titre">Explorez le catalogue</h3>
+                <p class="etape-texte">
+                    Parcourez tous nos catalogues, utilisez la recherche, découvrez les films
+                    tendance et les mieux notés par la communauté.
+                </p>
+            </div>
+
+            <!-- Flèche décorative -->
+            <div class="etape-fleche" aria-hidden="true">
+                <i class="fa-solid fa-arrow-right"></i>
+            </div>
+
+            <!-- Étape 3 -->
+            <div class="carte-etape" data-delai="300">
+                <div class="etape-numero" aria-hidden="true">03</div>
+                <h3 class="etape-titre">Regardez &amp; notez</h3>
+                <p class="etape-texte">
+                    Lancez la lecture directement dans votre navigateur. Après le visionnage,
+                    donnez votre note et laissez un commentaire pour la communauté.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ======================================================================
+     SECTION CTA FINAL — Dernier appel à l'action avant le footer
+====================================================================== -->
+<section class="section-cta-final" aria-label="Appel à l'action final">
+    <div class="boite-cta-final" id="ctaFinal">
+        <p class="section-surtitre" style="margin-bottom: 16px;">Rejoignez MADAMOV</p>
+        <h2 class="cta-final-titre">
+            Prêt à vivre<br>
+            l'expérience cinéma ?
+        </h2>
+        <p class="cta-final-desc">
+            Plus de 12 000 cinéphiles ont déjà rejoint la plateforme.
+            Créez votre compte gratuit et commencez à regarder immédiatement.
+        </p>
+        <button
+                class="btn-cta-principal"
+                style="margin: 0 auto;"
+                onclick="ouvrirModale(null, 'cta-final')">
+            <svg class="btn-circle-play"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+            Commencer dès maintenant
+        </button>
+    </div>
+</section>
+
+
+<!-- ======================================================================
+     FOOTER — Pied de page
+====================================================================== -->
+<footer class="footer" aria-label="Pied de page">
+    <div class="footer-contenu">
+
+        <!-- Logo répété dans le footer -->
+        <a href="#" class="logo" style="font-size: 18px;">
+            <svg class="circle-play-logo"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+            MADA<span class="logo-accent">MOV</span>
+        </a>
+
+        <!-- Liens de navigation du footer -->
+        <ul class="footer-liens" role="listbox" aria-label="Liens du footer">
+            <li><a href="#">À propos</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+        </ul>
+
+        <!-- Copyright -->
+        <p class="footer-copyright">
+            © 2026 MADAMOV · Tous droits réservés.
+        </p>
+
+    </div>
+</footer>
+
+
+<!-- ======================================================================
+     MODALE D'INSCRIPTION (INTERCEPTEUR)
+     -----------------------------------------------------------------------
+     Cachée par défaut (opacity:0, pointer-events:none).
+     Devient visible via la classe .active ajoutée par ouvrirModale() en JS.
+     Se ferme au clic sur le fond (.modale-fond) ou le bouton ×.
+====================================================================== -->
+<div class="modale-fond" id="modaleFond" aria-modal="true" role="dialog" aria-label="Inscription requise">
+    <div class="modale-boite" id="modaleBoite">
+
+        <!-- Bouton de fermeture -->
+        <button class="modale-fermer" onclick="fermerModale()" aria-label="Fermer">
+            <svg class="xmark-modale"><use href="/movie/view/assets/icons.svg#xmark"></use></svg>
+        </button>
+
+        <!-- Icône centrale -->
+        <div class="modale-icone">
+            <svg class="circle-play-modale"><use id="icon" href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+        </div>
+
+
+        <!-- Titre et sous-titre (mis à jour dynamiquement selon le contexte) -->
+        <h2 class="modale-titre" id="modaleTitre">Créez votre compte gratuit</h2>
+        <p class="modale-sous-titre" id="modaleSousTitre">
+            Pour regarder ce film et accéder à tout le catalogue,
+            créez votre compte MADAMOV en 30 secondes.
+        </p>
+
+        <!-- Contexte film (affiché uniquement si un film est ciblé) -->
+        <div class="modale-film-contexte" id="modaleFilmContexte" style="display:none;">
+            <img id="modaleFilmAffiche" src="" alt="Affiche du film">
+            <div>
+                <div class="modale-film-nom" id="modaleFilmNom">Titre du film</div>
+                <div class="modale-film-genre" id="modaleFilmGenre">Genre</div>
+            </div>
+        </div>
+
+        <!-- Avantages listés pour convaincre l'hésitant -->
+        <ul class="modale-avantages">
+            <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check-circle"></use></svg> Accès immédiat à 500+ films en streaming</li>
+            <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check-circle"></use></svg> Watchlist et favoris personnalisés</li>
+            <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check-circle"></use></svg> Notez et commentez les films</li>
+            <li><svg class="check-circle-modale"><use href="/movie/view/assets/icons.svg#check-circle"></use></svg> 100 % gratuit, aucune CB requise</li>
+        </ul>
+
+        <!-- Bouton principal : mène à la vraie page d'inscription -->
+        <a href="/movie/public/index.php?action=signup">
+            <button class="modale-btn-inscription">
+                <svg class="user-plus-modale"><use href="/movie/view/assets/icons.svg#user-plus"></use></svg>
+                Créer mon compte gratuitement
+            </button>
+        </a>
+
+        <!-- Bouton secondaire : mène à la page de connexion -->
+        <a href="/movie/public/index.php?action=login">
+            <button class="modale-btn-connexion">
+                <svg class="right-to-bracket-modale"><use href="/movie/view/assets/icons.svg#right-to-bracket"></use></svg>
+                J'ai déjà un compte — Me connecter
+            </button>
+        </a>
+
+    </div>
+</div>
+
+<!-- ======================================================================
+     MENU MOBILE (DRAWER LATÉRAL)
+     S'ouvre via le bouton hamburger du header.
+     Fermeture : bouton ×, clic sur le fond, ou touche Échap.
+====================================================================== -->
+
+<!-- Fond obscurcissant -->
+<div class="menu-mobile-fond" id="menuMobileFond"></div>
+
+<!-- Panneau latéral -->
+<nav class="menu-mobile-drawer" id="menuMobileDrawer" aria-label="Menu de navigation mobile">
+
+    <!-- En-tête : logo + bouton fermer -->
+    <div class="menu-mobile-entete">
+        <a href="#accueil" class="logo" style="font-size: 18px;" onclick="fermerMenuMobile()">
+            <svg class="circle-play-logo"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+            MADA<span class="logo-accent">MOV</span>
+        </a>
+        <button class="menu-mobile-fermer" onclick="fermerMenuMobile()" aria-label="Fermer le menu">
+            <svg class="xmark-modale"><use href="/movie/view/assets/icons.svg#xmark"></use></svg>
+        </button>
+    </div>
+
+    <!-- Liens de navigation -->
+    <ul class="menu-mobile-liens">
+        <li>
+            <a href="#fonctionnalites" onclick="fermerMenuMobile()">
+                <svg><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+                Fonctionnalités
+            </a>
+        </li>
+        <li>
+            <a href="#genres" onclick="fermerMenuMobile()">
+                <svg><use href="/movie/view/assets/icons.svg#film"></use></svg>
+                Genres
+            </a>
+        </li>
+        <li>
+            <a href="#catalogue" onclick="fermerMenuMobile()">
+                <svg><use href="/movie/view/assets/icons.svg#star"></use></svg>
+                Découvrir
+            </a>
+        </li>
+        <li>
+            <a href="#comment" onclick="fermerMenuMobile()">
+                <svg><use href="/movie/view/assets/icons.svg#check-circle"></use></svg>
+                Comment ça marche
+            </a>
+        </li>
+    </ul>
+
+    <!-- Boutons connexion / inscription -->
+    <div class="menu-mobile-actions">
+        <a href="/movie/public/index.php?action=login" style="display: block;">
+            <button class="btn-connexion" onclick="fermerMenuMobile()">Se connecter</button>
+        </a>
+        <a href="/movie/public/index.php?action=signup" style="display: block;">
+            <button class="btn-inscription" onclick="fermerMenuMobile()">
+                <svg class="user-plus-header"><use href="/movie/view/assets/icons.svg#user-plus"></use></svg>
+                S'inscrire gratuitement
+            </button>
+        </a>
+    </div>
+
+</nav>
+
+
+<!-- ======================================================================
+     JAVASCRIPT — Logique interactive de la Landing Page
+     -----------------------------------------------------------------------
+     Fonctions principales :
+     1. ouvrirModale()      — Affiche la modale avec contexte dynamique
+     2. fermerModale()      — Cache la modale
+     3. intercepterNotation() — Bloque la notation pour les anonymes
+     4. afficherToast()     — Notification temporaire
+     5. initScrollAnimations() — Anime les sections au scroll (IntersectionObserver)
+     6. initHeader()        — Gestion du header qui s'assombrit au scroll
+====================================================================== -->
+<script>
+
+    // =========================================================================
+    // 1. GESTION DE LA MODALE D'INSCRIPTION
+    // =========================================================================
+
+    const cheminIcons = "/movie/view/assets/icons.svg";
+
+    /**
+     * ouvrirModale(cartFilm, contexte)
+     * -------------------------------------------------------------------------
+     * Ouvre la modale d'inscription en l'adaptant au contexte du clic.
+     *
+     * @param {HTMLElement|null} carteFilm - L'élément .carte-film cliqué, ou null
+     * @param {string} contexte - Identifiant du contexte ('catalogue', 'hero', 'genre-*'...)
+     *
+     * Logique :
+     * - Si carteFilm est fourni, on lit son attribut data-film (JSON) pour
+     *   afficher le contexte du film dans la modale (affiche + titre + genre).
+     * - Selon le contexte, on adapte le titre et le sous-titre de la modale.
+     * - On ajoute la classe .active au fond de la modale pour la rendre visible.
+     * - On bloque le scroll du body pendant que la modale est ouverte.
+     */
+    function ouvrirModale(carteFilm, contexte) {
+        const fond       = document.getElementById('modaleFond');
+        const titre      = document.getElementById('modaleTitre');
+        const sousTitre  = document.getElementById('modaleSousTitre');
+        const filmCtx    = document.getElementById('modaleFilmContexte');
+        const filmNom    = document.getElementById('modaleFilmNom');
+        const filmGenre  = document.getElementById('modaleFilmGenre');
+        const filmImg    = document.getElementById('modaleFilmAffiche');
+        const icone      = document.getElementById('icon');
+
+        // --- Réinitialisation des valeurs par défaut ---
+        filmCtx.style.display = 'none';
+        icone.setAttribute('href', `${cheminIcons}#circle-play`);
+
+        // --- Remplissage du contexte film (si une carte est cliquée) ---
+        if (carteFilm) {
+            try {
+                const data = JSON.parse(carteFilm.getAttribute('data-film'));
+                filmImg.src         = data.poster  || '';
+                filmImg.alt         = data.titre   || '';
+                filmNom.textContent = data.titre   || 'Film';
+                filmGenre.textContent = `${data.genre} · ★ ${data.note}`;
+                filmCtx.style.display = 'flex'; // Affiche le bloc contexte film
+            } catch(e) {
+                // Si le JSON est mal formé, on masque le contexte film
+                filmCtx.style.display = 'none';
+            }
+        }
+
+        // --- Adaptation du titre/sous-titre selon le contexte ---
+        if (contexte === 'catalogue' || carteFilm) {
+            // Clic sur une carte film
+            titre.textContent    = 'Regardez ce film gratuitement';
+            sousTitre.textContent = 'Créez votre compte MADAMOV pour lancer la lecture. Gratuit et sans CB.';
+            icone.setAttribute('href', `${cheminIcons}#circle-play`);
+
+        } else if (contexte && contexte.startsWith('genre-')) {
+            // Clic sur un badge de genre
+            const nomGenre = contexte.replace('genre-', '');
+            titre.textContent     = `Explorer la catégorie ${nomGenre}`;
+            sousTitre.textContent = `Inscrivez-vous pour accéder à tous les films "${nomGenre}" et bien plus.`;
+            icone.setAttribute('href', `${cheminIcons}#film`);
+
+        } else if (contexte === 'catalogue-cta') {
+            // Clic sur "Accéder à tout le catalogue"
+            titre.textContent     = 'Accédez à 500+ films';
+            sousTitre.textContent = 'Créez votre compte gratuit pour débloquer le catalogue complet en streaming.';
+            icone.style.display = "";
+            icone.setAttribute('href', `${cheminIcons}#film`);
+
+        } else {
+            // Contexte hero ou CTA final — message d'accueil générique
+            titre.textContent     = 'Rejoignez MADAMOV';
+            sousTitre.textContent = 'Créez votre compte gratuit en 30 secondes et commencez à regarder des films immédiatement.';
+            icone.setAttribute('href', `${cheminIcons}#circle-play`);
+        }
+
+        // --- Affichage de la modale ---
+        fond.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Bloque le scroll de fond
+
+        // Focus piégé dans la modale pour l'accessibilité
+        setTimeout(() => {
+            const premierBouton = fond.querySelector('button');
+            if (premierBouton) premierBouton.focus();
+        }, 100);
+    }
+
+    /**
+     * fermerModale()
+     * -------------------------------------------------------------------------
+     * Cache la modale et rétablit le scroll de la page.
+     */
+    function fermerModale() {
+        document.getElementById('modaleFond').classList.remove('active');
+        document.body.style.overflow = ''; // Débloque le scroll
+    }
+
+    // Fermeture de la modale au clic sur le fond obscurcissant (hors boîte)
+    document.getElementById('modaleFond').addEventListener('click', function(e) {
+        if (e.target === this) {
+            fermerModale();
+        }
+    });
+
+    // Fermeture de la modale avec la touche Échap (accessibilité)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            fermerModale();
+            fermerMenuMobile();
+        }
+
+    });
+
+    // Accessibilité : ouverture des cartes films avec la touche Entrée ou Espace
+    document.querySelectorAll('.carte-film').forEach(carte => {
+        carte.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                ouvrirModale(this, 'catalogue');
+            }
+        });
+    });
+
+
+    // =========================================================================
+    // 2. INTERCEPTION DE LA NOTATION (ÉTOILES)
+    // =========================================================================
+
+    /**
+     * intercepterNotation(event)
+     * -------------------------------------------------------------------------
+     * Empêche le clic sur les étoiles de se propager à la carte parent
+     * (pour éviter l'ouverture de la modale "regarder"),
+     * puis ouvre la modale avec un message adapté à la notation.
+     *
+     * @param {MouseEvent} event - L'événement clic sur .film-etoiles
+     */
+    function intercepterNotation(event) {
+        event.stopPropagation(); // Empêche le clic de remonter à .carte-film
+
+        // Récupère la carte parente pour extraire les infos du film
+        const carte = event.currentTarget.closest('.carte-film');
+
+        // Ouvre la modale avec un contexte spécial "notation"
+        const fond      = document.getElementById('modaleFond');
+        const titre     = document.getElementById('modaleTitre');
+        const sousTitre = document.getElementById('modaleSousTitre');
+        const filmCtx   = document.getElementById('modaleFilmContexte');
+        const icone     = document.getElementById('icon');
+
+        // Adapte le message pour la notation
+        titre.textContent     = 'Notez ce film';
+        sousTitre.textContent = 'Créez un compte gratuit pour noter les films et partager vos avis.';
+        icone.setAttribute('href', `${cheminIcons}#star`);
+
+        // Affiche le contexte film si disponible
+        if (carte) {
+            try {
+                const data = JSON.parse(carte.getAttribute('data-film'));
+                document.getElementById('modaleFilmAffiche').src              = data.poster || '';
+                document.getElementById('modaleFilmNom').textContent           = data.titre || 'Film';
+                document.getElementById('modaleFilmGenre').textContent         = `${data.genre} · ★ ${data.note}`;
+                filmCtx.style.display = 'flex';
+            } catch(e) {
+                filmCtx.style.display = 'none';
+            }
+        }
+
+        // Ouvre la modale
+        fond.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    /**
+     * ouvrirMenuMobile()
+     * Ouvre le drawer de navigation latéral sur mobile.
+     * Bloque le scroll du body pendant que le menu est ouvert.
+     */
+    function ouvrirMenuMobile() {
+        document.getElementById('menuMobileDrawer').classList.add('active');
+        document.getElementById('menuMobileFond').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    /**
+     * fermerMenuMobile()
+     * Ferme le drawer et rétablit le scroll.
+     */
+    function fermerMenuMobile() {
+        document.getElementById('menuMobileDrawer').classList.remove('active');
+        document.getElementById('menuMobileFond').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+
+    // =========================================================================
+    // 4. ANIMATIONS AU SCROLL (IntersectionObserver)
+    // =========================================================================
+
+    /**
+     * initScrollAnimations()
+     * -------------------------------------------------------------------------
+     * Observe tous les éléments avec une animation d'entrée (opacity:0, translateY)
+     * et les révèle quand ils entrent dans le viewport.
+     *
+     * Éléments ciblés :
+     * - .carte-fonctionnalite  (délai progressif via data-delai)
+     * - .badge-genre           (délai progressif)
+     * - .carte-film            (délai progressif)
+     * - .carte-etape           (délai progressif)
+     * - .boite-cta-final       (entrée unique)
+     *
+     * L'attribut data-delai (en ms) est lu pour créer un effet de cascade.
+     */
+    function initScrollAnimations() {
+
+        // Sélectionne tous les éléments animables
+        const elementsAnimes = document.querySelectorAll(
+            '.carte-fonctionnalite, .badge-genre, .carte-film, .carte-etape, .boite-cta-final'
+        );
+
+        // Configuration : déclenche l'animation quand 15% de l'élément est visible
+        const observateur = new IntersectionObserver((entrees) => {
+            entrees.forEach(entree => {
+                if (entree.isIntersecting) {
+                    const el    = entree.target;
+                    const delai = parseInt(el.dataset.delai || '0', 10);
+
+                    // Applique le délai via setTimeout pour l'effet de cascade
+                    setTimeout(() => {
+                        el.classList.add('visible');
+                        // Applique les transitions CSS d'entrée
+                        el.style.opacity   = '1';
+                        el.style.transform = 'translateY(0) scale(1)';
+                    }, delai);
+
+                    // Ne plus observer cet élément (animation unique)
+                    observateur.unobserve(el);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        // Ajoute des délais progressifs aux cartes de la même section
+        // Cartes films : délai de 60ms par carte
+        document.querySelectorAll('.carte-film').forEach((carte, i) => {
+            carte.dataset.delai = i * 60;
+        });
+
+        // Observe chaque élément animable
+        elementsAnimes.forEach(el => {
+            // Applique la transition CSS de base
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observateur.observe(el);
+        });
+    }
+
+
+    // =========================================================================
+    // 5. HEADER — ASSOMBRISSEMENT AU SCROLL
+    // =========================================================================
+
+    /**
+     * initHeader()
+     * -------------------------------------------------------------------------
+     * Ajoute la classe .scrolled au header quand l'utilisateur scrolle de plus
+     * de 60px vers le bas. Cela augmente l'opacité du fond semi-transparent.
+     */
+    function initHeader() {
+        const header = document.getElementById('mainHeader');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 60) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }, { passive: true }); // passive:true améliore les performances de scroll
+    }
+
+
+    // =========================================================================
+    // 6. INTERACTIONS AU SURVOL DES ÉTOILES (prévisualisation de note)
+    // =========================================================================
+
+    /**
+     * initEtoiles()
+     * -------------------------------------------------------------------------
+     * Gère l'effet de survol sur les étoiles de notation dans les cartes film.
+     * Quand la souris survole une étoile, toutes les étoiles précédentes
+     * s'allument en or (prévisualisation). Au click, la modale est ouverte.
+     */
+    function initEtoiles() {
+        document.querySelectorAll('.film-etoiles').forEach(groupe => {
+            const etoiles = groupe.querySelectorAll('svg');
+
+            etoiles.forEach((etoile, index) => {
+                // Au survol : allume les étoiles de 0 à index
+                etoile.addEventListener('mouseenter', () => {
+                    etoiles.forEach((e, i) => {
+                        if (i <= index) {
+                            e.className = 'icons-etoile'; // Étoile pleine (or)
+                            e.style.color = '#f59e0b';
+                        } else {
+                            e.className = 'icons-etoile'; // Étoile vide
+                            e.style.color = 'var(--gris-moyen)';
+                        }
+                    });
+                });
+            });
+
+            // Quand la souris quitte le groupe, remet toutes les étoiles vides
+            groupe.addEventListener('mouseleave', () => {
+                etoiles.forEach(e => {
+                    e.className = 'icons-etoile';
+                    e.style.color = 'var(--gris-moyen)';
+                });
+            });
+        });
+    }
+
+
+    // =========================================================================
+    // 7. INITIALISATION AU CHARGEMENT DE LA PAGE
+    // =========================================================================
+
+    /**
+     * Quand le DOM est entièrement chargé, on initialise toutes les fonctions.
+     * DOMContentLoaded est plus rapide que window.onload car il n'attend pas
+     * les images et ressources externes.
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        initScrollAnimations(); // Lance les animations de révélation au scroll
+        initHeader();           // Lance la détection du scroll pour le header
+        initEtoiles();          // Lance les interactions des étoiles de notation
+
+        // --- Délai initial pour la hero (éléments déjà dans le viewport) ---
+        // Les stats de la hero n'ont pas d'animation d'entrée car elles sont
+        // déjà visibles au chargement — seul le fondu du fond est CSS pure.
+
+        // --- Bouton menu mobile (navigation compacte) ---
+        // Bouton hamburger — ouvre le drawer de navigation mobile
+        document.getElementById('btnMenuMobile').addEventListener('click', ouvrirMenuMobile);
+
+        // Fond obscurcissant — ferme le drawer au clic extérieur
+        document.getElementById('menuMobileFond').addEventListener('click', fermerMenuMobile);
+
+        // --- Compteur animé des statistiques hero ---
+        // Anime les nombres des stats (ex: 0 → 500+) au chargement
+        animerCompteurs();
+    });
+
+
+    // =========================================================================
+    // 8. ANIMATION DES COMPTEURS DE STATISTIQUES
+    // =========================================================================
+
+    /**
+     * animerCompteurs()
+     * -------------------------------------------------------------------------
+     * Anime les nombres dans .hero-stat-nombre de 0 jusqu'à leur valeur cible.
+     * L'animation dure 1500ms avec un easing quadratique.
+     *
+     * La valeur cible est lue depuis le texte original de chaque élément.
+     * Les suffixes non-numériques ("+", "k", "K") sont préservés.
+     */
+    function animerCompteurs() {
+        const compteurs = document.querySelectorAll('.hero-stat-nombre');
+        const duree     = 1500; // Durée de l'animation en ms
+        const debut     = performance.now();
+
+        compteurs.forEach(el => {
+            const valeurBrute = el.textContent.trim();
+
+            // Extrait le nombre et le suffixe (ex: "500+" → nombre=500, suffixe="+")
+            const match   = valeurBrute.match(/^(\d+)(.*)/);
+            if (!match) return;
+
+            const cible   = parseInt(match[1], 10);
+            const suffixe = match[2]; // ex: "+", "k+", " Ultra HD"
+
+            // Fonction d'animation frame par frame
+            function step(tempsActuel) {
+                const elapsed  = tempsActuel - debut;
+                const progress = Math.min(elapsed / duree, 1);
+
+                // Easing ease-out quadratique : rapide au début, lent à la fin
+                const eased = 1 - Math.pow(1 - progress, 3);
+
+                const valeurCourante = Math.round(eased * cible);
+                el.textContent       = valeurCourante + suffixe;
+
+                if (progress < 1) {
+                    requestAnimationFrame(step); // Continue l'animation
+                }
+            }
+
+            requestAnimationFrame(step); // Lance l'animation
+        });
+    }
+
+</script>
+
+</body>
+</html>

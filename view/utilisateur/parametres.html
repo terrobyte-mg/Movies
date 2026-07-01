@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Style commun -->
   <link rel="stylesheet" href="/movie/style.css">
+  <script src="/movie/view/utilisateur/utilisateur.js" defer></script>
+  <script src="/movie/view/utils/toast.js" defer></script>
   <style>
     .boite-parametres {
       background: var(--gris-fonce);
@@ -27,7 +29,7 @@
       align-items: center;
       gap: 10px;
     }
-    .parametre-titre i {
+    .parametre-titre svg {
       color: var(--rouge-mada);
     }
     .form-ligne {
@@ -79,198 +81,200 @@
     .btn-enregistrer:hover {
       background: var(--vert-mada);
     }
-    .carte-premium {
-      background: linear-gradient(135deg, #1b5e20, #0a5c36);
+
+    .circle-play-logo {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      bottom: 1px;
+    }
+
+    .zone-danger {
+      background: rgba(211, 47, 47, 0.08);
+      border: 2px solid var(--rouge-mada);
       border-radius: 12px;
       padding: 20px;
-      color: var(--blanc);
-      position: relative;
-      overflow: hidden;
-      margin-top: 15px;
+      margin-top: 30px;
     }
-    .carte-premium-decor {
-      position: absolute;
-      right: -20px;
-      bottom: -20px;
-      font-size: 120px;
-      color: rgba(255,255,255,0.05);
-      transform: rotate(-15deg);
-      pointer-events: none;
+
+    .sliders-contenu-principal {
+      width: 26px;
+      height: 26px;
+    }
+
+    .icon-parametre-titre {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      bottom: 2px;
     }
   </style>
 </head>
 <body class="utilisateur-theme">
 
-  <div class="page-conteneur">
-    
-    <!-- BARRE LATÉRALE -->
-    <aside class="barre-laterale">
-      <div>
-        <div class="logo">
-          <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
-          MADAMOV
-        </div>
-        <div class="profil-section">
-          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar" class="avatar-grand">
-          <h4 id="nomUtilisateurConnecte">Théodoric</h4>
-          <span class="badge-premium">Premium</span>
-        </div>
-        <nav style="margin-top: 20px;">
-          <p class="menu-titre">Menu principal</p>
-          <ul class="menu-liens">
-            <li><a href="index.html"><i class="fa-solid fa-house-play"></i> <span>Films</span></a></li>
-            <li class="sous-menu"><a href="par-genre.html"><i class="fa-solid fa-masks-theater"></i> <span>Par genre</span></a></li>
-            <li class="sous-menu"><a href="par-categorie.html"><i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span></a></li>
-            <li class="sous-menu"><a href="par-date.html"><i class="fa-solid fa-calendar-days"></i> <span>Par date</span></a></li>
-          </ul>
-        </nav>
+<div class="page-conteneur">
+
+  <!-- BARRE LATÉRALE -->
+  <aside class="barre-laterale">
+    <div>
+      <div class="logo">
+        <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
+        <span>Movies</span>
       </div>
-      <div>
-        <div class="baobab-silhouettes"></div>
-        <ul class="menu-liens" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 10px;">
-          <li class="actif"><a href="parametres.html"><i class="fa-solid fa-sliders"></i> <span>Paramètres</span></a></li>
-          <li><a href="../view/auth/connexion.html" ><i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span></a></li>
+      <div class="profil-section">
+        <img src="/movie/public/uploads/avatars/50e57ebf4b3666a1c31550be86db769c.jpg" alt="Avatar" class="avatar-grand">
+        <h4 id="nomUtilisateurConnecte">Brayane</h4>
+      </div>
+      <nav style="margin-top: 20px;">
+        <p class="menu-titre">Menu principal</p>
+        <ul class="menu-liens">
+          <li><a href="/movie/public/index.php?action=home"><i class="fa-solid fa-house-play"></i> <span>Films</span></a></li>
+          <li class="sous-menu"><a href="/movie/public/index.php?action=genre"><i class="fa-solid fa-masks-theater"></i> <span>Par genre</span></a></li>
+          <li class="sous-menu"><a href="/movie/public/index.php?action=categorie"><i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span></a></li>
+          <li class="sous-menu"><a href="/movie/public/index.php?action=date"><i class="fa-solid fa-calendar-days"></i> <span>Par date</span></a></li>
         </ul>
+      </nav>
+    </div>
+    <div>
+      <div class="baobab-silhouettes"></div>
+      <ul class="menu-liens" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 10px;">
+        <li class="actif"><a href="/movie/public/index.php?action=parameter"><i class="fa-solid fa-sliders"></i> <span>Paramètres</span></a></li>
+        <li><a href="/movie/public/index.php?action=logout" id="logoutButton"><i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span></a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ZONE PRINCIPALE -->
+  <main class="zone-principale">
+
+    <div class="contenu-principal">
+      <div style="margin-bottom: 24px;">
+        <h1 style="font-size: 26px; font-weight: 700; color: var(--blanc);">
+          <svg class="sliders-contenu-principal" style="color: var(--rouge-mada);"><use href="/movie/view/assets/icons.svg#sliders"></use></svg> Paramètres du Compte
+        </h1>
+        <p style="color: var(--gris-clair); font-size: 14px; margin-top: 6px;">Gérez vos informations personnelles et vos préférences.</p>
       </div>
-    </aside>
 
-    <!-- ZONE PRINCIPALE -->
-    <main class="zone-principale">
-      <header class="en-tete" style="background: var(--fond-sombre);">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <button class="bouton-menu-mobile"><i class="fa-solid fa-bars"></i></button>
-          <div class="barre-recherche">
-            <i class="fa-solid fa-search"></i>
-            <input type="text" placeholder="Rechercher..." disabled style="cursor: not-allowed; opacity: 0.5;">
+      <form id="formulaireParametres" >
+        <!-- Bloc 1: Informations du profil -->
+        <div class="boite-parametres">
+          <h3 class="parametre-titre">
+            <svg class="icon-parametre-titre"><use href="/movie/view/assets/icons.svg#user"></use></svg>
+            Informations du profil</h3>
+          <div class="form-ligne">
+            <div class="form-colonne">
+              <label for="nomUtilisateur">Nom d'utilisateur</label>
+              <input type="text" id="nomUtilisateur" name="nom_utilisateur" required>
+            </div>
+          </div>
+          <div class="form-ligne">
+            <div class="form-colonne">
+              <label for="email">Adresse email</label>
+              <input type="email" id="email" value="" required>
+            </div>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <button class="btn-icone" ><i class="fa-regular fa-bell"></i></button>
-          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=60" alt="Avatar" class="avatar-petit">
+
+        <!-- Bloc 2: Sécurité -->
+        <div class="boite-parametres">
+          <h3 class="parametre-titre">
+            <svg class="icon-parametre-titre"><use href="/movie/view/assets/icons.svg#lock"></use></svg>
+            Sécurité du compte
+          </h3>
+          <div class="form-ligne">
+            <div class="form-colonne">
+              <label for="ancienMdp">Ancien mot de passe</label>
+              <input type="password" id="ancienMdp" placeholder="Laisser vide si inchangé">
+            </div>
+          </div>
+          <div class="form-ligne">
+            <div class="form-colonne">
+              <label for="nouveauMdp">Nouveau mot de passe</label>
+              <input type="password" id="nouveauMdp" placeholder="Laisser vide si inchangé">
+            </div>
+            <div class="form-colonne">
+              <label for="confirmerMdp">Confirmer le nouveau mot de passe</label>
+              <input type="password" id="confirmerMdp" placeholder="Laisser vide si inchangé">
+            </div>
+          </div>
         </div>
-      </header>
-
-      <div class="contenu-principal">
-        <div style="margin-bottom: 24px;">
-          <h1 style="font-size: 26px; font-weight: 700; color: var(--blanc);">
-            <i class="fa-solid fa-sliders" style="color: var(--rouge-mada);"></i> Paramètres du Compte
-          </h1>
-          <p style="color: var(--gris-clair); font-size: 14px; margin-top: 6px;">Gérez vos informations personnelles et vos préférences.</p>
+        <!-- Bouton enregistrer -->
+        <div style="margin-top: 20px;">
+          <button type="submit" class="btn-enregistrer">
+            <i class="fa-solid fa-check"></i> Enregistrer les modifications
+          </button>
         </div>
+        <div class="zone-danger">
+          <h3><i class="fa-solid fa-triangle-exclamation"></i> Zone dangereuse</h3>
+          <p style="color: var(--gris-clair); margin-bottom: 15px;">
+            La suppression de votre compte est définitive et ne peut pas être annulée.
+          </p>
+          <button onclick="ouvrirModaleSuppression()" style="background: var(--rouge-mada); color: white; border: none; padding: 12px 28px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+            <i class="fa-solid fa-user-slash"></i> Supprimer mon compte
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
 
-        <form id="formulaireParametres" >
-          <!-- Bloc 1: Informations du profil -->
-          <div class="boite-parametres">
-            <h3 class="parametre-titre"><i class="fa-regular fa-user"></i> Informations du profil</h3>
-            <div class="form-ligne">
-              <div class="form-colonne">
-                <label for="nomComplet">Nom complet</label>
-                <input type="text" id="nomComplet" value="Théodoric" required>
-              </div>
-              <div class="form-colonne">
-                <label for="nomUtilisateur">Nom d'utilisateur</label>
-                <input type="text" id="nomUtilisateur" value="theodoric" required>
-              </div>
-            </div>
-            <div class="form-ligne">
-              <div class="form-colonne">
-                <label for="email">Adresse email</label>
-                <input type="email" id="email" value="theodoric@MADAMOV.mg" required>
-              </div>
-              <div class="form-colonne">
-                <label for="langue">Langue d'affichage</label>
-                <select id="langue">
-                  <option value="fr" selected>Français</option>
-                  <option value="mg">Malagasy</option>
-                  <option value="en">English</option>
-                </select>
-              </div>
-            </div>
-          </div>
+  <div id="modaleSuppression" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:10000; align-items:center; justify-content:center;">
+    <div class="boite-parametres" style="max-width:460px; background:#1a1f1c; border-color:var(--rouge-mada);">
+      <h3 style="color:var(--rouge-mada); text-align:center;">Confirmer la suppression</h3>
+      <p style="text-align:center; color:#ccc; margin:20px 0;">Cette action est irréversible.<br>Entrez votre mot de passe :</p>
 
-          <!-- Bloc 2: Sécurité -->
-          <div class="boite-parametres">
-            <h3 class="parametre-titre"><i class="fa-solid fa-lock"></i> Sécurité du compte</h3>
-            <div class="form-ligne">
-              <div class="form-colonne">
-                <label for="nouveauMdp">Nouveau mot de passe</label>
-                <input type="password" id="nouveauMdp" placeholder="Laisser vide si inchangé">
-              </div>
-              <div class="form-colonne">
-                <label for="confirmerMdp">Confirmer le nouveau mot de passe</label>
-                <input type="password" id="confirmerMdp" placeholder="Laisser vide si inchangé">
-              </div>
-            </div>
-          </div>
+      <input type="password" id="mdpConfirmation" placeholder="Votre mot de passe" style="width:100%; padding:12px; background:#111; border:1px solid var(--rouge-mada); color:white; border-radius:8px; margin-bottom:20px;">
 
-          <!-- Bloc 3: Abonnement -->
-          <div class="boite-parametres">
-            <h3 class="parametre-titre"><i class="fa-solid fa-credit-card"></i> Abonnement & Paiements</h3>
-            <div class="carte-premium">
-              <i class="fa-solid fa-gem carte-premium-decor"></i>
-              <div style="font-weight: 700; font-size: 18px; margin-bottom: 6px;">Formule Premium Actuelle</div>
-              <div style="font-size: 13px; opacity: 0.9; margin-bottom: 15px;">Accès illimité à tous les films, séries et animés en 4K UHD.</div>
-              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                <span style="background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Renouvellement le : 19 Juillet 2026</span>
-                <button type="button" class="bouton-principal" style="background: var(--rouge-mada); font-size: 12px; padding: 6px 14px; border-radius: 6px; width: auto;" >Résilier l'abonnement</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bouton enregistrer -->
-          <div style="margin-top: 20px;">
-            <button type="submit" class="btn-enregistrer">
-              <i class="fa-solid fa-check"></i> Enregistrer les modifications
-            </button>
-          </div>
-        </form>
+      <div style="display:flex; gap:12px;">
+        <button onclick="fermerModaleSuppression()" class="bouton-secondaire" style="flex:1;">Annuler</button>
+        <button onclick="supprimerCompte()" style="flex:1; background:var(--rouge-mada);">Supprimer définitivement</button>
       </div>
-    </main>
+    </div>
   </div>
 
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      // Charger les données de l'utilisateur si existantes dans localStorage
-      const nom = localStorage.getItem("nomCompletUtilisateur");
-      const email = localStorage.getItem("emailUtilisateur");
-      const username = localStorage.getItem("nomUtilisateur");
-      
-      if (nom) document.getElementById("nomComplet").value = nom;
-      if (email) document.getElementById("email").value = email;
-      if (username) {
-        document.getElementById("nomUtilisateur").value = username;
-        document.getElementById("nomUtilisateurConnecte").textContent = username;
-      }
-    });
+</div>
 
-    function enregistrerParametres(event) {
-      event.preventDefault();
-      
-      const nom = document.getElementById("nomComplet").value;
-      const email = document.getElementById("email").value;
-      const username = document.getElementById("nomUtilisateur").value;
-      const nouveauMdp = document.getElementById("nouveauMdp").value;
-      const confirmerMdp = document.getElementById("confirmerMdp").value;
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    // Charger les données de l'utilisateur si existantes dans localStorage
+    const nom = localStorage.getItem("nomCompletUtilisateur");
+    const email = localStorage.getItem("emailUtilisateur");
+    const username = localStorage.getItem("nomUtilisateur");
 
-      if (nouveauMdp && nouveauMdp !== confirmerMdp) {
-        alert("Erreur : Les mots de passe de confirmation ne correspondent pas.");
-        return;
-      }
-
-      // Enregistrer dans localStorage pour simuler
-      localStorage.setItem("nomCompletUtilisateur", nom);
-      localStorage.setItem("emailUtilisateur", email);
-      localStorage.setItem("nomUtilisateur", username);
-
-      alert("Vos paramètres ont été enregistrés avec succès !");
+    if (nom) document.getElementById("nomComplet").value = nom;
+    if (email) document.getElementById("email").value = email;
+    if (username) {
+      document.getElementById("nomUtilisateur").value = username;
       document.getElementById("nomUtilisateurConnecte").textContent = username;
-      
-      if (nouveauMdp) {
-        document.getElementById("nouveauMdp").value = "";
-        document.getElementById("confirmerMdp").value = "";
-      }
     }
-  </script>
+  });
+
+  function enregistrerParametres(event) {
+    event.preventDefault();
+
+    const nom = document.getElementById("nomComplet").value;
+    const email = document.getElementById("email").value;
+    const username = document.getElementById("nomUtilisateur").value;
+    const nouveauMdp = document.getElementById("nouveauMdp").value;
+    const confirmerMdp = document.getElementById("confirmerMdp").value;
+
+    if (nouveauMdp && nouveauMdp !== confirmerMdp) {
+      alert("Erreur : Les mots de passe de confirmation ne correspondent pas.");
+      return;
+    }
+
+    // Enregistrer dans localStorage pour simuler
+    localStorage.setItem("nomCompletUtilisateur", nom);
+    localStorage.setItem("emailUtilisateur", email);
+    localStorage.setItem("nomUtilisateur", username);
+
+    alert("Vos paramètres ont été enregistrés avec succès !");
+    document.getElementById("nomUtilisateurConnecte").textContent = username;
+
+    if (nouveauMdp) {
+      document.getElementById("nouveauMdp").value = "";
+      document.getElementById("confirmerMdp").value = "";
+    }
+  }
+</script>
 </body>
 </html>
-

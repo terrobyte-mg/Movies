@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MADAMOV - Par Catégorie</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="/movie/style.css">
+  <script src="/movie/view/utils/toast.js" defer></script>
+  <script src="/movie/view/utilisateur/utilisateur.js" defer></script>
   <style>
     /* Onglets de catégories */
     .barre-onglets {
@@ -94,28 +96,27 @@
       <div>
         <div class="logo">
           <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
-          MADAMOV
+          <span>Movies</span>
         </div>
         <div class="profil-section">
           <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar" class="avatar-grand">
           <h4 id="nomUtilisateurConnecte">Théodoric</h4>
-          <span class="badge-premium">Premium</span>
         </div>
         <nav style="margin-top: 20px;">
           <p class="menu-titre">Menu principal</p>
           <ul class="menu-liens">
-            <li><a href="index.html"><i class="fa-solid fa-house-play"></i> <span>Films</span></a></li>
-            <li class="sous-menu"><a href="par-genre.html"><i class="fa-solid fa-masks-theater"></i> <span>Par genre</span></a></li>
-            <li class="sous-menu actif"><a href="par-categorie.html"><i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span></a></li>
-            <li class="sous-menu"><a href="par-date.html"><i class="fa-solid fa-calendar-days"></i> <span>Par date</span></a></li>
+            <li><a href="/movie/public/index.php?action=home"><i class="fa-solid fa-house-play"></i> <span>Films</span></a></li>
+            <li class="sous-menu"><a href="/movie/public/index.php?action=genre"><i class="fa-solid fa-masks-theater"></i> <span>Par genre</span></a></li>
+            <li class="sous-menu actif"><a href="/movie/public/index.php?action=categorie"><i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span></a></li>
+            <li class="sous-menu"><a href="/movie/public/index.php?action=date"><i class="fa-solid fa-calendar-days"></i> <span>Par date</span></a></li>
           </ul>
         </nav>
       </div>
       <div>
         <div class="baobab-silhouettes"></div>
         <ul class="menu-liens" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 10px;">
-          <li><a href="parametres.html"><i class="fa-solid fa-sliders"></i> <span>Paramètres</span></a></li>
-          <li><a href="../view/auth/connexion.html" ><i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span></a></li>
+          <li><a href="/movie/public/index.php?action=parameter"><i class="fa-solid fa-sliders"></i> <span>Paramètres</span></a></li>
+          <li><a href="/movie/public/index.php?action=logout" id="logoutButton"><i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span></a></li>
         </ul>
       </div>
     </aside>
@@ -235,8 +236,6 @@
 
     // Initialisation au chargement
     window.addEventListener("DOMContentLoaded", () => {
-      const nomUtilisateur = localStorage.getItem("nomUtilisateur") || "Théodoric";
-      document.getElementById("nomUtilisateurConnecte").textContent = nomUtilisateur;
       afficherContenu(catalogueParCategorie.films);
     });
   </script>

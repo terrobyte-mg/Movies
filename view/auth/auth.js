@@ -59,11 +59,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 
     if (signupForm) {
-        handleForm(signupForm, "signup");
+        handleForm(signupForm, "signup").then(r => {});
     }
 
     if (loginForm) {
-        handleForm(loginForm, "login");
+        handleForm(loginForm, "login").then(r => {});
     }
 
 });
+
+const cheminIcons = "/movie/view/assets/icons.svg";
+function basculerMotDePasse(idChamp, icon) {
+    const input = document.getElementById(idChamp);
+    const icone = document.getElementById(icon);
+    if (input.type === "password") {
+        input.type = "text";
+        icone.setAttribute('href', `${cheminIcons}#eye-slash`);
+    } else {
+        input.type = "password";
+        icone.setAttribute('href', `${cheminIcons}#eye`);
+    }
+}

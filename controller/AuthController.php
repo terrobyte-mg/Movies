@@ -45,7 +45,7 @@ class AuthController {
             ];
         }
 
-        if (strlen($mot_de_passe1) < 8) {
+        if (strlen($mot_de_passe1) < 8 || strlen($mot_de_passe2) < 8) {
             return [
                 "success" => false,
                 "message" => "Mot de passe trop court (8 caractères minimum)"
@@ -135,13 +135,17 @@ class AuthController {
         }
 
         $this->userRepository->updateIsActif($user->getId(), true);
+        $user->setIsActif(true);
+
+        session_regenerate_id(true);
 
         $_SESSION['user'] = [
             'id' => $user->getId(),
             'role' => $user->getRoleUtilisateurs()->value,
             'nom_utilisateur' => $user->getNomUtilisateur(),
             'email' => $user->getEmail(),
-            'is_actif' => $user->isActif()
+            'is_actif' => $user->isActif(),
+            'url_photo_profil' => $user->getUrlPhotoProfil()
         ];
 
         return [
@@ -160,7 +164,7 @@ class AuthController {
         $userId = $_SESSION['user']['id'] ?? null;
 
         if ($userId) {
-            $this->userRepository->updateIsActif($_SESSION['user']['id'], false);
+            $this->userRepository->updateIsActif($_SESSION['user']['id'], 0);
         }
 
 
