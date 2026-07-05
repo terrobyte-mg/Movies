@@ -1,8 +1,6 @@
 <?php
 
 require_once(__DIR__ . '/../model/repository/FilmRepository.php');
-require_once(__DIR__ . '/../middleware/AuthMiddleware.php');
-require_once(__DIR__ . '/../middleware/ApiMiddleware.php');
 
 class FilmController
 {
@@ -18,8 +16,6 @@ class FilmController
      */
     public function index(): array
     {
-        ApiMiddleware::handle();
-
         $filters = [
             'q' => $_GET['q'] ?? null,
             'genre' => $_GET['genre'] ?? null,
@@ -37,23 +33,19 @@ class FilmController
     }
 
     /**
-     * DETAILS D’UN FILM
+     * DETAILS D'UN FILM
      */
     public function show(int $id): array
     {
-        ApiMiddleware::handle();
-
         $film = $this->filmRepository->findFilmById($id);
 
         if (!$film) {
-            http_response_code(404);
             return [
                 "success" => false,
                 "message" => "Film introuvable"
             ];
         }
 
-        // incrément vue (optionnel)
         $this->filmRepository->incrementViews($id);
 
         return [
@@ -67,12 +59,6 @@ class FilmController
      */
     public function store(): array
     {
-        if ($error = AuthMiddleware::handle()) {
-            return $error;
-        }
-
-        ApiMiddleware::handle();
-
         $data = json_decode(file_get_contents("php://input"), true);
 
         if (!$data) {
@@ -103,12 +89,6 @@ class FilmController
      */
     public function update(int $id): array
     {
-        if ($error = AuthMiddleware::handle()) {
-            return $error;
-        }
-
-        ApiMiddleware::handle();
-
         $data = json_decode(file_get_contents("php://input"), true);
 
         if (!$data) {
@@ -131,12 +111,6 @@ class FilmController
      */
     public function delete(int $id): array
     {
-        if ($error = AuthMiddleware::handle()) {
-            return $error;
-        }
-
-        ApiMiddleware::handle();
-
         $ok = $this->filmRepository->deleteFilm($id);
 
         return [
@@ -150,12 +124,6 @@ class FilmController
      */
     public function rate(int $filmId): array
     {
-        if ($error = AuthMiddleware::handle()) {
-            return $error;
-        }
-
-        ApiMiddleware::handle();
-
         $data = json_decode(file_get_contents("php://input"), true);
 
         $note = (int) ($data['note'] ?? 0);

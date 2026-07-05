@@ -2,68 +2,51 @@ console.log("AUTH.JS CHARGE");
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    async function handleForm(form, action) {
+    function handleResult({ success, message, redirect }) {
+        if (success) {
+            showMessage("success", message);
 
+            if (redirect) {
+                setTimeout(() => {
+                    window.location.href = redirect;
+                }, 1000);
+            }
+        } else {
+            showMessage("error", message);
+        }
+    }
+
+    function handleForm(form, submitFn) {
         form.addEventListener("submit", async (e) => {
-
             e.preventDefault();
 
-            const formData = new FormData(form);
-
             try {
-
-                const response = await fetch(
-                    `/movie/public/index.php?action=${action}`,
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
-
-                const data = await response.json();
-
-                if (data.success) {
-
-                    showMessage("success", data.message);
-
-                    if (data.redirect) {
-
-                        setTimeout(() => {
-                            window.location.href = data.redirect;
-                        }, 1000);
-
-                    }
-
-                } else {
-
-                    showMessage("error", data.message);
-
-                }
-
+                const result = await submitFn(new FormData(form));
+                handleResult(result);
             } catch (error) {
-
                 console.error(error);
-
-                showMessage(
-                    "error",
-                    "Erreur de communication avec le serveur"
-                );
-
+                showMessage("error", "Erreur de communication avec le serveur");
             }
-
         });
-
     }
 
     const signupForm = document.getElementById("signupForm");
     const loginForm = document.getElementById("loginForm");
 
     if (signupForm) {
-        handleForm(signupForm, "signup").then(r => {});
+        handleForm(signupForm, (formData) => api.signup(
+            formData.get("nom_utilisateur"),
+            formData.get("email_utilisateur"),
+            formData.get("mot_de_passe1"),
+            formData.get("mot_de_passe2")
+        ));
     }
 
     if (loginForm) {
-        handleForm(loginForm, "login").then(r => {});
+        handleForm(loginForm, (formData) => api.login(
+            formData.get("email_utilisateur"),
+            formData.get("mot_de_passe")
+        ));
     }
 
 });

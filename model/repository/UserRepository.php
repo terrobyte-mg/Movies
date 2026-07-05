@@ -92,20 +92,20 @@ class UserRepository {
         try {
 
             $stmt = $this->pdo->prepare("UPDATE utilisateurs SET is_actif = :state_actif WHERE id = :id");
-            return $stmt->execute([
-                'state_actif' => $state_actif,
-                "id" => $userId
-            ]);
+
+            // Important : ne pas passer $state_actif dans un tableau execute().
+            // PDO convertit alors les bool en string ("" pour false), ce qui
+            // peut échouer en mode SQL strict sur une colonne TINYINT/BOOLEAN.
+            $stmt->bindValue(':state_actif', $state_actif ? 1 : 0, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $userId, PDO::PARAM_INT);
+
+            return $stmt->execute();
 
         } catch (PDOException $e) {
             error_log("[" . date('d-M-Y H-i-s') . "] Error update state 'is_actif' in bd: " . $e->getMessage());
             return false;
         }
 
-    }
-
-    public function out(): void {
-        $this->updateIsActif($_SESSION['user']['id'], false);
     }
 
     public function usernameExists(string $username, int $excludeUserId = 0): bool {

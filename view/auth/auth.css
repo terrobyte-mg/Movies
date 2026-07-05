@@ -8,21 +8,6 @@
     box-sizing: border-box;
 }
 
-/* La carte du Toast */
-.toast-card {
-    display: flex;
-    align-items: center;
-    min-width: 280px;
-    max-width: 400px;
-    padding: 16px;
-    border-radius: 8px;
-    background: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    pointer-events: auto;
-    font-family: inherit;
-    animation: slideIn 0.3s ease-out;
-}
-
 /* Alignement et espacement du texte */
 .toast-content {
     flex: 1;

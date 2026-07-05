@@ -10,21 +10,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
 
             try {
-                const response = await fetch("/movie/public/index.php?action=logout", {
-                    method: "POST"
-                });
+                const { success, message, redirect } = await api.logout();
 
-                const data = await response.json();
-
-                if (data.success) {
-                    showMessage("success", data.message);
+                if (success) {
+                    showMessage("success", message);
 
                     setTimeout(() => {
-                        window.location.href = data.redirect;
+                        window.location.href = redirect;
                     }, 1000);
 
                 } else {
-                    showMessage("error", data.message);
+                    showMessage("error", message);
                 }
 
             } catch (error) {
@@ -40,17 +36,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function loadUser() {
 
         try {
-            const response = await fetch("/movie/public/index.php?action=user");
-            const data = await response.json();
+            const { success, user } = await api.getCurrentUser();
 
-            if (!data.success || !data.user) {
+            if (!success || !user) {
                 console.log("Utilisateur non connecté");
                 return;
             }
 
-            const user = data.user;
-
-            // Injection UI
             injectUser(user);
 
         } catch (error) {
@@ -186,32 +178,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             formData.append("email", email);
             formData.append("nouveau_mdp", nouveauMdp);
             formData.append("confirmer_mdp", confirmerMdp);
-            
+
             if (photoInput && photoInput.files.length > 0) {
                 formData.append("photo_profil", photoInput.files[0]);
             }
 
             try {
-                const response = await fetch("/movie/public/index.php?action=update-profile", {
-                    method: "POST",
-                    body: formData
-                });
+                const { success, message, user } = await api.updateProfile(formData);
 
-                const responseText = await response.text();
-                let data;
-
-                try {
-                    data = JSON.parse(responseText);
-                } catch (error) {
-                    console.error("Réponse serveur non JSON:", responseText);
-                    showMessage("error", "Le serveur a renvoyé une réponse invalide pendant l'enregistrement");
-                    return;
-                }
-
-                if (data.success) {
-                    showMessage("success", data.message);
-                    if (data.user) {
-                        injectUser(data.user);
+                if (success) {
+                    showMessage("success", message);
+                    if (user) {
+                        injectUser(user);
                     }
                     document.getElementById("nouveauMdp").value = "";
                     document.getElementById("confirmerMdp").value = "";
@@ -219,7 +197,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         photoInput.value = ""; // reset file input
                     }
                 } else {
-                    showMessage("error", data.message);
+                    showMessage("error", message);
                 }
             } catch (error) {
                 console.error(error);
