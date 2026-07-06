@@ -14,6 +14,7 @@ require_once __DIR__ . '/../model/repository/FilmRepository.php';
 require_once __DIR__ . '/../controller/AuthController.php';
 require_once __DIR__ . '/../controller/UserController.php';
 require_once __DIR__ . '/../controller/FilmController.php';
+require_once __DIR__ . '/../controller/AdminController.php';
 
 require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 require_once __DIR__ . '/../middleware/AdminMiddleware.php';
@@ -26,6 +27,7 @@ $action = $_GET['action'] ?? 'home';
 $authController = new AuthController();
 $userController = new UserController();
 $filmController = new FilmController();
+$adminController = new AdminController();
 
 // ==========================================
 // Helpers de garde (évitent la répétition
@@ -244,6 +246,16 @@ switch ($action) {
         requireAuthApi();
         $id = getIdParam();
         ApiResponse::send($filmController->rate($id));
+        break;
+
+    // ==========================================
+    // API dashboard admin
+    // ==========================================
+
+    case 'admin-dashboard-data':
+        requireAuthApi();
+        requireAdminApi();
+        ApiResponse::send($adminController->dashboard());
         break;
 
     default:

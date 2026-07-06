@@ -200,7 +200,7 @@ class AuthController {
         return [
             "success" => true,
             "message" => "Déconnecté",
-            "redirect" => "index.php?action=login"
+            "redirect" => "index.php?action=home"
         ];
     }
 

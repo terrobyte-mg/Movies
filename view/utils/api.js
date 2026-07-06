@@ -164,6 +164,14 @@ class Api {
     deleteFilm(id) {
         return this.request("film-delete", { method: "POST", params: { id } });
     }
+
+    // =========================
+    // Admin
+    // =========================
+
+    getAdminDashboard() {
+        return this.request("admin-dashboard-data");
+    }
 }
 
 const api = new Api();

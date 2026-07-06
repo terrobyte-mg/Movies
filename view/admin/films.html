@@ -7,7 +7,10 @@
   <!-- FontAwesome CDN pour les icônes premium -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Style commun -->
-  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="/movie/style.css">
+  <script src="/movie/view/utils/api.js" defer></script>
+  <script src="/movie/view/utils/toast.js" defer></script>
+  <script src="/movie/view/admin/js/films.js" defer></script>
   <style>
     .kpi-petit {
       display: grid;
@@ -41,7 +44,7 @@
           <p class="menu-titre">Tableau de bord</p>
           <ul class="menu-liens">
             <li>
-              <a href="index.html">
+              <a href="/movie/public/index.php?action=admin">
                 <i class="fa-solid fa-house-chimney"></i> <span>Tableau de bord</span>
               </a>
             </li>
@@ -50,23 +53,8 @@
           <p class="menu-titre">Gestion du contenu</p>
           <ul class="menu-liens">
             <li class="actif">
-              <a href="films.html">
+              <a href="/movie/public/index.php?action=admin-films">
                 <i class="fa-solid fa-film"></i> <span>Film</span>
-              </a>
-            </li>
-            <li>
-              <a href="series.html">
-                <i class="fa-solid fa-tv"></i> <span>Série</span>
-              </a>
-            </li>
-            <li>
-              <a href="animes.html">
-                <i class="fa-solid fa-ghost"></i> <span>Animé</span>
-              </a>
-            </li>
-            <li>
-              <a href="index.html?onglet=categories">
-                <i class="fa-solid fa-tags"></i> <span>Catégories</span>
               </a>
             </li>
           </ul>
@@ -74,7 +62,7 @@
           <p class="menu-titre">Utilisateurs</p>
           <ul class="menu-liens">
             <li>
-              <a href="utilisateurs.html">
+              <a href="/movie/public/index.php?action=admin-utilisateurs">
                 <i class="fa-solid fa-users"></i> <span>Utilisateurs</span>
               </a>
             </li>
@@ -83,12 +71,12 @@
           <p class="menu-titre">Paramètres</p>
           <ul class="menu-liens">
             <li>
-              <a href="profil.html">
+              <a href="/movie/public/index.php?action=admin-profil">
                 <i class="fa-solid fa-user-gear"></i> <span>Profil Admin</span>
               </a>
             </li>
             <li>
-              <a href="inscription.html">
+              <a id="logoutBtn">
                 <i class="fa-solid fa-right-from-bracket"></i> <span>Déconnexion</span>
               </a>
             </li>
@@ -222,86 +210,6 @@
     </div>
   </div>
 
-  <script>
-    // Liste fictive de films
-    let films = [
-      { id: 1, titre: "The Batman", genre: "Action, Drame", annee: 2022, duree: "2h 56m", date: "15 Juin 2026", affiche: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg" },
-      { id: 2, titre: "Top Gun: Maverick", genre: "Action, Aventure", annee: 2022, duree: "2h 10m", date: "16 Juin 2026", affiche: "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDabo8diEhkHPm3.jpg" },
-      { id: 3, titre: "Avatar 3", genre: "Sci-Fi, Aventure", annee: 2026, duree: "3h 12m", date: "17 Juin 2026", affiche: "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" },
-      { id: 4, titre: "John Wick 4", genre: "Action, Thriller", annee: 2023, duree: "2h 49m", date: "18 Juin 2026", affiche: "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" },
-      { id: 5, titre: "Oppenheimer", genre: "Drame, Histoire", annee: 2023, duree: "3h 00m", date: "19 Juin 2026", affiche: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" },
-      { id: 6, titre: "Barbie", genre: "Comédie, Fantaisie", annee: 2023, duree: "1h 54m", date: "20 Juin 2026", affiche: "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7IS.jpg" }
-    ];
-
-    function afficherFilms() {
-      const corps = document.getElementById("corpsTableauFilms");
-      document.getElementById("totalFilms").textContent = films.length;
-      corps.innerHTML = films.map(f => `
-        <tr id="film-${f.id}">
-          <td><img src="${f.affiche}" alt="Affiche" style="width:45px; height:60px; object-fit:cover; border-radius:6px;"></td>
-          <td style="font-weight:700; color:white;">${f.titre}</td>
-          <td>${f.genre}</td>
-          <td>${f.annee}</td>
-          <td>${f.duree}</td>
-          <td>${f.date}</td>
-          <td style="text-align: right;">
-            <button class="btn-table-action"  style="margin-right:6px;"><i class="fa-solid fa-pen-to-square" style="color:var(--vert-clair);"></i></button>
-            <button class="btn-table-action" ><i class="fa-solid fa-trash-can" style="color:var(--rouge-mada);"></i></button>
-          </td>
-        </tr>
-      `).join("");
-    }
-
-    function supprimerFilm(id) {
-      if (confirm("Voulez-vous vraiment supprimer ce film ?")) {
-        films = films.filter(f => f.id !== id);
-        afficherFilms();
-      }
-    }
-
-    function ouvrirModaleFilm() {
-      document.getElementById("modaleFilm").style.display = "flex";
-    }
-
-    function fermerModaleFilm() {
-      document.getElementById("modaleFilm").style.display = "none";
-    }
-
-    function ajouterFilm(event) {
-      event.preventDefault();
-      const titre = document.getElementById("titreFilm").value;
-      const genre = document.getElementById("genreFilm").value;
-      const annee = document.getElementById("anneeFilm").value;
-      const duree = document.getElementById("dureeFilm").value;
-      const affiche = document.getElementById("afficheFilm").value;
-
-      const nvFilm = {
-        id: Date.now(),
-        titre,
-        genre,
-        annee: parseInt(annee),
-        duree,
-        date: "Aujourd'hui",
-        affiche
-      };
-
-      films.unshift(nvFilm);
-      afficherFilms();
-      fermerModaleFilm();
-      // Reset form
-      event.target.reset();
-    }
-
-    function filtrerFilmsAdmin() {
-      const recherche = document.getElementById("rechercheFilmAdmin").value.toLowerCase();
-      document.querySelectorAll("#corpsTableauFilms tr").forEach(tr => {
-        const texteTr = tr.textContent.toLowerCase();
-        tr.style.display = texteTr.includes(recherche) ? "" : "none";
-      });
-    }
-
-    window.addEventListener("DOMContentLoaded", afficherFilms);
-  </script>
 </body>
 </html>
 

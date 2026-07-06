@@ -232,6 +232,29 @@ class FilmRepository {
         }
     }
 
+    /**
+     * Le film le plus vu (pour le KPI "Film populaire" du dashboard admin).
+     */
+    public function mostViewed(): ?array
+    {
+        try {
+            $sql = $this->baseFilmSelect() . "
+                WHERE c.type_code = 'film' AND c.est_publie = 1
+                GROUP BY c.id
+                ORDER BY c.nombre_vues DESC
+                LIMIT 1
+            ";
+
+            $stmt = $this->pdo->query($sql);
+            $row = $stmt->fetch();
+
+            return $row ? Film::fromRow($row)->toArray() : null;
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error mostViewed: " . $e->getMessage());
+            return null;
+        }
+    }
+
     private function baseFilmSelect(): string
     {
         return "SELECT

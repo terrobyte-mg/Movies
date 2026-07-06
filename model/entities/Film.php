@@ -44,7 +44,7 @@ class Film {
             $row['synopsis'],
             (int) $row['duree_minutes'],
             (int) $row['annee_sortie'],
-            $row['url_image'],
+            $row['poster'],
             $row['url_trailer'] ?? null,
             $row['url_video'] ?? null
         );

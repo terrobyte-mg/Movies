@@ -8,492 +8,492 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Style commun -->
   <link rel="stylesheet" href="/movie/style.css">
+  <script src="/movie/view/utils/api.js" defer></script>
+  <script src="/movie/view/utils/toast.js" defer></script>
+  <script src="/movie/view/admin/js/admin-dashboard.js" defer></script>
 </head>
 <body>
 
-  <div class="page-conteneur">
-    
-    <!-- BARRE LATÉRALE ADMINISTRATIVE GAUCHE -->
-    <aside class="barre-laterale">
-      <div>
-        <div class="logo" style="font-size: 18px; gap: 8px; flex-wrap: nowrap; overflow: hidden;">
-          <i class="fa-solid fa-clapperboard" style="color: var(--rouge-mada); flex-shrink: 0;"></i>
-          <span style="color: var(--blanc); white-space: nowrap;">MADAMOV</span>
-          <span style="font-size: 10px; background: var(--rouge-mada); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 1px; flex-shrink: 0;">ADMIN</span>
-        </div>
-        
-        <!-- Section Profil Admin Connecté -->
-        <div class="profil-section">
-          <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar Administrateur" class="avatar-grand">
-          <h4 id="nomAdminConnecte">Théodoric</h4>
-          <p class="badge-premium" style="margin-top: 6px;">Super Administrateur</p>
-        </div>
-        
-        <!-- Navigation Menu -->
-        <nav>
-          <p class="menu-titre">Tableau de bord</p>
-          <ul class="menu-liens">
-            <li class="actif" id="lienMenuTdb">
-              <a href="#" >
-                <i class="fa-solid fa-house-chimney"></i> <span>Tableau de bord</span>
-              </a>
-            </li>
-          </ul>
+<div class="page-conteneur">
 
-          <p class="menu-titre">Gestion du contenu</p>
-          <ul class="menu-liens">
-            <li id="lienMenuFilms">
-              <a href="films.html">
-                <i class="fa-solid fa-film"></i> <span>Film</span>
-              </a>
-            </li>
-            <li id="lienMenuCategories">
-              <a href="/movie/public/index.php?action=admin-utilisateurs" >
-                <i class="fa-solid fa-user"></i> <span>Utilisateurs</span>
-              </a>
-            </li>
-          </ul>
-
-          <p class="menu-titre">Utilisateurs</p>
-          <ul class="menu-liens">
-            <li id="lienMenuUtilisateurs">
-              <a href="utilisateurs.html">
-                <i class="fa-solid fa-users"></i> <span>Utilisateurs</span>
-              </a>
-            </li>
-          </ul>
-
-          <p class="menu-titre">Paramètres</p>
-          <ul class="menu-liens">
-            <li>
-              <a href="profil.html">
-                <i class="fa-solid fa-user-gear"></i> <span>Profil Admin</span>
-              </a>
-            </li>
-            <li>
-              <a href="/movie/public/index.php?action=logout">
-                <i class="fa-solid fa-right-from-bracket"></i> <span>Déconnexion</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+  <!-- BARRE LATÉRALE ADMINISTRATIVE GAUCHE -->
+  <aside class="barre-laterale">
+    <div>
+      <div class="logo" style="font-size: 18px; gap: 8px; flex-wrap: nowrap; overflow: hidden;">
+        <i class="fa-solid fa-clapperboard" style="color: var(--rouge-mada); flex-shrink: 0;"></i>
+        <span style="color: var(--blanc); white-space: nowrap;">MADAMOV</span>
+        <span style="font-size: 10px; background: var(--rouge-mada); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 1px; flex-shrink: 0;">ADMIN</span>
       </div>
-      
-      <!-- Pied de la barre latérale (silhouettes de baobabs) -->
-      <div>
-        <div class="baobab-silhouettes"></div>
-        <div style="font-size: 11px; text-align: center; color: var(--gris-clair); padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05); font-weight: 500;">
-          2026 MADAMOV Admin Panel.<br>Tous droits réservés.
-        </div>
+
+      <!-- Section Profil Admin Connecté -->
+      <div class="profil-section">
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar Administrateur" class="avatar-grand">
+        <h4 id="nomAdminConnecte">Théodoric</h4>
+        <p class="badge-premium" style="margin-top: 6px;">Administrateur</p>
       </div>
-    </aside>
 
-    <!-- ZONE DE CONTENU PRINCIPALE DROITE -->
-    <main class="zone-principale">
-      
-      <!-- EN-TÊTE COMMUNE -->
-      <header class="en-tete">
-        <div class="recherche-barre">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="barreRechercheAdmin" placeholder="Rechercher un film, un utilisateur ou une catégorie..." >
-        </div>
-        
-        <div class="en-tete-droite">
-          <div class="notification-cloche" >
-            <i class="fa-regular fa-bell"></i>
-            <span class="badge-notif">5</span>
-          </div>
-          <div class="profil-utilisateur" >
-            <span style="font-weight: 700; font-size: 14px;">Admin</span>
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar mini" class="avatar-petit">
-          </div>
-        </div>
-      </header>
+      <!-- Navigation Menu -->
+      <nav>
+        <p class="menu-titre">Tableau de bord</p>
+        <ul class="menu-liens">
+          <li class="actif" id="lienMenuTdb">
+            <a href="#" >
+              <i class="fa-solid fa-house-chimney"></i> <span>Tableau de bord</span>
+            </a>
+          </li>
+        </ul>
 
-      <!-- ===================================================================
-           VUE 1 : TABLEAU DE BORD (IMAGE 2)
-           =================================================================== -->
-      <section id="vueAdminTableauDeBord">
-        
-        <!-- Grille de fiches statistiques KPIs -->
-        <div class="grille-stats">
-          <div class="carte-stat">
-            <div class="icone-cercle rouge"><i class="fa-solid fa-clapperboard"></i></div>
-            <div>
-              <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Films disponibles</p>
-              <h3 class="stat-valeur">850</h3>
-              <p class="stat-evol"><i class="fa-solid fa-arrow-trend-up"></i> +8.3% ce mois</p>
-            </div>
-          </div>
-          <div class="carte-stat">
-            <div class="icone-cercle jaune"><i class="fa-solid fa-star"></i></div>
-            <div>
-              <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Film populaire</p>
-              <h3 class="stat-valeur" style="font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">Fast & Furious 10</h3>
-              <p class="stat-evol" style="color: #f59e0b;"><i class="fa-solid fa-fire"></i> 2 350 recherches</p>
-            </div>
-          </div>
-        </div>
+        <p class="menu-titre">Gestion du contenu</p>
+        <ul class="menu-liens">
+          <li id="lienMenuFilms">
+            <a href="/movie/public/index.php?action=admin-films">
+              <i class="fa-solid fa-film"></i> <span>Film</span>
+            </a>
+          </li>
+          <li id="lienMenuCategories">
+            <a href="/movie/public/index.php?action=admin-utilisateurs" >
+              <i class="fa-solid fa-users"></i> <span>Utilisateurs</span>
+            </a>
+          </li>
+        </ul>
 
-        <!-- RANGÉE 1 : DERNIERS FILMS (2/3) + ACTIONS RAPIDES (1/3) -->
-        <div class="ligne-dashboard">
-          
-          <!-- Bloc de gauche : Derniers films ajoutés -->
-          <div class="conteneur-section" style="margin-bottom: 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-              <h3 style="font-size: 16px; font-weight: 800; letter-spacing: 0.5px; margin: 0;">DERNIERS FILMS AJOUTÉS</h3>
-              <a href="films.html" class="voir-tout">Voir tout</a>
-            </div>
-            
-            <div class="tableau-wrapper">
-              <table class="tableau-mada">
-                <thead>
-                  <tr>
-                    <th style="width: 80px;">Affiche</th>
-                    <th>Nom du film / Série</th>
-                    <th>Genre</th>
-                    <th>Date d'ajout</th>
-                    <th style="text-align: right; width: 120px;">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="corpsTableauDerniersFilms">
-                  <!-- Rempli dynamiquement par admin.js -->
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <p class="menu-titre">Utilisateurs</p>
+        <ul class="menu-liens">
+          <li id="lienMenuUtilisateurs">
+            <a href="utilisateurs.html">
+              <i class="fa-solid fa-users"></i> <span>Utilisateurs</span>
+            </a>
+          </li>
+        </ul>
 
-          <!-- Bloc de droite : Actions rapides -->
-          <div class="conteneur-section" style="margin-bottom: 0;">
-            <h3 class="section-titre" style="margin-top: 0; font-size: 16px; margin-bottom: 20px;">ACTIONS RAPIDES</h3>
-            <div class="actions-rapides-kpi">
-              <div class="btn-action-carre" >
-                <i class="fa-solid fa-circle-plus" style="color: #4caf50;"></i>
-                <span style="color: var(--blanc);">Ajouter un film</span>
-              </div>
-              <div class="btn-action-carre" >
-                <i class="fa-solid fa-trash-can" style="color: var(--rouge-mada);"></i>
-                <span style="color: var(--blanc);">Supprimer des films</span>
-              </div>
-              <div class="btn-action-carre" >
-                <i class="fa-solid fa-user-group" style="color: #2196f3;"></i>
-                <span style="color: var(--blanc);">Utilisateurs</span>
-              </div>
-              <div class="btn-action-carre" >
-                <i class="fa-solid fa-folder-tree" style="color: #8b5cf6;"></i>
-                <span style="color: var(--blanc);">Catégories</span>
-              </div>
-            </div>
-          </div>
+        <p class="menu-titre">Paramètres</p>
 
-        </div>
+        <div class="espace"></div>
 
-        <!-- RANGÉE 2 : FILM LE PLUS RECHERCHÉ (1/2) + LISTES COMPLÈTES (1/2) -->
-        <div class="ligne-dashboard-demi">
-          
-          <!-- Bloc de gauche : Film le plus recherché -->
-          <div class="conteneur-section" style="margin-bottom: 0;">
-            <h3 class="section-titre" style="margin-top: 0; font-size: 16px; margin-bottom: 20px;">FILM LE PLUS RECHERCHÉ</h3>
-            <div class="carte-vedette" style="border: none; padding: 0; background: transparent; box-shadow: none;">
-              <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=180" alt="Fast & Furious 10" class="carte-vedette-affiche">
-              <div class="carte-vedette-infos">
-                <span class="badge badge-vert" style="background-color: #2e7d32; width: fit-content; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: white;">Action</span>
-                <h2 style="font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin: 5px 0 0 0;">Fast & Furious 10</h2>
-                <p style="color: var(--rouge-mada); font-size: 14px; font-weight: 700; margin: 4px 0;">2 350 recherches</p>
-                <div class="etoiles" style="margin-bottom: 12px; font-size: 12px; color: #f59e0b;">
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                </div>
-                <button class="bouton-principal" style="width: fit-content; padding: 10px 22px; font-size: 13px;" >
-                  Voir les détails
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bloc de droite : Listes complètes -->
-          <div class="conteneur-section" style="margin-bottom: 0; display: flex; flex-direction: column;">
-            <h3 class="section-titre" style="margin-top: 0; font-size: 16px; margin-bottom: 20px;">LISTES COMPLÈTES</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: center;">
-              <div class="carte-stat curseur-main"  style="justify-content: space-between; padding: 16px; margin-bottom: 0;">
-                <div style="display: flex; align-items: center; gap: 14px;">
-                  <div class="icone-cercle vert" style="width:40px; height:40px; font-size:16px;"><i class="fa-solid fa-clapperboard"></i></div>
-                  <div>
-                    <h4 style="font-size: 14px; font-weight: 700; color: var(--blanc); margin: 0;">Tous les films</h4>
-                    <p style="font-size: 11px; color: var(--gris-clair); margin: 2px 0 0 0;">Accédez à tous les films</p>
-                  </div>
-                </div>
-                <i class="fa-solid fa-chevron-right" style="color: var(--vert-clair);"></i>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- RANGÉE 3 : CARROUSELS ET RECOMMANDATIONS (PLEINE LARGEUR) -->
-        <div style="margin-bottom: 30px; margin-top: 10px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 class="section-titre" style="margin: 0; font-size: 16px;">LES PLUS POPULAIRES</h3>
-            <a href="films.html" class="voir-tout">Voir tout</a>
-          </div>
-          <div class="grille-films" id="grilleFilmsPopulaires">
-            <!-- Rempli dynamiquement par admin.js -->
-          </div>
-        </div>
-
-        <div style="margin-bottom: 40px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 class="section-titre" style="margin: 0; font-size: 16px;">LES PLUS VUS</h3>
-            <a href="films.html" class="voir-tout">Voir tout</a>
-          </div>
-          <div class="grille-films" id="grilleFilmsPlusVus">
-            <!-- Rempli dynamiquement par admin.js -->
-          </div>
-        </div>
-
-      </section>
-
-      <!-- ===================================================================
-           VUE 2 : GESTION DES CATÉGORIES (IMAGE 3)
-           =================================================================== -->
-      <section id="vueAdminCategories" class="masque">
-        
-        <!-- Cartes statistiques des catégories -->
-        <div class="grille-stats">
-          <div class="carte-stat">
-            <div class="icone-cercle vert"><i class="fa-solid fa-folder"></i></div>
-            <div>
-              <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Total Catégories</p>
-              <h3 class="stat-valeur" id="indicateurTotalCategories">28</h3>
-              <p style="font-size: 12px; color: var(--vert-clair); font-weight: 600;">Catégories créées</p>
-            </div>
-          </div>
-          <div class="carte-stat">
-            <div class="icone-cercle rouge"><i class="fa-solid fa-film"></i></div>
-            <div>
-              <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Catégories Films</p>
-              <h3 class="stat-valeur">12</h3>
-              <p style="font-size: 12px; color: var(--rouge-mada); font-weight: 600;">Catégories</p>
-            </div>
-          </div>
-          <div class="carte-stat">
-            <div class="icone-cercle jaune"><i class="fa-solid fa-tv"></i></div>
-            <div>
-              <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Catégories Séries</p>
-              <h3 class="stat-valeur">9</h3>
-              <p style="font-size: 12px; color: #f59e0b; font-weight: 600;">Catégories</p>
-            </div>
-          </div>
-          <div class="carte-stat">
-            <div class="icone-cercle violet"><i class="fa-solid fa-masks-theater"></i></div>
-            <div>
-              <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Catégories Animés</p>
-              <h3 class="stat-valeur">7</h3>
-              <p style="font-size: 12px; color: #8b5cf6; font-weight: 600;">Catégories</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Barre d'Actions rapides pour les catégories -->
-        <div class="tableau-actions-barre">
-          <div class="boutons-actions-groupe">
-            <button class="btn-action-kpi vert" >
-              <i class="fa-solid fa-plus"></i> Ajouter une catégorie
-            </button>
-            <button class="btn-action-kpi rouge" >
-              <i class="fa-solid fa-trash"></i> Supprimer une catégorie
-            </button>
-            <button class="btn-action-kpi bleu" >
-              <i class="fa-solid fa-folder-tree"></i> Gérer sous-catégories
-            </button>
-            <button class="btn-action-kpi violet" >
-              <i class="fa-solid fa-arrows-up-down"></i> Réorganiser les catégories
-            </button>
-          </div>
-        </div>
-
-        <!-- Section Principale : Tableau et Widgets de Droite -->
-        <div class="ligne-dashboard">
-          
-          <!-- Tableau complet des catégories (Gauche) -->
-          <div class="conteneur-section" style="margin-bottom: 0;">
-            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 20px; letter-spacing: 0.5px;">TABLEAU DES CATÉGORIES</h3>
-            
-            <div class="tableau-wrapper">
-              <table class="tableau-mada">
-                <thead>
-                  <tr>
-                    <th style="width: 50px;">#</th>
-                    <th style="width: 70px; text-align: center;">Icône</th>
-                    <th>Nom de la catégorie</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th>Contenus</th>
-                    <th>Statut</th>
-                    <th>Date d'ajout</th>
-                    <th style="text-align: right; width: 130px;">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="corpsTableauCategories">
-                  <!-- Rempli dynamiquement par admin.js -->
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Barre de pagination du tableau -->
-            <div class="table-pagination">
-              <div>
-                Afficher 
-                <select style="background: var(--gris-moyen); color: white; border: 1px solid var(--gris-moyen); border-radius: 6px; padding: 4px 8px; cursor: pointer;" >
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="50">50</option>
-                </select> entrées
-              </div>
-              <div class="pagination-boutons">
-                <button class="pag-btn actif">1</button>
-                <button class="pag-btn" >2</button>
-                <button class="pag-btn" >3</button>
-                <button class="pag-btn" style="border: none; cursor: default; background: transparent;">...</button>
-                <button class="pag-btn" >10</button>
-                <button class="pag-btn" ><i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Panneaux statistiques de droite -->
-          <div style="display: flex; flex-direction: column; gap: 24px;">
-            
-            <!-- Graphique de répartition -->
-            <div class="conteneur-section" style="margin-bottom: 0;">
-              <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 20px; letter-spacing: 0.5px;">RÉPARTITION DES CATÉGORIES</h3>
-              <div class="donut-conteneur">
-                <svg class="donut-svg" width="160" height="160" viewBox="0 0 42 42">
-                  <circle class="donut-cercle-fond" cx="21" cy="21" r="15.915"></circle>
-                  <circle class="donut-segment film" cx="21" cy="21" r="15.915"></circle>
-                  <circle class="donut-segment serie" cx="21" cy="21" r="15.915"></circle>
-                  <circle class="donut-segment anime" cx="21" cy="21" r="15.915"></circle>
-                  <g class="chart-text">
-                    <text x="50%" y="50%" class="donut-texte" dominant-baseline="middle" text-anchor="middle" font-size="6">28</text>
-                    <text x="50%" y="63%" fill="var(--gris-clair)" font-size="3.5" dominant-baseline="middle" text-anchor="middle" font-weight="600">Total</text>
-                  </g>
-                </svg>
-                
-                <div class="donut-legende">
-                  <div class="legende-item">
-                    <span class="legende-couleur"><span class="puce-cercle vert"></span>Films</span>
-                    <span style="font-weight: 700; color: var(--blanc);">12 (42.9%)</span>
-                  </div>
-                  <div class="legende-item">
-                    <span class="legende-couleur"><span class="puce-cercle rouge"></span>Séries</span>
-                    <span style="font-weight: 700; color: var(--blanc);">9 (32.1%)</span>
-                  </div>
-                  <div class="legende-item">
-                    <span class="legende-couleur"><span class="puce-cercle jaune"></span>Animés</span>
-                    <span style="font-weight: 700; color: var(--blanc);">7 (25.0%)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Top Catégories par Contenus -->
-            <div class="conteneur-section" style="margin-bottom: 0;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-                <h3 style="font-size: 15px; font-weight: 800; letter-spacing: 0.5px;">TOP CATÉGORIES (PAR CONTENUS)</h3>
-                <a href="#" class="voir-tout" >Voir tout</a>
-              </div>
-              <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px;" id="listeTopCategoriesAdmin">
-                <!-- Rempli dynamiquement par admin.js -->
-              </ul>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- Section Pied de page : Catégories récemment ajoutées -->
-        <div style="margin-top: 35px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 class="section-titre" style="margin: 0; font-size: 16px;">CATÉGORIES RÉCEMMENT AJOUTÉES</h3>
-            <a href="#" class="voir-tout" >Voir tout</a>
-          </div>
-          <div class="grille-stats" style="grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));" id="grilleCategoriesRecentesAdmin">
-            <!-- Rempli dynamiquement par admin.js -->
-          </div>
-        </div>
-
-      </section>
-
-      <!-- PIED DE PAGE COMMUN -->
-      <footer class="pied-page">
-        <p>© 2026 MADAMOV. Tous droits réservés.</p>
-      </footer>
-
-    </main>
-
-  </div>
-
-  <!-- FENÊTRE MODALE D'AJOUT DE CATÉGORIE -->
-  <div id="boiteModaleCategorie" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
-    <div class="boite-inscription" style="max-width: 440px; background: var(--gris-fonce);">
-      <h3 style="margin-bottom: 15px; text-align: center; font-size: 20px; font-weight: 800;">Ajouter une catégorie</h3>
-      <p style="font-size: 12px; color: var(--gris-clair); text-align: center; margin-bottom: 20px;">
-        Remplissez le formulaire ci-dessous pour créer une nouvelle catégorie.
-      </p>
-      
-      <form >
-        <div class="form-groupe">
-          <label for="nvNomCat">Nom de la catégorie</label>
-          <div class="input-icone">
-            <i class="fa-solid fa-tag"></i>
-            <input type="text" id="nvNomCat" placeholder="Ex: Action, Fantastique" required>
-          </div>
-        </div>
-        
-        <div class="form-groupe">
-          <label for="nvTypeCat">Type de contenu</label>
-          <select id="nvTypeCat" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid var(--gris-moyen); border-radius: var(--rayon-bordure); cursor: pointer;" required>
-            <option value="Film">Film</option>
-            <option value="Série">Série</option>
-            <option value="Animé">Animé</option>
-            <option value="Film, Série, Animé">Film, Série, Animé</option>
-          </select>
-        </div>
-
-        <div class="form-groupe">
-          <label for="nvIconeCat">Icône de catégorie (FontAwesome)</label>
-          <select id="nvIconeCat" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid var(--gris-moyen); border-radius: var(--rayon-bordure); cursor: pointer;" required>
-            <option value="fa-users">fa-users (Action)</option>
-            <option value="fa-compass">fa-compass (Aventure)</option>
-            <option value="fa-face-sad-tear">fa-face-sad-tear (Drame)</option>
-            <option value="fa-face-laugh-beam">fa-face-laugh-beam (Comédie)</option>
-            <option value="fa-rocket">fa-rocket (Sci-Fi)</option>
-            <option value="fa-ghost">fa-ghost (Horreur)</option>
-            <option value="fa-heart">fa-heart (Romance)</option>
-            <option value="fa-file-lines">fa-file-lines (Documentaire)</option>
-            <option value="fa-people-roof">fa-people-roof (Famille)</option>
-            <option value="fa-mask">fa-mask (Thriller)</option>
-          </select>
-        </div>
-        
-        <div class="form-groupe">
-          <label for="nvDescCat">Description</label>
-          <textarea id="nvDescCat" style="width: 100%; height: 75px; padding: 12px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid var(--gris-moyen); border-radius: var(--rayon-bordure); font-family: inherit; resize: none;" placeholder="Description de la catégorie..." required></textarea>
-        </div>
-        
-        <div style="display: flex; gap: 15px; margin-top: 25px;">
-          <button type="submit" class="bouton-principal" style="flex: 1;">Créer</button>
-          <button type="button" class="bouton-secondaire" style="flex: 1;" >Annuler</button>
-        </div>
-      </form>
+        <ul class="menu-liens">
+          <li>
+            <a href="/movie/public/index.php?action=admin-profil">
+              <i class="fa-solid fa-user-gear"></i> <span>Profil Admin</span>
+            </a>
+          </li>
+          <li>
+            <a id="logoutBtn">
+              <i class="fa-solid fa-right-from-bracket"></i> <span>Déconnexion</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
-  </div>
 
-  <!-- Script d'administration -->
-  
+    <!-- Pied de la barre latérale (silhouettes de baobabs) -->
+    <div class="pied-pages">
+      <div class="baobab-silhouettes"></div>
+      <div style="font-size: 11px; text-align: center; color: var(--gris-clair); padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05); font-weight: 500;">
+        2026 MADAMOV Admin Panel.<br>Tous droits réservés.
+      </div>
+    </div>
+  </aside>
+
+  <!-- ZONE DE CONTENU PRINCIPALE DROITE -->
+  <main class="zone-principale">
+
+    <!-- EN-TÊTE COMMUNE -->
+    <header class="en-tete">
+      <div class="recherche-barre">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="barreRechercheAdmin" placeholder="Rechercher un film, un utilisateur ou une catégorie..." >
+      </div>
+
+      <div class="en-tete-droite">
+        <div class="notification-cloche" >
+          <i class="fa-regular fa-bell"></i>
+          <span class="badge-notif">5</span>
+        </div>
+        <div class="profil-utilisateur" >
+          <span style="font-weight: 700; font-size: 14px;">Admin</span>
+          <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar mini" class="avatar-petit">
+        </div>
+      </div>
+    </header>
+
+    <!-- ===================================================================
+         VUE 1 : TABLEAU DE BORD (IMAGE 2)
+         =================================================================== -->
+    <section id="vueAdminTableauDeBord">
+
+      <!-- Grille de fiches statistiques KPIs -->
+      <div class="grille-stats">
+        <div class="carte-stat">
+          <div class="icone-cercle rouge"><i class="fa-solid fa-clapperboard"></i></div>
+          <div>
+            <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Films disponibles</p>
+            <h3 class="stat-valeur" id="kpiTotalFilms">—</h3>
+          </div>
+        </div>
+        <div class="carte-stat">
+          <div class="icone-cercle jaune"><i class="fa-solid fa-star"></i></div>
+          <div>
+            <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Film populaire</p>
+            <h3 class="stat-valeur" id="kpiFilmPopulaire" style="font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">—</h3>
+            <p class="stat-evol" style="color: #f59e0b;"><i class="fa-solid fa-fire"></i> <span id="kpiFilmPopulaireVues">0</span> vues</p>
+          </div>
+        </div>
+        <!-- Bloc de droite : Listes complètes -->
+        <div class="conteneur-section grille-item-pleine-largeur" style="margin-bottom: 0; display: flex; flex-direction: column;">
+          <h3 class="section-titre" style="margin-top: 0; font-size: 16px; margin-bottom: 20px;">LISTES COMPLÈTES</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: center;">
+            <div class="carte-stat curseur-main"  style="justify-content: space-between; padding: 16px; margin-bottom: 0;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div class="icone-cercle vert" style="width:40px; height:40px; font-size:16px;"><i class="fa-solid fa-clapperboard"></i></div>
+                <div>
+                  <h4 style="font-size: 14px; font-weight: 700; color: var(--blanc); margin: 0;">Tous les films</h4>
+                  <p style="font-size: 11px; color: var(--gris-clair); margin: 2px 0 0 0;">Accédez à tous les films</p>
+                </div>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: var(--vert-clair);"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RANGÉE 1 : DERNIERS FILMS (2/3) + ACTIONS RAPIDES (1/3) -->
+      <div class="ligne-dashboard">
+
+        <!-- Bloc de gauche : Derniers films ajoutés -->
+        <div class="conteneur-section" style="margin-bottom: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="font-size: 16px; font-weight: 800; letter-spacing: 0.5px; margin: 0;">DERNIERS FILMS AJOUTÉS</h3>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div class="carousel-nav-boutons">
+                <button class="btn-icone" id="carouselDerniersPrev" type="button"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="btn-icone" id="carouselDerniersNext" type="button"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+              <a href="/movie/public/index.php?action=admin-films" class="voir-tout">Voir tout</a>
+            </div>
+          </div>
+
+          <div class="carousel-derniers-conteneur">
+            <div class="carousel-derniers-films" id="carouselDerniersFilms">
+              <!-- Rempli dynamiquement par admin-dashboard.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloc de droite : Actions rapides -->
+        <div class="conteneur-section" style="margin-bottom: 0; display: flex; flex-direction: column;">
+          <h3 class="section-titre" style="margin-top: 0; font-size: 16px; margin-bottom: 20px;">ACTIONS RAPIDES</h3>
+          <div class="actions-rapides-kpi" style="flex: 1; align-content: center;">
+            <div class="btn-action-carre" >
+              <i class="fa-solid fa-circle-plus" style="color: #4caf50;"></i>
+              <span style="color: var(--blanc);">Ajouter un film</span>
+            </div>
+            <div class="btn-action-carre" >
+              <i class="fa-solid fa-trash-can" style="color: var(--rouge-mada);"></i>
+              <span style="color: var(--blanc);">Supprimer des films</span>
+            </div>
+            <div class="btn-action-carre" >
+              <i class="fa-solid fa-user-group" style="color: #2196f3;"></i>
+              <span style="color: var(--blanc);">Utilisateurs</span>
+            </div>
+            <div class="btn-action-carre" >
+              <i class="fa-solid fa-folder-tree" style="color: #8b5cf6;"></i>
+              <span style="color: var(--blanc);">Catégories</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RANGÉE 2 : FILM LE PLUS RECHERCHÉ (1/2) + LISTES COMPLÈTES (1/2) -->
+      <div class="ligne-dashboard-demi">
+
+        <!-- Bloc de gauche : Film le plus recherché -->
+        <div class="conteneur-section" style="margin-bottom: 0;">
+          <h3 class="section-titre" style="margin-top: 0; font-size: 16px; margin-bottom: 20px;">FILM LE PLUS RECHERCHÉ</h3>
+          <div class="carte-vedette" style="border: none; padding: 0; background: transparent; box-shadow: none;">
+            <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=180" alt="Fast & Furious 10" class="carte-vedette-affiche">
+            <div class="carte-vedette-infos">
+              <span class="badge badge-vert" style="background-color: #2e7d32; width: fit-content; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; color: white;">Action</span>
+              <h2 style="font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin: 5px 0 0 0;">Fast & Furious 10</h2>
+              <p style="color: var(--rouge-mada); font-size: 14px; font-weight: 700; margin: 4px 0;">2 350 recherches</p>
+              <div class="etoiles" style="margin-bottom: 12px; font-size: 12px; color: #f59e0b;">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <button class="bouton-principal" style="width: fit-content; padding: 10px 22px; font-size: 13px;" >
+                Voir les détails
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+      <!-- RANGÉE 3 : CARROUSELS ET RECOMMANDATIONS (PLEINE LARGEUR) -->
+      <div style="margin-bottom: 30px; margin-top: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h3 class="section-titre" style="margin: 0; font-size: 16px;">LES PLUS POPULAIRES</h3>
+          <a href="/movie/public/index.php?action=admin-films" class="voir-tout">Voir tout</a>
+        </div>
+        <div class="grille-films" id="grilleFilmsPopulaires">
+          <!-- Rempli dynamiquement par admin.js -->
+        </div>
+      </div>
+
+      <div style="margin-bottom: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h3 class="section-titre" style="margin: 0; font-size: 16px;">LES PLUS VUS</h3>
+          <a href="/movie/public/index.php?action=admin-films" class="voir-tout">Voir tout</a>
+        </div>
+        <div class="grille-films" id="grilleFilmsPlusVus">
+          <!-- Rempli dynamiquement par admin.js -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================================================================
+         VUE 2 : GESTION DES CATÉGORIES (IMAGE 3)
+         =================================================================== -->
+    <section id="vueAdminCategories" class="masque">
+
+      <!-- Cartes statistiques des catégories -->
+      <div class="grille-stats">
+        <div class="carte-stat">
+          <div class="icone-cercle vert"><i class="fa-solid fa-folder"></i></div>
+          <div>
+            <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Total Catégories</p>
+            <h3 class="stat-valeur" id="indicateurTotalCategories">28</h3>
+            <p style="font-size: 12px; color: var(--vert-clair); font-weight: 600;">Catégories créées</p>
+          </div>
+        </div>
+        <div class="carte-stat">
+          <div class="icone-cercle rouge"><i class="fa-solid fa-film"></i></div>
+          <div>
+            <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Catégories Films</p>
+            <h3 class="stat-valeur">12</h3>
+            <p style="font-size: 12px; color: var(--rouge-mada); font-weight: 600;">Catégories</p>
+          </div>
+        </div>
+        <div class="carte-stat">
+          <div class="icone-cercle jaune"><i class="fa-solid fa-tv"></i></div>
+          <div>
+            <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Catégories Séries</p>
+            <h3 class="stat-valeur">9</h3>
+            <p style="font-size: 12px; color: #f59e0b; font-weight: 600;">Catégories</p>
+          </div>
+        </div>
+        <div class="carte-stat">
+          <div class="icone-cercle violet"><i class="fa-solid fa-masks-theater"></i></div>
+          <div>
+            <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Catégories Animés</p>
+            <h3 class="stat-valeur">7</h3>
+            <p style="font-size: 12px; color: #8b5cf6; font-weight: 600;">Catégories</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barre d'Actions rapides pour les catégories -->
+      <div class="tableau-actions-barre">
+        <div class="boutons-actions-groupe">
+          <button class="btn-action-kpi vert" >
+            <i class="fa-solid fa-plus"></i> Ajouter une catégorie
+          </button>
+          <button class="btn-action-kpi rouge" >
+            <i class="fa-solid fa-trash"></i> Supprimer une catégorie
+          </button>
+          <button class="btn-action-kpi bleu" >
+            <i class="fa-solid fa-folder-tree"></i> Gérer sous-catégories
+          </button>
+          <button class="btn-action-kpi violet" >
+            <i class="fa-solid fa-arrows-up-down"></i> Réorganiser les catégories
+          </button>
+        </div>
+      </div>
+
+      <!-- Section Principale : Tableau et Widgets de Droite -->
+      <div class="ligne-dashboard">
+
+        <!-- Tableau complet des catégories (Gauche) -->
+        <div class="conteneur-section" style="margin-bottom: 0;">
+          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 20px; letter-spacing: 0.5px;">TABLEAU DES CATÉGORIES</h3>
+
+          <div class="tableau-wrapper">
+            <table class="tableau-mada">
+              <thead>
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th style="width: 70px; text-align: center;">Icône</th>
+                <th>Nom de la catégorie</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Contenus</th>
+                <th>Statut</th>
+                <th>Date d'ajout</th>
+                <th style="text-align: right; width: 130px;">Actions</th>
+              </tr>
+              </thead>
+              <tbody id="corpsTableauCategories">
+              <!-- Rempli dynamiquement par admin.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Barre de pagination du tableau -->
+          <div class="table-pagination">
+            <div>
+              Afficher
+              <select style="background: var(--gris-moyen); color: white; border: 1px solid var(--gris-moyen); border-radius: 6px; padding: 4px 8px; cursor: pointer;" >
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select> entrées
+            </div>
+            <div class="pagination-boutons">
+              <button class="pag-btn actif">1</button>
+              <button class="pag-btn" >2</button>
+              <button class="pag-btn" >3</button>
+              <button class="pag-btn" style="border: none; cursor: default; background: transparent;">...</button>
+              <button class="pag-btn" >10</button>
+              <button class="pag-btn" ><i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panneaux statistiques de droite -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+
+          <!-- Graphique de répartition -->
+          <div class="conteneur-section" style="margin-bottom: 0;">
+            <h3 style="font-size: 15px; font-weight: 800; margin-bottom: 20px; letter-spacing: 0.5px;">RÉPARTITION DES CATÉGORIES</h3>
+            <div class="donut-conteneur">
+              <svg class="donut-svg" width="160" height="160" viewBox="0 0 42 42">
+                <circle class="donut-cercle-fond" cx="21" cy="21" r="15.915"></circle>
+                <circle class="donut-segment film" cx="21" cy="21" r="15.915"></circle>
+                <circle class="donut-segment serie" cx="21" cy="21" r="15.915"></circle>
+                <circle class="donut-segment anime" cx="21" cy="21" r="15.915"></circle>
+                <g class="chart-text">
+                  <text x="50%" y="50%" class="donut-texte" dominant-baseline="middle" text-anchor="middle" font-size="6">28</text>
+                  <text x="50%" y="63%" fill="var(--gris-clair)" font-size="3.5" dominant-baseline="middle" text-anchor="middle" font-weight="600">Total</text>
+                </g>
+              </svg>
+
+              <div class="donut-legende">
+                <div class="legende-item">
+                  <span class="legende-couleur"><span class="puce-cercle vert"></span>Films</span>
+                  <span style="font-weight: 700; color: var(--blanc);">12 (42.9%)</span>
+                </div>
+                <div class="legende-item">
+                  <span class="legende-couleur"><span class="puce-cercle rouge"></span>Séries</span>
+                  <span style="font-weight: 700; color: var(--blanc);">9 (32.1%)</span>
+                </div>
+                <div class="legende-item">
+                  <span class="legende-couleur"><span class="puce-cercle jaune"></span>Animés</span>
+                  <span style="font-weight: 700; color: var(--blanc);">7 (25.0%)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Catégories par Contenus -->
+          <div class="conteneur-section" style="margin-bottom: 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+              <h3 style="font-size: 15px; font-weight: 800; letter-spacing: 0.5px;">TOP CATÉGORIES (PAR CONTENUS)</h3>
+              <a href="#" class="voir-tout" >Voir tout</a>
+            </div>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px;" id="listeTopCategoriesAdmin">
+              <!-- Rempli dynamiquement par admin.js -->
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Section Pied de page : Catégories récemment ajoutées -->
+      <div style="margin-top: 35px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 class="section-titre" style="margin: 0; font-size: 16px;">CATÉGORIES RÉCEMMENT AJOUTÉES</h3>
+          <a href="#" class="voir-tout" >Voir tout</a>
+        </div>
+        <div class="grille-stats" style="grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));" id="grilleCategoriesRecentesAdmin">
+          <!-- Rempli dynamiquement par admin.js -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PIED DE PAGE COMMUN -->
+    <footer class="pied-page">
+      <p>© 2026 MADAMOV. Tous droits réservés.</p>
+    </footer>
+
+  </main>
+
+</div>
+
+<!-- FENÊTRE MODALE D'AJOUT DE CATÉGORIE -->
+<div id="boiteModaleCategorie" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
+  <div class="boite-inscription" style="max-width: 440px; background: var(--gris-fonce);">
+    <h3 style="margin-bottom: 15px; text-align: center; font-size: 20px; font-weight: 800;">Ajouter une catégorie</h3>
+    <p style="font-size: 12px; color: var(--gris-clair); text-align: center; margin-bottom: 20px;">
+      Remplissez le formulaire ci-dessous pour créer une nouvelle catégorie.
+    </p>
+
+    <form >
+      <div class="form-groupe">
+        <label for="nvNomCat">Nom de la catégorie</label>
+        <div class="input-icone">
+          <i class="fa-solid fa-tag"></i>
+          <input type="text" id="nvNomCat" placeholder="Ex: Action, Fantastique" required>
+        </div>
+      </div>
+
+      <div class="form-groupe">
+        <label for="nvTypeCat">Type de contenu</label>
+        <select id="nvTypeCat" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid var(--gris-moyen); border-radius: var(--rayon-bordure); cursor: pointer;" required>
+          <option value="Film">Film</option>
+          <option value="Série">Série</option>
+          <option value="Animé">Animé</option>
+          <option value="Film, Série, Animé">Film, Série, Animé</option>
+        </select>
+      </div>
+
+      <div class="form-groupe">
+        <label for="nvIconeCat">Icône de catégorie (FontAwesome)</label>
+        <select id="nvIconeCat" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid var(--gris-moyen); border-radius: var(--rayon-bordure); cursor: pointer;" required>
+          <option value="fa-users">fa-users (Action)</option>
+          <option value="fa-compass">fa-compass (Aventure)</option>
+          <option value="fa-face-sad-tear">fa-face-sad-tear (Drame)</option>
+          <option value="fa-face-laugh-beam">fa-face-laugh-beam (Comédie)</option>
+          <option value="fa-rocket">fa-rocket (Sci-Fi)</option>
+          <option value="fa-ghost">fa-ghost (Horreur)</option>
+          <option value="fa-heart">fa-heart (Romance)</option>
+          <option value="fa-file-lines">fa-file-lines (Documentaire)</option>
+          <option value="fa-people-roof">fa-people-roof (Famille)</option>
+          <option value="fa-mask">fa-mask (Thriller)</option>
+        </select>
+      </div>
+
+      <div class="form-groupe">
+        <label for="nvDescCat">Description</label>
+        <textarea id="nvDescCat" style="width: 100%; height: 75px; padding: 12px; background: rgba(255, 255, 255, 0.05); color: white; border: 1px solid var(--gris-moyen); border-radius: var(--rayon-bordure); font-family: inherit; resize: none;" placeholder="Description de la catégorie..." required></textarea>
+      </div>
+
+      <div style="display: flex; gap: 15px; margin-top: 25px;">
+        <button type="submit" class="bouton-principal" style="flex: 1;">Créer</button>
+        <button type="button" class="bouton-secondaire" style="flex: 1;" >Annuler</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Script d'administration -->
+
 </body>
 </html>
-
