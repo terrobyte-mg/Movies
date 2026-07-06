@@ -9,7 +9,7 @@
 class Api {
 
     constructor() {
-        // Le vrai routeur est index.php?action=...,
+        // Le vrai routeur est index.php?action=..., pas /api
         this.baseUrlApi = "/movie/public/index.php";
     }
 
@@ -72,6 +72,17 @@ class Api {
 
     login(email, motDePasse) {
         return this.request("login", {
+            method: "POST",
+            isFormData: true,
+            body: this.toFormData({
+                email_utilisateur: email,
+                mot_de_passe: motDePasse
+            })
+        });
+    }
+
+    loginAdmin(email, motDePasse) {
+        return this.request("admin-login", {
             method: "POST",
             isFormData: true,
             body: this.toFormData({

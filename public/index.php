@@ -1,5 +1,7 @@
 <?php
 
+use Random\RandomException;
+
 require_once __DIR__ . '/../model/core/Database.php';
 require_once __DIR__ . '/../model/core/ApiResponse.php';
 
@@ -74,7 +76,7 @@ function getIdParam(): int
 {
     $id = (int) ($_GET['id'] ?? 0);
     if ($id <= 0) {
-        ApiResponse::error("Identifiant invalide", 400);
+        ApiResponse::error("Identifiant invalide");
         exit;
     }
     return $id;
@@ -101,6 +103,15 @@ switch ($action) {
         } else {
             requireGuestView();
             require __DIR__ . '/../view/auth/login.html';
+        }
+        break;
+
+    case 'admin-login':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            ApiResponse::send($authController->login_admin(), 200, 401);
+        } else {
+            requireGuestView();
+            require __DIR__ . '/../view/admin/login.html';
         }
         break;
 
@@ -181,7 +192,11 @@ switch ($action) {
             ApiResponse::error("Méthode non autorisée", 405);
             exit;
         }
-        ApiResponse::send($userController->updateProfile());
+        try {
+            ApiResponse::send($userController->updateProfile());
+        } catch (RandomException $e) {
+            error_log("RandomException: ".$e->getMessage());
+        }
         break;
 
     case 'delete-account':

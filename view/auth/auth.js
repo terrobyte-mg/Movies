@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const signupForm = document.getElementById("signupForm");
     const loginForm = document.getElementById("loginForm");
+    const adminLoginForm = document.getElementById("adminLoginForm");
 
     if (signupForm) {
         handleForm(signupForm, (formData) => api.signup(
@@ -44,6 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (loginForm) {
         handleForm(loginForm, (formData) => api.login(
+            formData.get("email_utilisateur"),
+            formData.get("mot_de_passe")
+        ));
+    }
+
+    // Formulaire de connexion admin — vue séparée (view/admin/login.html),
+    // jamais rendue accessible depuis la navigation publique.
+    if (adminLoginForm) {
+        handleForm(adminLoginForm, (formData) => api.loginAdmin(
             formData.get("email_utilisateur"),
             formData.get("mot_de_passe")
         ));

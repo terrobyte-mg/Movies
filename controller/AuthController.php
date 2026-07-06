@@ -3,6 +3,7 @@
 require_once (__DIR__ .'/../model/entities/Utilisateur.php');
 require_once (__DIR__ .'/../model/core/Database.php');
 require_once (__DIR__ .'/../model/repository/UserRepository.php');
+require_once (__DIR__ .'/../model/enums/RoleUtilisateurs.php');
 
 class AuthController {
 
@@ -93,7 +94,13 @@ class AuthController {
 
     }
 
-    public function login(): array {
+    /**
+     * Logique commune de vérification des identifiants, partagée
+     * entre login() et login_admin().
+     *
+     * @return array{success: bool, message?: string, user?: Utilisateur}
+     */
+    private function authenticate(): array {
 
         if (empty($_POST['email_utilisateur']) || empty($_POST['mot_de_passe'])) {
             return [
@@ -102,10 +109,8 @@ class AuthController {
             ];
         }
 
-
         $email = strip_tags(trim($_POST['email_utilisateur']));
         $mot_de_passe = $_POST['mot_de_passe'];
-
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return [
@@ -116,43 +121,50 @@ class AuthController {
 
         $user = $this->userRepository->findByEmail($email);
 
-        if ($user === null) {
+        if ($user === null || !password_verify($mot_de_passe, $user->getPasswordHash())) {
             return [
                 "success" => false,
                 "message" => "Identifiants incorrects"
             ];
         }
-
-        if (!password_verify($mot_de_passe, $user->getPasswordHash())) {
-            return [
-                "success" => false,
-                "message" => "Identifiants incorrects"
-            ];
-        }
-
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $this->userRepository->updateIsActif($user->getId(), true);
-        $user->setIsActif(true);
-
-        session_regenerate_id(true);
-
-        $_SESSION['user'] = [
-            'id' => $user->getId(),
-            'role' => $user->getRoleUtilisateurs()->value,
-            'nom_utilisateur' => $user->getNomUtilisateur(),
-            'email' => $user->getEmail(),
-            'is_actif' => $user->isActif(),
-            'url_photo_profil' => $user->getUrlPhotoProfil()
-        ];
 
         return [
             "success" => true,
-            "message" => "Connexion réussie",
-            "redirect" => "index.php?action=home"
+            "user" => $user
         ];
+    }
+
+    public function login(): array {
+
+        $result = $this->authenticate();
+
+        if (!$result['success']) {
+            return $result;
+        }
+
+        return $this->innit_session($result['user']);
+    }
+
+    public function login_admin(): array {
+
+        $result = $this->authenticate();
+
+        if (!$result['success']) {
+            return $result;
+        }
+
+        $user = $result['user'];
+
+        // Message volontairement identique à un échec d'identifiants
+        // (on ne révèle pas qu'un compte existe mais n'est pas admin).
+        if ($user->getRoleUtilisateurs() !== RoleUtilisateurs::ADMIN) {
+            return [
+                "success" => false,
+                "message" => "Identifiants incorrects"
+            ];
+        }
+
+        return $this->innit_session($user);
     }
 
     public function logout(): array {
@@ -189,6 +201,41 @@ class AuthController {
             "success" => true,
             "message" => "Déconnecté",
             "redirect" => "index.php?action=login"
+        ];
+    }
+
+    /**
+     * @param Utilisateur $user
+     * @return array
+     */
+    public function innit_session(Utilisateur $user): array
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $this->userRepository->updateIsActif($user->getId(), true);
+        $user->setIsActif(true);
+
+        session_regenerate_id(true);
+
+        $_SESSION['user'] = [
+            'id' => $user->getId(),
+            'role' => $user->getRoleUtilisateurs()->value,
+            'nom_utilisateur' => $user->getNomUtilisateur(),
+            'email' => $user->getEmail(),
+            'is_actif' => $user->isActif(),
+            'url_photo_profil' => $user->getUrlPhotoProfil()
+        ];
+
+        $redirect = $user->getRoleUtilisateurs() === RoleUtilisateurs::ADMIN
+            ? "index.php?action=admin"
+            : "index.php?action=home";
+
+        return [
+            "success" => true,
+            "message" => "Connexion réussie",
+            "redirect" => $redirect
         ];
     }
 
