@@ -486,14 +486,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 if (urlApercuPhoto) {
                     URL.revokeObjectURL(urlApercuPhoto);
+                    urlApercuPhoto = null;
                 }
-
-                urlApercuPhoto = URL.createObjectURL(fichier);
-                const previewUrl = sanitizeAssetUrl(urlApercuPhoto, imageProfilParDefaut);
-                apercuPhoto.src = previewUrl;
-                document.querySelectorAll(".avatar-grand, .avatar-petit").forEach((avatar) => {
-                    avatar.src = previewUrl;
-                });
             });
         }
 
