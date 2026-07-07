@@ -488,6 +488,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     URL.revokeObjectURL(urlApercuPhoto);
                     urlApercuPhoto = null;
                 }
+
+                urlApercuPhoto = URL.createObjectURL(fichier);
+                apercuPhoto.src = urlApercuPhoto;
             });
         }
 

@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    const imageProfilParDefaut = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150";
+    const typesImageAutorises = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    const tailleImageMax = 2 * 1024 * 1024;
+    let urlApercuPhoto = null;
 
     const logoutBtn = document.getElementById("logoutBtn");
 
@@ -34,6 +38,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const form = document.getElementById("formulaireProfilAdmin");
     const button = document.getElementById("submitProfile");
+    const photoInput = document.getElementById("photoProfilAdmin");
+    const apercuPhoto = document.getElementById("apercuPhotoProfilAdmin");
 
     if (button) {
         button.disabled = true;
@@ -46,14 +52,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             nom: document.getElementById("nomUtilisateurAdmin").value.trim(),
             email: document.getElementById("emailAdmin").value.trim(),
             mdp: document.getElementById("nouveauMdpAdmin").value,
-            confirmation: document.getElementById("confirmerMdpAdmin").value
+            confirmation: document.getElementById("confirmerMdpAdmin").value,
+            photo: photoInput?.files?.length > 0
         };
 
         const modifie =
             currentValues.nom !== initialValues.nom ||
             currentValues.email !== initialValues.email ||
             currentValues.mdp !== initialValues.mdp ||
-            currentValues.confirmation !== initialValues.confirmation;
+            currentValues.confirmation !== initialValues.confirmation ||
+            currentValues.photo !== initialValues.photo;
 
         button.disabled = !modifie;
     }
@@ -73,6 +81,64 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    if (photoInput && apercuPhoto) {
+        photoInput.addEventListener("change", () => {
+            const fichier = photoInput.files[0];
+
+            if (!fichier) {
+                if (urlApercuPhoto) {
+                    URL.revokeObjectURL(urlApercuPhoto);
+                    urlApercuPhoto = null;
+                }
+                return;
+            }
+
+            if (!typesImageAutorises.includes(fichier.type)) {
+                showMessage("error", "Format d'image non autorisé");
+                photoInput.value = "";
+                verifierModification();
+                return;
+            }
+
+            if (fichier.size > tailleImageMax) {
+                showMessage("error", "L'image ne doit pas dépasser 2 Mo");
+                photoInput.value = "";
+                verifierModification();
+                return;
+            }
+
+            if (urlApercuPhoto) {
+                URL.revokeObjectURL(urlApercuPhoto);
+            }
+
+            urlApercuPhoto = URL.createObjectURL(fichier);
+            apercuPhoto.src = urlApercuPhoto;
+            verifierModification();
+        });
+    }
+
+    const sanitizeAssetUrl = (value, fallback = imageProfilParDefaut) => {
+        const raw = String(value ?? "").trim();
+        if (!raw) {
+            return fallback;
+        }
+
+        if (raw.startsWith("/")) {
+            return raw;
+        }
+
+        try {
+            const parsed = new URL(raw, window.location.origin);
+            if (["http:", "https:", "blob:"].includes(parsed.protocol)) {
+                return parsed.href;
+            }
+        } catch {
+            return fallback;
+        }
+
+        return fallback;
+    };
+
     function injectAdmin(user) {
         const nomAdminConnecte = document.getElementById("nomAdminConnecte");
         const nomUtilisateur = document.getElementById("nomUtilisateurAdmin");
@@ -81,13 +147,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (nomAdminConnecte) nomAdminConnecte.textContent = user.nom_utilisateur;
         if (nomUtilisateur) nomUtilisateur.value = user.nom_utilisateur;
         if (email) email.value = user.email;
+        if (apercuPhoto) apercuPhoto.src = sanitizeAssetUrl(user.url_photo_profil, imageProfilParDefaut);
+        if (photoInput) photoInput.value = "";
 
         // Sauvegarde des valeurs initiales
         initialValues = {
             nom: user.nom_utilisateur,
             email: user.email,
             mdp: "",
-            confirmation: ""
+            confirmation: "",
+            photo: false
         };
 
         verifierModification();
@@ -101,6 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const email = document.getElementById("emailAdmin").value.trim();
             const nouveauMdp = document.getElementById("nouveauMdpAdmin").value;
             const confirmerMdp = document.getElementById("confirmerMdpAdmin").value;
+            const fichierPhoto = photoInput?.files?.[0] ?? null;
 
             if (nomUtilisateur.length < 3 || nomUtilisateur.length > 50) {
                 showMessage("error", "Le nom d'utilisateur doit contenir entre 3 et 50 caractères");
@@ -122,11 +192,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
+            if (fichierPhoto) {
+                if (!typesImageAutorises.includes(fichierPhoto.type)) {
+                    showMessage("error", "Format d'image non autorisé");
+                    return;
+                }
+                if (fichierPhoto.size > tailleImageMax) {
+                    showMessage("error", "L'image ne doit pas dépasser 2 Mo");
+                    return;
+                }
+            }
+
             const formData = new FormData();
             formData.append("nom_utilisateur", nomUtilisateur);
             formData.append("email", email);
             formData.append("nouveau_mdp", nouveauMdp);
             formData.append("confirmer_mdp", confirmerMdp);
+            if (fichierPhoto) {
+                formData.append("photo_profil", fichierPhoto);
+            }
 
             try {
                 const { success, message, user } = await api.updateProfile(formData);
@@ -136,8 +220,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     document.getElementById("nouveauMdpAdmin").value = "";
                     document.getElementById("confirmerMdpAdmin").value = "";
+                    if (photoInput) {
+                        photoInput.value = "";
+                    }
 
                     if (user) {
+                        injectAdminIdentity(user);
                         injectAdmin(user);
                     }
 
@@ -150,7 +238,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 showMessage("error", "Erreur lors de l'enregistrement");
             }
         });
-    }    function injectAdminIdentity(user) {
+    }
+
+    function injectAdminIdentity(user) {
         const nomSidebar = document.getElementById("nomAdminConnecte");
         const nomHeader = document.querySelector(".profil-utilisateur span");
 
@@ -164,9 +254,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const avatars = document.querySelectorAll(".avatar-grand, .avatar-petit");
         avatars.forEach(avatar => {
-            if (user.url_photo_profil) {
-                avatar.src = user.url_photo_profil;
-            }
+            avatar.src = sanitizeAssetUrl(user.url_photo_profil, imageProfilParDefaut);
         });
     }
 
