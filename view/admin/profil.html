@@ -82,6 +82,42 @@
     .btn-enregistrer:hover {
       background: var(--vert-mada);
     }
+    .photo-profil-bloc {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    .photo-profil-apercu {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: var(--fond-sombre);
+      flex-shrink: 0;
+    }
+    .photo-profil-controles {
+      flex: 1;
+      min-width: 220px;
+    }
+    .aide-photo {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--gris-clair);
+    }
+    @media (max-width: 768px) {
+      .photo-profil-bloc {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .photo-profil-controles {
+        width: 100%;
+        min-width: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -196,6 +232,18 @@
             <div class="form-colonne">
               <label for="roleAdmin">Rôle administratif</label>
               <input type="text" id="roleAdmin" value="Administrateur" disabled style="background-color:rgba(255,255,255,0.02); color:var(--gris-clair); cursor:not-allowed;">
+            </div>
+          </div>
+          <div class="form-ligne">
+            <div class="form-colonne">
+              <label for="photoProfilAdmin">Photo de profil</label>
+              <div class="photo-profil-bloc">
+                <img id="apercuPhotoProfilAdmin" class="photo-profil-apercu" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Aperçu photo admin">
+                <div class="photo-profil-controles">
+                  <input type="file" id="photoProfilAdmin" name="photo_profil" accept="image/jpeg,image/png,image/gif,image/webp">
+                  <small class="aide-photo">Formats autorisés : JPG, PNG, GIF, WEBP — 2 Mo max.</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>

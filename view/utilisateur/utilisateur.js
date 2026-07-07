@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+    const safeServerMessage = (message, fallback) => escapeHtml(message || fallback);
 
     const safePoster = (film) => {
         const titre = film?.titre ?? "Film";
@@ -61,13 +62,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             try {
                 const { success, message, redirect } = await api.logout();
                 if (success) {
-                    showMessage("success", message);
+                    showMessage("success", safeServerMessage(message, "Déconnexion réussie"));
                     setTimeout(() => {
                         window.location.href = redirect;
                     }, 1000);
                     return;
                 }
-                showMessage("error", message || "Échec de la déconnexion");
+                showMessage("error", safeServerMessage(message, "Échec de la déconnexion"));
             } catch {
                 showMessage("error", "Erreur serveur");
             }
@@ -463,7 +464,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const photoInput = document.getElementById("photoProfil");
         const apercuPhoto = document.getElementById("apercuPhotoProfil");
         const typesImageAutorises = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-        let urlApercuPhoto = null;
 
         if (photoInput && apercuPhoto) {
             photoInput.addEventListener("change", () => {
@@ -482,11 +482,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     showMessage("error", "L'image ne doit pas dépasser 2 Mo");
                     photoInput.value = "";
                     return;
-                }
-
-                if (urlApercuPhoto) {
-                    URL.revokeObjectURL(urlApercuPhoto);
-                    urlApercuPhoto = null;
                 }
             });
         }
@@ -548,7 +543,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             try {
                 const { success, message, user } = await api.updateProfile(formData);
                 if (success) {
-                    showMessage("success", message);
+                    showMessage("success", safeServerMessage(message, "Profil mis à jour"));
                     if (user) {
                         injectUser(user);
                     }
@@ -560,7 +555,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         photoInput.value = "";
                     }
                 } else {
-                    showMessage("error", message || "Erreur lors de la mise à jour");
+                    showMessage("error", safeServerMessage(message, "Erreur lors de la mise à jour"));
                 }
             } catch (error) {
                 console.error(error);
@@ -599,13 +594,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             const { success, message, redirect } = await api.deleteAccount(motDePasse);
             if (success) {
-                showMessage("success", message);
+                showMessage("success", safeServerMessage(message, "Compte supprimé avec succès"));
                 setTimeout(() => {
                     window.location.href = redirect || "/movie/public/index.php?action=login";
                 }, 1000);
                 return;
             }
-            showMessage("error", message || "Suppression impossible");
+            showMessage("error", safeServerMessage(message, "Suppression impossible"));
         } catch {
             showMessage("error", "Erreur serveur");
         }
