@@ -218,8 +218,7 @@ switch ($action) {
         break;
 
     // ==========================================
-    // API films — ces routes manquaient
-    // entièrement du routeur avant.
+    // API films
     // ==========================================
 
     case 'films':
@@ -330,6 +329,10 @@ switch ($action) {
         $id = getIdParam();
         ApiResponse::send($userController->deleteUser($id));
         break;
+
+    // ==========================================
+    // DEFAULT
+    // ==========================================
 
     default:
         header('location: /movie/public/index.php?action=home');

@@ -75,9 +75,48 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    function initModaleProfil() {
+        const btnProfil = document.getElementById("btnProfilUtilisateur");
+        const modale = document.getElementById("modaleProfil");
+        const btnFermer = document.getElementById("modaleProfilFermer");
+        const btnDeconnexion = document.getElementById("modaleProfilDeconnexion");
+
+        if (!btnProfil || !modale) {
+            return;
+        }
+
+        const ouvrir = () => { modale.style.display = "flex"; };
+        const fermer = () => { modale.style.display = "none"; };
+
+        btnProfil.addEventListener("click", ouvrir);
+        btnFermer?.addEventListener("click", fermer);
+        modale.addEventListener("click", (e) => {
+            if (e.target === modale) {
+                fermer();
+            }
+        });
+
+        btnDeconnexion?.addEventListener("click", async (e) => {
+            e.preventDefault();
+            try {
+                const { success, message, redirect } = await api.logout();
+                if (success) {
+                    showMessage("success", safeServerMessage(message, "Déconnexion réussie"));
+                    setTimeout(() => {
+                        window.location.href = redirect;
+                    }, 800);
+                    return;
+                }
+                showMessage("error", safeServerMessage(message, "Échec de la déconnexion"));
+            } catch {
+                showMessage("error", "Erreur serveur");
+            }
+        });
+    }
+
     function injectUser(user) {
         const nomSidebar = document.getElementById("nomUtilisateurConnecte");
-        const nomHeader = document.querySelector(".profil-utilisateur span");
+        const nomHeader = document.getElementById("nomUtilisateurHeader") || document.querySelector(".profil-utilisateur span");
 
         if (nomSidebar) {
             nomSidebar.textContent = user.nom_utilisateur;
@@ -104,6 +143,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (apercuPhoto) {
             apercuPhoto.src = sanitizeAssetUrl(user.url_photo_profil, imageProfilParDefaut);
         }
+
+        const modaleNom = document.getElementById("modaleProfilNom");
+        const modaleEmail = document.getElementById("modaleProfilEmail");
+        if (modaleNom) modaleNom.textContent = user.nom_utilisateur;
+        if (modaleEmail) modaleEmail.textContent = user.email;
     }
 
     async function loadUser() {
@@ -181,6 +225,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (banniereTitre) banniereTitre.textContent = film.titre;
             if (banniereDesc) banniereDesc.textContent = film.synopsis || "";
             if (banniereImage) banniereImage.src = safePoster(film);
+
+            const banniereBouton = document.getElementById("banniereBoutonRegarder");
+            if (banniereBouton) {
+                banniereBouton.addEventListener("click", () => openFilmDetail(film.id));
+            }
         }
 
     }
@@ -573,6 +622,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     await loadUser();
+    initModaleProfil();
     await initHomePage();
     await initGenrePage();
     await initCategoryPage();

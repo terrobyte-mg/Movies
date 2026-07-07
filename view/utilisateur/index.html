@@ -16,309 +16,337 @@
 </head>
 <body class="utilisateur-theme">
 
-  <div class="page-conteneur">
-    
-    <!-- BARRE LATÉRALE SOMBRE (IMAGE 4) -->
-    <aside class="barre-laterale">
-      <div>
-        <div class="logo">
-          <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
-          <span>Movies</span>
-        </div>
-        
-        <!-- Section Profil de l'Utilisateur Connecté -->
-        <div class="profil-section">
-          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar Utilisateur" class="avatar-grand">
-          <h4 id="nomUtilisateurConnecte"></h4>
-        </div>
+<div class="page-conteneur">
 
-        <!-- Navigation Utilisateur -->
-        <nav style="margin-top: 20px;">
-          <p class="menu-titre">Menu principal</p>
-          <ul class="menu-liens">
-            <li class="actif" id="lienMenuCatalogue">
-              <a href="/movie/public/index.php?action=home" >
-                <i class="fa-solid fa-house-play"></i> <span>Films</span>
-              </a>
-            </li>
-            <li class="sous-menu">
-              <a href="/movie/public/index.php?action=genre" >
-                <i class="fa-solid fa-masks-theater"></i> <span>Par genre</span>
-              </a>
-            </li>
-            <li class="sous-menu">
-              <a href="/movie/public/index.php?action=categorie" >
-                <i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span>
-              </a>
-            </li>
-            <li class="sous-menu">
-              <a href="/movie/public/index.php?action=date" >
-                <i class="fa-solid fa-calendar-days"></i> <span>Par date</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+  <!-- BARRE LATÉRALE SOMBRE (IMAGE 4) -->
+  <aside class="barre-laterale">
+    <div>
+      <div class="logo">
+        <i class="fa-solid fa-circle-play" style="color: var(--rouge-mada);"></i>
+        <span>Movies</span>
       </div>
 
-      <!-- Pied de la barre latérale (silhouettes de baobabs et Paramètres) -->
-      <div>
-        <div class="baobab-silhouettes"></div>
-        <ul class="menu-liens" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 10px;">
-          <li>
-            <a href="/movie/public/index.php?action=parameter">
-              <i class="fa-solid fa-sliders"></i> <span>Paramètres</span>
+      <!-- Section Profil de l'Utilisateur Connecté -->
+      <div class="profil-section">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar Utilisateur" class="avatar-grand">
+        <h4 id="nomUtilisateurConnecte"></h4>
+      </div>
+
+      <!-- Navigation Utilisateur -->
+      <nav style="margin-top: 20px;">
+        <p class="menu-titre">Menu principal</p>
+        <ul class="menu-liens">
+          <li class="actif" id="lienMenuCatalogue">
+            <a href="/movie/public/index.php?action=home" >
+              <i class="fa-solid fa-house-play"></i> <span>Films</span>
             </a>
           </li>
-          <li>
-            <a id="logoutButton">
-              <i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span>
+          <li class="sous-menu">
+            <a href="/movie/public/index.php?action=genre" >
+              <i class="fa-solid fa-masks-theater"></i> <span>Par genre</span>
+            </a>
+          </li>
+          <li class="sous-menu">
+            <a href="/movie/public/index.php?action=categorie" >
+              <i class="fa-solid fa-list-ul"></i> <span>Par catégorie</span>
+            </a>
+          </li>
+          <li class="sous-menu">
+            <a href="/movie/public/index.php?action=date" >
+              <i class="fa-solid fa-calendar-days"></i> <span>Par date</span>
             </a>
           </li>
         </ul>
+      </nav>
+    </div>
+
+    <!-- Pied de la barre latérale (silhouettes de baobabs et Paramètres) -->
+    <div>
+      <div class="baobab-silhouettes"></div>
+      <ul class="menu-liens" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 10px;">
+        <li>
+          <a href="/movie/public/index.php?action=parameter">
+            <i class="fa-solid fa-sliders"></i> <span>Paramètres</span>
+          </a>
+        </li>
+        <li>
+          <a id="logoutButton">
+            <i class="fa-solid fa-right-from-bracket" style="color: var(--rouge-mada);"></i> <span>Déconnexion</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ZONE DE CONTENU PRINCIPALE DROITE -->
+  <main class="zone-principale">
+
+    <!-- EN-TÊTE UTILISATEUR SOMBRE -->
+    <header class="en-tete">
+      <div class="recherche-barre">
+        <label for="rechercheFilmUtilisateur">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </label>
+        <input type="text" id="rechercheFilmUtilisateur" placeholder="Rechercher un film, une série ou un animé..." >
       </div>
-    </aside>
 
-    <!-- ZONE DE CONTENU PRINCIPALE DROITE -->
-    <main class="zone-principale">
-      
-      <!-- EN-TÊTE UTILISATEUR SOMBRE -->
-      <header class="en-tete">
-        <div class="recherche-barre">
-          <label for="rechercheFilmUtilisateur">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </label>
-          <input type="text" id="rechercheFilmUtilisateur" placeholder="Rechercher un film, une série ou un animé..." >
+      <div class="en-tete-droite">
+        <div class="notification-cloche" >
+          <i class="fa-regular fa-bell"></i>
+          <span class="badge-notif" style="background-color: var(--rouge-mada);" id="compteurNotifsUtilisateur">8</span>
+        </div>
+        <div class="profil-utilisateur" id="btnProfilUtilisateur">
+          <span style="font-weight: 700; font-size: 14px; color: var(--blanc);" id="nomUtilisateurHeader">Théodoric</span>
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar petit" class="avatar-petit">
+        </div>
+      </div>
+    </header>
+
+    <!-- Menu modal Profil : Paramètres / Déconnexion -->
+    <div id="modaleProfil" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:200; align-items:center; justify-content:center;">
+      <div style="background: var(--gris-fonce); border: 1px solid var(--gris-moyen); border-radius: 16px; padding: 28px; width: 100%; max-width: 320px; box-shadow: var(--ombre-forte);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:22px;">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar" class="avatar-petit" id="modaleProfilAvatar">
+          <div>
+            <h4 style="font-size:15px; font-weight:800; color: var(--blanc); margin-bottom:2px;" id="modaleProfilNom">Mon compte</h4>
+            <span style="font-size:12px; color: var(--gris-clair);" id="modaleProfilEmail"></span>
+          </div>
+        </div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:6px;">
+          <li>
+            <a href="/movie/public/index.php?action=parameter" style="display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; color: var(--blanc); font-size:14px; font-weight:600; transition: var(--transition);" onmouseover="this.style.background='var(--gris-hover)'" onmouseout="this.style.background='transparent'">
+              <i class="fa-solid fa-sliders"></i> Paramètres
+            </a>
+          </li>
+          <li>
+            <a id="modaleProfilDeconnexion" href="#" style="display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; color: var(--rouge-mada); font-size:14px; font-weight:600; transition: var(--transition);" onmouseover="this.style.background='var(--gris-hover)'" onmouseout="this.style.background='transparent'">
+              <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+            </a>
+          </li>
+        </ul>
+        <button id="modaleProfilFermer" style="width:100%; margin-top:16px; background:transparent; border:1px solid var(--gris-moyen); color: var(--gris-clair); padding:10px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer;">
+          Fermer
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         VUE 1 : CATALOGUE DE FILMS (IMAGE 4)
+         =================================================================== -->
+    <section id="vueUtilisateurCatalogue">
+
+      <!-- Bannière vedette coulissante -->
+      <div class="carrousel-banniere">
+        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200" alt="Bannière vedette" class="slide-image" id="banniereFilmImg">
+        <div class="banniere-gradient"></div>
+
+        <!-- Flèches directionnelles du carrousel -->
+        <button class="carrousel-fleche gauche" ><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="carrousel-fleche droite" ><i class="fa-solid fa-chevron-right"></i></button>
+
+        <!-- Contenu textuel surimposé -->
+        <div class="banniere-contenu">
+          <div class="banniere-titre-badge">Tendance du moment</div>
+          <h1 style="font-size: 40px; font-weight: 800; letter-spacing: -1px;" id="banniereFilmTitre">AVATAR 3 (2026)</h1>
+          <p class="banniere-desc" id="banniereFilmDesc">
+            Dans les soixante-douze heures précédant le Jour J, le chef météorologue britannique James Stagg est appelé à fournir les prévisions les plus importantes de l'histoire...
+          </p>
+          <button class="banniere-bouton" id="banniereBoutonRegarder" style="margin-top: 10px;">
+            <i class="fa-solid fa-play"></i> REGARDER
+          </button>
         </div>
 
-        <div class="en-tete-droite">
-          <div class="notification-cloche" >
-            <i class="fa-regular fa-bell"></i>
-            <span class="badge-notif" style="background-color: var(--rouge-mada);" id="compteurNotifsUtilisateur">8</span>
+        <!-- Puces indicatrices de position -->
+        <div class="carrousel-points">
+          <span class="pt-carrousel actif" ></span>
+          <span class="pt-carrousel" ></span>
+          <span class="pt-carrousel" ></span>
+        </div>
+      </div>
+
+      <!-- Section Grille : À ne pas manquer -->
+      <div style="margin-bottom: 40px;">
+        <h3 class="section-titre" style="margin-top: 0; color: var(--blanc); font-size: 16px;">
+          <span><i class="fa-solid fa-fire" style="color: var(--vert-clair); margin-right: 8px;"></i>À NE PAS MANQUER</span>
+        </h3>
+        <div class="grille-films" id="grilleFilmsANePasManquer">
+          <!-- Rempli dynamiquement par utilisateur.js -->
+        </div>
+      </div>
+
+      <!-- Flèche indicative de défilement vers le bas -->
+      <div style="text-align: center; margin-top: 30px; color: var(--gris-clair); animation: rebond 2s infinite;">
+        <i class="fa-solid fa-chevron-down" style="font-size: 26px; cursor: pointer;" ></i>
+      </div>
+
+    </section>
+
+    <!-- ===================================================================
+         VUE 2 : FICHE DU FILM ET LECTEUR VIDEO (IMAGE 5)
+         =================================================================== -->
+    <section id="vueUtilisateurFicheFilm" class="masque">
+
+      <!-- Bouton retour -->
+      <button class="bouton-voir-plus" style="margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px;" >
+        <i class="fa-solid fa-arrow-left"></i> Retour au catalogue
+      </button>
+
+      <!-- Lecteur vidéo haute fidélité -->
+      <div class="lecteur-video-cadre">
+        <video class="video-tag" id="baliseLecteurVideo" src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-background-1611-large.mp4" poster="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000"></video>
+
+        <!-- Contrôles superposés -->
+        <div class="lecteur-overlay-controles">
+          <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+            <h3 id="lecteurFilmTitreEnCours" style="font-size: 17px; font-weight: 700; text-shadow: 0 2px 5px rgba(0,0,0,0.9);">AVATAR 3</h3>
+            <button class="btn-table-action" style="font-size: 20px; color: white;" ><i class="fa-solid fa-ellipsis-vertical"></i></button>
           </div>
-          <div class="profil-utilisateur" >
-            <span style="font-weight: 700; font-size: 14px; color: var(--blanc);">Théodoric</span>
-            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar petit" class="avatar-petit">
+
+          <!-- Commandes de lecture centrales -->
+          <div class="lecteur-centre">
+            <button class="btn-lecteur-rond" ><i class="fa-solid fa-rotate-left"></i> <span style="font-size: 9px; display:block; margin-top:2px;">10</span></button>
+            <button class="btn-lecteur-rond principal" id="btnLectureCentreUtilisateur" ><i class="fa-solid fa-play"></i></button>
+            <button class="btn-lecteur-rond" ><i class="fa-solid fa-rotate-right"></i> <span style="font-size: 9px; display:block; margin-top:2px;">10</span></button>
+          </div>
+
+          <!-- Barre de contrôles basse -->
+          <div class="barre-controles-bas">
+            <div class="barre-progression-conteneur" >
+              <div class="barre-progression-remplissage" id="barreProgressionVideo"></div>
+            </div>
+            <div class="ligne-controles">
+              <div class="controles-gauche">
+                <i class="fa-solid fa-play curseur-main" id="btnLectureBasUtilisateur" ></i>
+                <i class="fa-solid fa-forward-step curseur-main" style="margin-left: 15px;" ></i>
+                <span id="tempsVideoEnCours" style="margin-left: 15px; font-size: 13px; font-weight: 600;">00:00 / 02:15:00</span>
+              </div>
+              <div class="controles-droite">
+                <i class="fa-solid fa-volume-high curseur-main" ></i>
+                <i class="fa-solid fa-gear curseur-main" ></i>
+                <i class="fa-solid fa-window-restore curseur-main" ></i>
+                <i class="fa-solid fa-expand curseur-main" ></i>
+              </div>
+            </div>
           </div>
         </div>
-      </header>
+      </div>
 
-      <!-- ===================================================================
-           VUE 1 : CATALOGUE DE FILMS (IMAGE 4)
-           =================================================================== -->
-      <section id="vueUtilisateurCatalogue">
-        
-        <!-- Bannière vedette coulissante -->
-        <div class="carrousel-banniere">
-          <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200" alt="Bannière vedette" class="slide-image" id="banniereFilmImg">
-          <div class="banniere-gradient"></div>
-          
-          <!-- Flèches directionnelles du carrousel -->
-          <button class="carrousel-fleche gauche" ><i class="fa-solid fa-chevron-left"></i></button>
-          <button class="carrousel-fleche droite" ><i class="fa-solid fa-chevron-right"></i></button>
-          
-          <!-- Contenu textuel surimposé -->
-          <div class="banniere-contenu">
-            <div class="banniere-titre-badge">Tendance du moment</div>
-            <h1 style="font-size: 40px; font-weight: 800; letter-spacing: -1px;" id="banniereFilmTitre">AVATAR 3 (2026)</h1>
-            <p class="banniere-desc" id="banniereFilmDesc">
-              Dans les soixante-douze heures précédant le Jour J, le chef météorologue britannique James Stagg est appelé à fournir les prévisions les plus importantes de l'histoire...
+      <!-- Rangée descriptive détaillée -->
+      <div class="fiche-film-layout">
+
+        <!-- Colonne 1 : Affiche et Bande-annonce (Gauche) -->
+        <div>
+          <div class="carte-film" style="cursor: default; border-radius: 16px;">
+            <div class="film-affiche-conteneur" style="aspect-ratio: 2/3;">
+              <img class="film-affiche" src="" alt="Affiche du film" id="ficheAfficheFilm">
+              <div class="film-badges"><span class="badge badge-vert">4K</span></div>
+            </div>
+          </div>
+          <button class="bouton-principal" style="background: var(--rouge-mada); margin-top: 15px; font-size: 13px; font-weight: 700;" >
+            <i class="fa-solid fa-circle-play"></i> VOIR LA BANDE-ANNONCE
+          </button>
+        </div>
+
+        <!-- Colonne 2 : Métadonnées et Synopsis (Milieu) -->
+        <div>
+          <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <h2 style="font-size: 32px; font-weight: 800; letter-spacing: -0.5px;" id="ficheTitreFilm">AVATAR 3</h2>
+            <span style="color: var(--vert-clair); font-weight: 800; font-size: 20px;" id="ficheAnneeFilm">2026</span>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin: 15px 0;">
+            <span class="badge badge-vert" id="ficheGenreFilm">Science-fiction</span>
+            <span class="badge badge-gris" id="ficheDureeFilm">2h 15min</span>
+            <span class="badge badge-jaune">4K Ultra HD</span>
+          </div>
+
+          <!-- Fiche Synopsis réelle -->
+          <div class="synopsis-boite">
+            <h4 style="font-size: 14px; text-transform: uppercase; color: var(--vert-clair); margin-bottom: 8px; letter-spacing: 1px; font-weight: 800;">Synopsis</h4>
+            <p id="ficheSynopsisFilm" style="font-size: 14px; line-height: 1.6; color: var(--gris-clair);">
+              Synopsis réel...
             </p>
-            <button class="banniere-bouton"  style="margin-top: 10px;">
-              <i class="fa-solid fa-play"></i> REGARDER
-            </button>
           </div>
 
-          <!-- Puces indicatrices de position -->
-          <div class="carrousel-points">
-            <span class="pt-carrousel actif" ></span>
-            <span class="pt-carrousel" ></span>
-            <span class="pt-carrousel" ></span>
+          <!-- Liste des caractéristiques techniques -->
+          <ul class="detail-liste-items">
+            <li><i class="fa-solid fa-user-tie"></i> <span><strong>Réalisateur :</strong> <span id="ficheRealFilm">James Cameron</span></span></li>
+            <li><i class="fa-solid fa-users-viewfinder"></i> <span><strong>Acteurs :</strong> <span id="ficheActeursFilm">Sam Worthington, Zoe Saldaña, Sigourney Weaver</span></span></li>
+            <li><i class="fa-solid fa-language"></i> <span><strong>Langue :</strong> <span id="ficheLangueFilm">VF / VOSTFR</span></span></li>
+            <li><i class="fa-solid fa-circle-check"></i> <span><strong>Qualité :</strong> <span>4K Ultra HD</span></span></li>
+            <li><i class="fa-solid fa-money-bill-1-wave"></i> <span><strong>Budget :</strong> <span id="ficheBudgetFilm">350 000 000 $</span></span></li>
+            <li><i class="fa-solid fa-calendar-check"></i> <span><strong>Date de sortie :</strong> <span id="ficheDateSortieFilm">2026</span></span></li>
+          </ul>
+        </div>
+
+        <!-- Colonne 3 : Actions et Évaluation (Droite) -->
+        <div>
+          <div class="bouton-favoris-liste">
+            <button class="btn-favori-item" ><i class="fa-regular fa-thumbs-up"></i> J'aime</button>
+            <button class="btn-favori-item" ><i class="fa-regular fa-thumbs-down"></i> Je n'aime pas</button>
+            <button class="btn-favori-item actif" id="btnFavorisUtilisateur" ><i class="fa-solid fa-heart"></i> Ajouter aux favoris</button>
+            <button class="btn-favori-item" ><i class="fa-regular fa-bookmark"></i> Ajouter à ma liste</button>
+            <button class="btn-favori-item" ><i class="fa-solid fa-share-nodes"></i> Partager</button>
+            <button class="btn-favori-item" ><i class="fa-solid fa-download"></i> Télécharger</button>
+          </div>
+
+          <!-- Widget Évaluation -->
+          <div class="carte-eval">
+            <span style="font-size: 11px; text-transform: uppercase; color: var(--gris-clair); letter-spacing: 1px; font-weight: 700;">Évaluation</span>
+            <h3 class="eval-note" id="ficheNoteFilm">9.2<span>/10</span></h3>
+            <div class="etoiles" style="font-size: 13px; color: #f59e0b;">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star-half-stroke"></i>
+            </div>
+            <span style="font-size: 12px; color: var(--gris-clair); font-weight: 600;" id="ficheAvisFilm">12 500 avis</span>
           </div>
         </div>
 
-        <!-- Section Grille : À ne pas manquer -->
-        <div style="margin-bottom: 40px;">
-          <h3 class="section-titre" style="margin-top: 0; color: var(--blanc); font-size: 16px;">
-            <span><i class="fa-solid fa-fire" style="color: var(--vert-clair); margin-right: 8px;"></i>À NE PAS MANQUER</span>
-          </h3>
-          <div class="grille-films" id="grilleFilmsANePasManquer">
+      </div>
+
+      <!-- Films similaires et Espace Commentaires (Pied) -->
+      <div class="ligne-dashboard" style="grid-template-columns: 1.5fr 1fr; margin-top: 50px; gap: 32px;">
+
+        <!-- Films similaires -->
+        <div>
+          <h3 class="section-titre" style="margin-top: 0; font-size: 16px;">FILMS SIMILAIRES</h3>
+          <div class="grille-films" id="grilleFilmsSimilaires">
             <!-- Rempli dynamiquement par utilisateur.js -->
           </div>
         </div>
 
-        <!-- Flèche indicative de défilement vers le bas -->
-        <div style="text-align: center; margin-top: 30px; color: var(--gris-clair); animation: rebond 2s infinite;">
-          <i class="fa-solid fa-chevron-down" style="font-size: 26px; cursor: pointer;" ></i>
+        <!-- Zone de commentaires interactifs -->
+        <div class="section-commentaires" style="margin-top: 0;">
+          <h3 style="font-size: 15px; font-weight: 800; border-bottom: 1px solid var(--gris-moyen); padding-bottom: 12px; letter-spacing: 1px;">
+            COMMENTAIRES (<span id="compteurCommentairesFilm">125</span>)
+          </h3>
+
+          <div class="liste-commentaires" id="conteneurListeCommentairesFilm">
+            <!-- Rempli dynamiquement par utilisateur.js -->
+          </div>
+
+          <!-- Formulaire interactif de saisie -->
+          <form class="saisie-commentaire" >
+            <label for="texteNouveauCommentaireUtilisateur"></label>
+            <input type="text" id="texteNouveauCommentaireUtilisateur" placeholder="Ajouter un commentaire..." required>
+            <button type="submit">Publier</button>
+          </form>
         </div>
 
-      </section>
+      </div>
 
-      <!-- ===================================================================
-           VUE 2 : FICHE DU FILM ET LECTEUR VIDEO (IMAGE 5)
-           =================================================================== -->
-      <section id="vueUtilisateurFicheFilm" class="masque">
-        
-        <!-- Bouton retour -->
-        <button class="bouton-voir-plus" style="margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px;" >
-          <i class="fa-solid fa-arrow-left"></i> Retour au catalogue
-        </button>
+    </section>
 
-        <!-- Lecteur vidéo haute fidélité -->
-        <div class="lecteur-video-cadre">
-          <video class="video-tag" id="baliseLecteurVideo" src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-background-1611-large.mp4" poster="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000"></video>
-          
-          <!-- Contrôles superposés -->
-          <div class="lecteur-overlay-controles">
-            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-              <h3 id="lecteurFilmTitreEnCours" style="font-size: 17px; font-weight: 700; text-shadow: 0 2px 5px rgba(0,0,0,0.9);">AVATAR 3</h3>
-              <button class="btn-table-action" style="font-size: 20px; color: white;" ><i class="fa-solid fa-ellipsis-vertical"></i></button>
-            </div>
-            
-            <!-- Commandes de lecture centrales -->
-            <div class="lecteur-centre">
-              <button class="btn-lecteur-rond" ><i class="fa-solid fa-rotate-left"></i> <span style="font-size: 9px; display:block; margin-top:2px;">10</span></button>
-              <button class="btn-lecteur-rond principal" id="btnLectureCentreUtilisateur" ><i class="fa-solid fa-play"></i></button>
-              <button class="btn-lecteur-rond" ><i class="fa-solid fa-rotate-right"></i> <span style="font-size: 9px; display:block; margin-top:2px;">10</span></button>
-            </div>
+    <!-- PIED DE PAGE COMMUN -->
+    <footer class="pied-page">
+      <p>© 2026 Movies . Tous droits réservés.</p>
+    </footer>
 
-            <!-- Barre de contrôles basse -->
-            <div class="barre-controles-bas">
-              <div class="barre-progression-conteneur" >
-                <div class="barre-progression-remplissage" id="barreProgressionVideo"></div>
-              </div>
-              <div class="ligne-controles">
-                <div class="controles-gauche">
-                  <i class="fa-solid fa-play curseur-main" id="btnLectureBasUtilisateur" ></i>
-                  <i class="fa-solid fa-forward-step curseur-main" style="margin-left: 15px;" ></i>
-                  <span id="tempsVideoEnCours" style="margin-left: 15px; font-size: 13px; font-weight: 600;">00:00 / 02:15:00</span>
-                </div>
-                <div class="controles-droite">
-                  <i class="fa-solid fa-volume-high curseur-main" ></i>
-                  <i class="fa-solid fa-gear curseur-main" ></i>
-                  <i class="fa-solid fa-window-restore curseur-main" ></i>
-                  <i class="fa-solid fa-expand curseur-main" ></i>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  </main>
 
-        <!-- Rangée descriptive détaillée -->
-        <div class="fiche-film-layout">
-          
-          <!-- Colonne 1 : Affiche et Bande-annonce (Gauche) -->
-          <div>
-            <div class="carte-film" style="cursor: default; border-radius: 16px;">
-              <div class="film-affiche-conteneur" style="aspect-ratio: 2/3;">
-                <img class="film-affiche" src="" alt="Affiche du film" id="ficheAfficheFilm">
-                <div class="film-badges"><span class="badge badge-vert">4K</span></div>
-              </div>
-            </div>
-            <button class="bouton-principal" style="background: var(--rouge-mada); margin-top: 15px; font-size: 13px; font-weight: 700;" >
-              <i class="fa-solid fa-circle-play"></i> VOIR LA BANDE-ANNONCE
-            </button>
-          </div>
-
-          <!-- Colonne 2 : Métadonnées et Synopsis (Milieu) -->
-          <div>
-            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-              <h2 style="font-size: 32px; font-weight: 800; letter-spacing: -0.5px;" id="ficheTitreFilm">AVATAR 3</h2>
-              <span style="color: var(--vert-clair); font-weight: 800; font-size: 20px;" id="ficheAnneeFilm">2026</span>
-            </div>
-            
-            <div style="display: flex; gap: 8px; margin: 15px 0;">
-              <span class="badge badge-vert" id="ficheGenreFilm">Science-fiction</span>
-              <span class="badge badge-gris" id="ficheDureeFilm">2h 15min</span>
-              <span class="badge badge-jaune">4K Ultra HD</span>
-            </div>
-
-            <!-- Fiche Synopsis réelle -->
-            <div class="synopsis-boite">
-              <h4 style="font-size: 14px; text-transform: uppercase; color: var(--vert-clair); margin-bottom: 8px; letter-spacing: 1px; font-weight: 800;">Synopsis</h4>
-              <p id="ficheSynopsisFilm" style="font-size: 14px; line-height: 1.6; color: var(--gris-clair);">
-                Synopsis réel...
-              </p>
-            </div>
-
-            <!-- Liste des caractéristiques techniques -->
-            <ul class="detail-liste-items">
-              <li><i class="fa-solid fa-user-tie"></i> <span><strong>Réalisateur :</strong> <span id="ficheRealFilm">James Cameron</span></span></li>
-              <li><i class="fa-solid fa-users-viewfinder"></i> <span><strong>Acteurs :</strong> <span id="ficheActeursFilm">Sam Worthington, Zoe Saldaña, Sigourney Weaver</span></span></li>
-              <li><i class="fa-solid fa-language"></i> <span><strong>Langue :</strong> <span id="ficheLangueFilm">VF / VOSTFR</span></span></li>
-              <li><i class="fa-solid fa-circle-check"></i> <span><strong>Qualité :</strong> <span>4K Ultra HD</span></span></li>
-              <li><i class="fa-solid fa-money-bill-1-wave"></i> <span><strong>Budget :</strong> <span id="ficheBudgetFilm">350 000 000 $</span></span></li>
-              <li><i class="fa-solid fa-calendar-check"></i> <span><strong>Date de sortie :</strong> <span id="ficheDateSortieFilm">2026</span></span></li>
-            </ul>
-          </div>
-
-          <!-- Colonne 3 : Actions et Évaluation (Droite) -->
-          <div>
-            <div class="bouton-favoris-liste">
-              <button class="btn-favori-item" ><i class="fa-regular fa-thumbs-up"></i> J'aime</button>
-              <button class="btn-favori-item" ><i class="fa-regular fa-thumbs-down"></i> Je n'aime pas</button>
-              <button class="btn-favori-item actif" id="btnFavorisUtilisateur" ><i class="fa-solid fa-heart"></i> Ajouter aux favoris</button>
-              <button class="btn-favori-item" ><i class="fa-regular fa-bookmark"></i> Ajouter à ma liste</button>
-              <button class="btn-favori-item" ><i class="fa-solid fa-share-nodes"></i> Partager</button>
-              <button class="btn-favori-item" ><i class="fa-solid fa-download"></i> Télécharger</button>
-            </div>
-
-            <!-- Widget Évaluation -->
-            <div class="carte-eval">
-              <span style="font-size: 11px; text-transform: uppercase; color: var(--gris-clair); letter-spacing: 1px; font-weight: 700;">Évaluation</span>
-              <h3 class="eval-note" id="ficheNoteFilm">9.2<span>/10</span></h3>
-              <div class="etoiles" style="font-size: 13px; color: #f59e0b;">
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star-half-stroke"></i>
-              </div>
-              <span style="font-size: 12px; color: var(--gris-clair); font-weight: 600;" id="ficheAvisFilm">12 500 avis</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Films similaires et Espace Commentaires (Pied) -->
-        <div class="ligne-dashboard" style="grid-template-columns: 1.5fr 1fr; margin-top: 50px; gap: 32px;">
-          
-          <!-- Films similaires -->
-          <div>
-            <h3 class="section-titre" style="margin-top: 0; font-size: 16px;">FILMS SIMILAIRES</h3>
-            <div class="grille-films" id="grilleFilmsSimilaires">
-              <!-- Rempli dynamiquement par utilisateur.js -->
-            </div>
-          </div>
-
-          <!-- Zone de commentaires interactifs -->
-          <div class="section-commentaires" style="margin-top: 0;">
-            <h3 style="font-size: 15px; font-weight: 800; border-bottom: 1px solid var(--gris-moyen); padding-bottom: 12px; letter-spacing: 1px;">
-              COMMENTAIRES (<span id="compteurCommentairesFilm">125</span>)
-            </h3>
-            
-            <div class="liste-commentaires" id="conteneurListeCommentairesFilm">
-              <!-- Rempli dynamiquement par utilisateur.js -->
-            </div>
-
-            <!-- Formulaire interactif de saisie -->
-            <form class="saisie-commentaire" >
-              <label for="texteNouveauCommentaireUtilisateur"></label>
-              <input type="text" id="texteNouveauCommentaireUtilisateur" placeholder="Ajouter un commentaire..." required>
-              <button type="submit">Publier</button>
-            </form>
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- PIED DE PAGE COMMUN -->
-      <footer class="pied-page">
-        <p>© 2026 Movies . Tous droits réservés.</p>
-      </footer>
-
-    </main>
-
-  </div>
+</div>
 </body>
 </html>
