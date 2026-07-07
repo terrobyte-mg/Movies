@@ -16,7 +16,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const safePoster = (film) => {
         const titre = film?.titre ?? "Film";
-        return film?.poster || `${placeholderBase}${encodeURIComponent(titre)}`;
+        return sanitizeAssetUrl(film?.poster, `${placeholderBase}${encodeURIComponent(titre)}`);
+    };
+
+    const sanitizeAssetUrl = (value, fallback = imageProfilParDefaut) => {
+        const raw = String(value ?? "").trim();
+        if (!raw) {
+            return fallback;
+        }
+
+        if (raw.startsWith("/")) {
+            return raw;
+        }
+
+        try {
+            const parsed = new URL(raw, window.location.origin);
+            if (["http:", "https:", "blob:"].includes(parsed.protocol)) {
+                return parsed.href;
+            }
+        } catch {
+            return fallback;
+        }
+
+        return fallback;
     };
 
     const formatNote = (film) => {
@@ -74,12 +96,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         document.querySelectorAll(".avatar-grand, .avatar-petit").forEach((avatar) => {
-            avatar.src = user.url_photo_profil || imageProfilParDefaut;
+            avatar.src = sanitizeAssetUrl(user.url_photo_profil, imageProfilParDefaut);
         });
 
         const apercuPhoto = document.getElementById("apercuPhotoProfil");
         if (apercuPhoto) {
-            apercuPhoto.src = user.url_photo_profil || imageProfilParDefaut;
+            apercuPhoto.src = sanitizeAssetUrl(user.url_photo_profil, imageProfilParDefaut);
         }
     }
 
@@ -467,9 +489,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 urlApercuPhoto = URL.createObjectURL(fichier);
-                apercuPhoto.src = urlApercuPhoto;
+                const previewUrl = sanitizeAssetUrl(urlApercuPhoto, imageProfilParDefaut);
+                apercuPhoto.src = previewUrl;
                 document.querySelectorAll(".avatar-grand, .avatar-petit").forEach((avatar) => {
-                    avatar.src = urlApercuPhoto;
+                    avatar.src = previewUrl;
                 });
             });
         }
