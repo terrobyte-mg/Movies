@@ -3,6 +3,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const typesImageAutorises = ["image/jpeg", "image/png", "image/gif", "image/webp"];
     const tailleImageMax = 2 * 1024 * 1024;
     let urlApercuPhoto = null;
+    const escapeHtml = (value) => String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    const safeServerMessage = (message, fallback) => escapeHtml(message || fallback);
 
     const logoutBtn = document.getElementById("logoutBtn");
 
@@ -14,14 +21,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const { success, message, redirect } = await api.logout();
 
                 if (success) {
-                    showMessage("success", message);
+                    showMessage("success", safeServerMessage(message, "Déconnexion réussie"));
 
                     setTimeout(() => {
                         window.location.href = redirect;
                     }, 1000);
 
                 } else {
-                    showMessage("error", message);
+                    showMessage("error", safeServerMessage(message, "Échec de la déconnexion"));
                 }
 
             } catch (error) {
@@ -216,7 +223,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const { success, message, user } = await api.updateProfile(formData);
 
                 if (success) {
-                    showMessage("success", message);
+                    showMessage("success", safeServerMessage(message, "Profil mis à jour"));
 
                     document.getElementById("nouveauMdpAdmin").value = "";
                     document.getElementById("confirmerMdpAdmin").value = "";
@@ -230,7 +237,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
 
                 } else {
-                    showMessage("error", message);
+                    showMessage("error", safeServerMessage(message, "Erreur lors de l'enregistrement"));
                 }
 
             } catch (error) {
