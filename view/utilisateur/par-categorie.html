@@ -6,6 +6,7 @@
   <title>MADAMOV - Par Catégorie</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/movie/style.css">
+  <script src="/movie/view/utils/api.js"></script>
   <script src="/movie/view/utils/toast.js" defer></script>
   <script src="/movie/view/utilisateur/utilisateur.js" defer></script>
   <style>
@@ -129,7 +130,7 @@
           <button class="bouton-menu-mobile" ><i class="fa-solid fa-bars"></i></button>
           <div class="barre-recherche">
             <i class="fa-solid fa-search"></i>
-            <input type="text" id="champRecherche" placeholder="Rechercher dans la catégorie..." oninput="filtrerContenu()">
+            <input type="text" id="champRecherche" placeholder="Rechercher dans la catégorie...">
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 14px;">
@@ -173,72 +174,5 @@
     </main>
   </div>
 
-  <script>
-    // Catalogue de démonstration par catégorie (le backend fournira les vraies données)
-    const catalogueParCategorie = {
-      films: [
-        { titre: "The Batman", annee: "2022", type: "Film", image: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg" },
-        { titre: "Top Gun: Maverick", annee: "2022", type: "Film", image: "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDabo8diEhkHPm3.jpg" },
-        { titre: "Dune: Part 2", annee: "2024", type: "Film", image: "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" },
-        { titre: "Oppenheimer", annee: "2023", type: "Film", image: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" },
-        { titre: "Parasite", annee: "2019", type: "Film", image: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg" },
-        { titre: "Black Panther", annee: "2022", type: "Film", image: "https://image.tmdb.org/t/p/w500/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" }
-      ],
-      series: [
-        { titre: "The Last of Us", annee: "2023", type: "Série", image: "https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg" },
-        { titre: "House of Dragon", annee: "2022", type: "Série", image: "https://image.tmdb.org/t/p/w500/z2yahl2uefxDCl0nogcRBstwruJ.jpg" },
-        { titre: "Wednesday", annee: "2022", type: "Série", image: "https://image.tmdb.org/t/p/w500/9PFonBhy4cQy7Jz20NpMygczOkv.jpg" },
-        { titre: "Stranger Things", annee: "2016", type: "Série", image: "https://image.tmdb.org/t/p/w500/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg" }
-      ],
-      animes: [
-        { titre: "Demon Slayer", annee: "2019", type: "Animé", image: "https://image.tmdb.org/t/p/w500/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg" },
-        { titre: "Attack on Titan", annee: "2013", type: "Animé", image: "https://image.tmdb.org/t/p/w500/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg" },
-        { titre: "Jujutsu Kaisen", annee: "2020", type: "Animé", image: "https://image.tmdb.org/t/p/w500/t1UaFlfn5R5ojqwZ9CkXDMWjCwq.jpg" },
-        { titre: "One Piece", annee: "1999", type: "Animé", image: "https://image.tmdb.org/t/p/w500/e3NBGiAifW9Xt8xD5tpARskjccO.jpg" }
-      ]
-    };
-
-    let categorieActive = "films";
-
-    // Changer l'onglet de catégorie actif
-    function changerCategorie(categorie) {
-      categorieActive = categorie;
-      // Mettre à jour l'onglet actif
-      document.querySelectorAll(".onglet-categorie").forEach(o => o.classList.remove("actif"));
-      document.getElementById("onglet" + categorie.charAt(0).toUpperCase() + categorie.slice(1)).classList.add("actif");
-      // Afficher les contenus de la catégorie
-      afficherContenu(catalogueParCategorie[categorie]);
-    }
-
-    // Afficher la grille de contenus
-    function afficherContenu(listeContenu) {
-      const conteneur = document.getElementById("grilleContenu");
-      conteneur.innerHTML = listeContenu.map(element => `
-        <div class="carte-contenu" >
-          <img src="${element.image}" alt="${element.titre}" onerror="this.src='https://via.placeholder.com/160x230/1a1a2e/fff?text=${encodeURIComponent(element.titre)}'">
-          <div class="badge-type">${element.type}</div>
-          <div class="info-contenu">
-            <h4>${element.titre}</h4>
-            <span><i class="fa-regular fa-calendar" style="margin-right:4px;"></i>${element.annee}</span>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    // Filtrer les contenus par recherche
-    function filtrerContenu() {
-      const texte = document.getElementById("champRecherche").value.toLowerCase();
-      document.querySelectorAll(".carte-contenu").forEach(carte => {
-        const titre = carte.querySelector("h4").textContent.toLowerCase();
-        carte.style.display = titre.includes(texte) ? "" : "none";
-      });
-    }
-
-    // Initialisation au chargement
-    window.addEventListener("DOMContentLoaded", () => {
-      afficherContenu(catalogueParCategorie.films);
-    });
-  </script>
 </body>
 </html>
-

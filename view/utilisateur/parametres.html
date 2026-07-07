@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Style commun -->
   <link rel="stylesheet" href="/movie/style.css">
+  <script src="/movie/view/utils/api.js"></script>
   <script src="/movie/view/utilisateur/utilisateur.js" defer></script>
   <script src="/movie/view/utils/toast.js" defer></script>
   <style>
@@ -233,48 +234,5 @@
 
 </div>
 
-<script>
-  window.addEventListener("DOMContentLoaded", () => {
-    // Charger les données de l'utilisateur si existantes dans localStorage
-    const nom = localStorage.getItem("nomCompletUtilisateur");
-    const email = localStorage.getItem("emailUtilisateur");
-    const username = localStorage.getItem("nomUtilisateur");
-
-    if (nom) document.getElementById("nomComplet").value = nom;
-    if (email) document.getElementById("email").value = email;
-    if (username) {
-      document.getElementById("nomUtilisateur").value = username;
-      document.getElementById("nomUtilisateurConnecte").textContent = username;
-    }
-  });
-
-  function enregistrerParametres(event) {
-    event.preventDefault();
-
-    const nom = document.getElementById("nomComplet").value;
-    const email = document.getElementById("email").value;
-    const username = document.getElementById("nomUtilisateur").value;
-    const nouveauMdp = document.getElementById("nouveauMdp").value;
-    const confirmerMdp = document.getElementById("confirmerMdp").value;
-
-    if (nouveauMdp && nouveauMdp !== confirmerMdp) {
-      alert("Erreur : Les mots de passe de confirmation ne correspondent pas.");
-      return;
-    }
-
-    // Enregistrer dans localStorage pour simuler
-    localStorage.setItem("nomCompletUtilisateur", nom);
-    localStorage.setItem("emailUtilisateur", email);
-    localStorage.setItem("nomUtilisateur", username);
-
-    alert("Vos paramètres ont été enregistrés avec succès !");
-    document.getElementById("nomUtilisateurConnecte").textContent = username;
-
-    if (nouveauMdp) {
-      document.getElementById("nouveauMdp").value = "";
-      document.getElementById("confirmerMdp").value = "";
-    }
-  }
-</script>
 </body>
 </html>
