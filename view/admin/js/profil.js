@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const imageProfilParDefaut = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150";
     const typesImageAutorises = ["image/jpeg", "image/png", "image/gif", "image/webp"];
     const tailleImageMax = 2 * 1024 * 1024;
-    let urlApercuPhoto = null;
     const escapeHtml = (value) => String(value ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -93,10 +92,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const fichier = photoInput.files[0];
 
             if (!fichier) {
-                if (urlApercuPhoto) {
-                    URL.revokeObjectURL(urlApercuPhoto);
-                    urlApercuPhoto = null;
-                }
                 return;
             }
 
@@ -113,13 +108,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 verifierModification();
                 return;
             }
-
-            if (urlApercuPhoto) {
-                URL.revokeObjectURL(urlApercuPhoto);
-            }
-
-            urlApercuPhoto = URL.createObjectURL(fichier);
-            apercuPhoto.src = urlApercuPhoto;
             verifierModification();
         });
     }

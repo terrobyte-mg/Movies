@@ -464,7 +464,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const photoInput = document.getElementById("photoProfil");
         const apercuPhoto = document.getElementById("apercuPhotoProfil");
         const typesImageAutorises = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-        let urlApercuPhoto = null;
 
         if (photoInput && apercuPhoto) {
             photoInput.addEventListener("change", () => {
@@ -484,14 +483,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     photoInput.value = "";
                     return;
                 }
-
-                if (urlApercuPhoto) {
-                    URL.revokeObjectURL(urlApercuPhoto);
-                    urlApercuPhoto = null;
-                }
-
-                urlApercuPhoto = URL.createObjectURL(fichier);
-                apercuPhoto.src = urlApercuPhoto;
             });
         }
 
