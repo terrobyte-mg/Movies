@@ -151,6 +151,11 @@ switch ($action) {
         require __DIR__ . '/../view/utilisateur/parametres.html';
         break;
 
+    case 'voir-film':
+        requireAuthView();
+        require __DIR__ . '/../view/utilisateur/film.html';
+        break;
+
     // ==========================================
     // Pages admin
     // ==========================================
@@ -265,6 +270,24 @@ switch ($action) {
         requireAuthApi();
         $id = getIdParam();
         ApiResponse::send($filmController->rate($id));
+        break;
+
+    case 'film-comments':
+        requireAuthApi();
+        $id = getIdParam();
+        ApiResponse::send($filmController->comments($id));
+        break;
+
+    case 'film-comment-add':
+        requireAuthApi();
+        $id = getIdParam();
+        ApiResponse::send($filmController->addComment($id));
+        break;
+
+    case 'film-comment-delete':
+        requireAuthApi();
+        $id = getIdParam();
+        ApiResponse::send($filmController->deleteComment($id));
         break;
 
     // ==========================================

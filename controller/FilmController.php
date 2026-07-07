@@ -1,14 +1,17 @@
 <?php
 
 require_once(__DIR__ . '/../model/repository/FilmRepository.php');
+require_once(__DIR__ . '/../model/repository/CommentaireRepository.php');
 
 class FilmController
 {
     private FilmRepository $filmRepository;
+    private CommentaireRepository $commentaireRepository;
 
     public function __construct()
     {
         $this->filmRepository = new FilmRepository();
+        $this->commentaireRepository = new CommentaireRepository();
     }
 
     /**
@@ -35,8 +38,7 @@ class FilmController
     /**
      * DETAILS D'UN FILM
      */
-    public function show(int $id): array
-    {
+    public function show(int $id): array {
         $film = $this->filmRepository->findFilmById($id);
 
         if (!$film) {
@@ -174,6 +176,103 @@ class FilmController
         return [
             "success" => $ok,
             "message" => $ok ? "Note enregistrée" : "Erreur note"
+        ];
+    }
+
+    /**
+     * LISTE DES COMMENTAIRES D'UN FILM
+     */
+    public function comments(int $filmId): array
+    {
+        $film = $this->filmRepository->findFilmById($filmId);
+
+        if (!$film) {
+            return [
+                "success" => false,
+                "message" => "Film introuvable"
+            ];
+        }
+
+        return [
+            "success" => true,
+            "data" => $this->commentaireRepository->listByContenu($filmId)
+        ];
+    }
+
+    /**
+     * AJOUTER UN COMMENTAIRE SUR UN FILM
+     */
+    public function addComment(int $filmId): array
+    {
+        if (empty($_SESSION['user']['id'])) {
+            return [
+                "success" => false,
+                "message" => "Vous devez être connecté pour commenter"
+            ];
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        $texte = trim((string) ($data['commentaire'] ?? ''));
+
+        if ($texte === '' || mb_strlen($texte) > 1000) {
+            return [
+                "success" => false,
+                "message" => "Le commentaire doit contenir entre 1 et 1000 caractères"
+            ];
+        }
+
+        $film = $this->filmRepository->findFilmById($filmId);
+        if (!$film) {
+            return [
+                "success" => false,
+                "message" => "Film introuvable"
+            ];
+        }
+
+        $commentId = $this->commentaireRepository->create(
+            $filmId,
+            (int) $_SESSION['user']['id'],
+            $texte
+        );
+
+        if (!$commentId) {
+            return [
+                "success" => false,
+                "message" => "Erreur lors de la publication du commentaire"
+            ];
+        }
+
+        return [
+            "success" => true,
+            "message" => "Commentaire publié",
+            "comment_id" => $commentId
+        ];
+    }
+
+    /**
+     * SUPPRIMER UN COMMENTAIRE
+     * (auteur du commentaire, ou admin pour modération)
+     */
+    public function deleteComment(int $commentId): array
+    {
+        if (empty($_SESSION['user']['id'])) {
+            return [
+                "success" => false,
+                "message" => "Vous devez être connecté"
+            ];
+        }
+
+        $isAdmin = ($_SESSION['user']['role_utilisateur'] ?? '') === 'admin';
+
+        $ok = $this->commentaireRepository->delete(
+            $commentId,
+            (int) $_SESSION['user']['id'],
+            $isAdmin
+        );
+
+        return [
+            "success" => $ok,
+            "message" => $ok ? "Commentaire supprimé" : "Suppression impossible"
         ];
     }
 }

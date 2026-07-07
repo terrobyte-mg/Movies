@@ -153,52 +153,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    async function openFilmDetail(id) {
+    /**
+     * Redirige vers la page dédiée film.html plutôt que d'afficher
+     * une fiche en overlay dans la page courante.
+     */
+    function openFilmDetail(id) {
         if (!id) {
             return;
         }
-
-        const fiche = document.getElementById("vueUtilisateurFicheFilm");
-        const catalogue = document.getElementById("vueUtilisateurCatalogue");
-        if (!fiche || !catalogue) {
-            return;
-        }
-
-        try {
-            const { success, data } = await api.getFilm(id);
-            if (!success || !data) {
-                showMessage("error", "Film introuvable");
-                return;
-            }
-
-            document.getElementById("ficheTitreFilm").textContent = data.titre;
-            document.getElementById("ficheAnneeFilm").textContent = data.annee_sortie;
-            document.getElementById("ficheGenreFilm").textContent = data.genre_principal || "-";
-            document.getElementById("ficheDureeFilm").textContent = data.duree_formatee || "-";
-            document.getElementById("ficheSynopsisFilm").textContent = data.synopsis || "Synopsis indisponible";
-            document.getElementById("ficheRealFilm").textContent = data.realisateur || "-";
-            document.getElementById("ficheDateSortieFilm").textContent = data.annee_sortie;
-            document.getElementById("ficheAfficheFilm").src = safePoster(data);
-            document.getElementById("ficheNoteFilm").innerHTML = `${formatNote(data)}<span>/10</span>`;
-            document.getElementById("ficheAvisFilm").textContent = `${data.nombre_notes || 0} avis`;
-            document.getElementById("banniereFilmTitre").textContent = data.titre;
-            document.getElementById("banniereFilmDesc").textContent = data.synopsis || "";
-            document.getElementById("banniereFilmImg").src = safePoster(data);
-            document.getElementById("lecteurFilmTitreEnCours").textContent = data.titre;
-
-            const video = document.getElementById("baliseLecteurVideo");
-            if (video) {
-                video.poster = safePoster(data);
-                if (data.video_path) {
-                    video.src = data.video_path;
-                }
-            }
-
-            fiche.classList.remove("masque");
-            catalogue.classList.add("masque");
-        } catch {
-            showMessage("error", "Impossible de charger le film");
-        }
+        window.location.href = `/movie/public/index.php?action=voir-film&id=${id}`;
     }
 
     async function initHomePage() {
@@ -220,15 +183,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (banniereImage) banniereImage.src = safePoster(film);
         }
 
-        const retourBtn = document.querySelector("#vueUtilisateurFicheFilm .bouton-voir-plus");
-        const fiche = document.getElementById("vueUtilisateurFicheFilm");
-        const catalogue = document.getElementById("vueUtilisateurCatalogue");
-        if (retourBtn && fiche && catalogue) {
-            retourBtn.addEventListener("click", () => {
-                fiche.classList.add("masque");
-                catalogue.classList.remove("masque");
-            });
-        }
     }
 
     function renderGenreFilms(films) {
@@ -251,6 +205,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
             </div>
         `).join("");
+
+        conteneur.querySelectorAll("[data-film-id]").forEach((element) => {
+            element.addEventListener("click", () => openFilmDetail(Number(element.dataset.filmId)));
+        });
     }
 
     async function initGenrePage() {
@@ -318,7 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         conteneur.innerHTML = filmsState.categoryFilms.map((film) => `
-            <div class="carte-contenu">
+            <div class="carte-contenu" data-film-id="${film.id}">
                 <img src="${safePoster(film)}" alt="${escapeHtml(film.titre)}" loading="lazy">
                 <div class="badge-type">Film</div>
                 <div class="info-contenu">
@@ -327,6 +285,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
             </div>
         `).join("");
+
+        conteneur.querySelectorAll("[data-film-id]").forEach((element) => {
+            element.addEventListener("click", () => openFilmDetail(Number(element.dataset.filmId)));
+        });
 
         applyCategorySearchFilter();
     }
@@ -407,7 +369,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         conteneur.innerHTML = filtered.map((film) => `
-            <div class="carte-film-date">
+            <div class="carte-film-date" data-film-id="${film.id}">
                 <img src="${safePoster(film)}" alt="${escapeHtml(film.titre)}" loading="lazy">
                 <div class="info-film-date">
                     <h4>${escapeHtml(film.titre)}</h4>
@@ -415,6 +377,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
             </div>
         `).join("");
+
+        conteneur.querySelectorAll("[data-film-id]").forEach((element) => {
+            element.addEventListener("click", () => openFilmDetail(Number(element.dataset.filmId)));
+        });
     }
 
     function renderDateYears(selectedYear = "Tous") {

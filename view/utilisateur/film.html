@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies - Fiche du film</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/movie/style.css">
+    <link rel="stylesheet" href="/movie/view/auth/auth.css">
+
+    <style>
+        /* ==========================================================
+           Styles propres à la page film.html
+           (préfixe "fp-" pour ne rien casser dans le reste du site,
+           s'appuie sur les variables déjà définies dans style.css,
+           avec une valeur de repli si jamais elles n'existent pas)
+           ========================================================== */
+        :root {
+            --fp-rouge: var(--rouge-mada, #d32f2f);
+            --fp-rouge-sombre: var(--rouge-sombre, #b71c1c);
+            --fp-vert: var(--vert-clair, #2e7d32);
+            --fp-blanc: var(--blanc, #ffffff);
+            --fp-gris-clair: var(--gris-clair, #9aa5a0);
+            --fp-gris-moyen: var(--gris-moyen, #252a28);
+            --fp-fond: var(--fond-sombre, #0d0f0e);
+            --fp-carte: var(--gris-fonce, #141816);
+        }
+
+        body.fp-body {
+            background: var(--fp-fond);
+            margin: 0;
+        }
+
+        .fp-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            background: linear-gradient(180deg, rgba(11,11,20,0.95) 0%, rgba(11,11,20,0.75) 70%, transparent 100%);
+            backdrop-filter: blur(6px);
+        }
+
+        .fp-retour {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--fp-blanc);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+        .fp-retour i { color: var(--fp-rouge); }
+
+        .fp-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--fp-blanc);
+            font-weight: 800;
+            font-size: 18px;
+        }
+        .fp-logo i { color: var(--fp-rouge); }
+
+        .fp-hero {
+            position: relative;
+            min-height: 62vh;
+            display: flex;
+            align-items: flex-end;
+            background-size: cover;
+            background-position: center 20%;
+            margin-top: -72px;
+        }
+        .fp-hero-voile {
+            position: absolute;
+            inset: 0;
+            background:
+                    linear-gradient(180deg, rgba(11,11,20,0.15) 0%, rgba(11,11,20,0.55) 55%, var(--fp-fond) 100%),
+                    linear-gradient(90deg, rgba(11,11,20,0.9) 0%, rgba(11,11,20,0.2) 55%);
+        }
+        .fp-hero-contenu {
+            position: relative;
+            z-index: 2;
+            padding: 40px 32px 44px;
+            max-width: 760px;
+        }
+        .fp-badge-statut {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(230,57,70,0.18);
+            color: var(--fp-rouge);
+            border: 1px solid rgba(230,57,70,0.4);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .fp-titre {
+            color: var(--fp-blanc);
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0 0 12px;
+            line-height: 1.1;
+        }
+        .fp-meta-ligne {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            color: var(--fp-gris-clair);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+        .fp-meta-ligne .fp-note-inline {
+            color: #f59e0b;
+            font-weight: 800;
+        }
+        .fp-genres-inline .badge { margin-right: 6px; }
+        .fp-synopsis {
+            color: #d1d5db;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+        .fp-actions-hero {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .fp-btn-play {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--fp-rouge);
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        .fp-btn-play:hover { transform: translateY(-1px); background: var(--fp-rouge-sombre); }
+        .fp-btn-icone {
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: var(--fp-blanc);
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .fp-btn-icone:hover { background: rgba(255,255,255,0.18); }
+        .fp-btn-icone.fp-actif { background: var(--fp-rouge); border-color: var(--fp-rouge); }
+
+        .fp-corps {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 32px 60px;
+        }
+
+        /* Lecteur */
+        .fp-player-cadre {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 14px;
+            overflow: hidden;
+            margin: -90px auto 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.55);
+            z-index: 5;
+        }
+        .fp-player-cadre video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #000;
+        }
+        .fp-player-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.75) 100%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            padding: 20px;
+        }
+        .fp-player-cadre:hover .fp-player-overlay,
+        .fp-player-cadre.fp-controles-visibles .fp-player-overlay { opacity: 1; }
+
+        .fp-player-play-central {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            background: rgba(230,57,70,0.9);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            border: none;
+        }
+        .fp-barre-progression {
+            width: 100%;
+            height: 5px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .fp-barre-progression-remplissage {
+            height: 100%;
+            width: 0%;
+            background: var(--fp-rouge);
+            border-radius: 3px;
+        }
+        .fp-controles-bas {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #fff;
+        }
+        .fp-controles-gauche, .fp-controles-droite {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 16px;
+        }
+        .fp-controles-gauche i, .fp-controles-droite i { cursor: pointer; }
+        .fp-temps { font-size: 12px; font-weight: 600; color: #e5e7eb; }
+
+        /* Grille info + actions + note */
+        .fp-grille-info {
+            display: grid;
+            grid-template-columns: 220px 1fr 260px;
+            gap: 32px;
+            margin-bottom: 50px;
+        }
+        @media (max-width: 900px) {
+            .fp-grille-info { grid-template-columns: 1fr; }
+        }
+        .fp-affiche img {
+            width: 100%;
+            border-radius: 12px;
+            display: block;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
+        .fp-liste-details {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color: var(--fp-gris-clair);
+            font-size: 14px;
+        }
+        .fp-liste-details li {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .fp-liste-details li i { color: var(--fp-vert); width: 18px; }
+        .fp-liste-details strong { color: var(--fp-blanc); font-weight: 700; }
+
+        .fp-carte-note {
+            background: var(--fp-carte);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 22px;
+            text-align: center;
+        }
+        .fp-note-moyenne {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--fp-blanc);
+            margin: 6px 0 2px;
+        }
+        .fp-note-moyenne span { font-size: 16px; color: var(--fp-gris-clair); font-weight: 600; }
+        .fp-etoiles-interactives {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 16px 0 8px;
+            font-size: 24px;
+            color: #4b4b5c;
+        }
+        .fp-etoiles-interactives i {
+            cursor: pointer;
+            transition: color 0.1s ease, transform 0.1s ease;
+        }
+        .fp-etoiles-interactives i.fp-survol,
+        .fp-etoiles-interactives i.fp-selection { color: #f59e0b; transform: scale(1.1); }
+        .fp-note-label { font-size: 12px; color: var(--fp-gris-clair); font-weight: 600; }
+
+        /* Commentaires */
+        .fp-section-titre {
+            color: var(--fp-blanc);
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            margin: 0 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .fp-section-titre span.fp-count { color: var(--fp-gris-clair); font-weight: 600; }
+
+        .fp-form-commentaire {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .fp-form-commentaire textarea {
+            flex: 1;
+            resize: none;
+            min-height: 48px;
+            background: var(--fp-carte);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            color: var(--fp-blanc);
+            padding: 12px 14px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .fp-form-commentaire textarea:focus { outline: none; border-color: var(--fp-rouge); }
+        .fp-form-commentaire button {
+            background: var(--fp-rouge);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 0 22px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .fp-form-commentaire button:disabled { opacity: 0.5; cursor: default; }
+
+        .fp-commentaire-item {
+            display: flex;
+            gap: 14px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .fp-commentaire-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .fp-commentaire-corps { flex: 1; }
+        .fp-commentaire-entete {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .fp-commentaire-auteur { color: var(--fp-blanc); font-weight: 700; font-size: 14px; }
+        .fp-commentaire-date { color: var(--fp-gris-clair); font-size: 12px; }
+        .fp-commentaire-texte { color: #d1d5db; font-size: 14px; line-height: 1.5; }
+        .fp-commentaire-supprimer {
+            background: none;
+            border: none;
+            color: var(--fp-gris-clair);
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: auto;
+        }
+        .fp-commentaire-supprimer:hover { color: var(--fp-rouge); }
+
+        .fp-vide {
+            color: var(--fp-gris-clair);
+            font-size: 14px;
+            padding: 20px 0;
+        }
+
+        .fp-similaires {
+            margin-top: 56px;
+        }
+    </style>
+</head>
+<body class="utilisateur-theme fp-body">
+
+<!-- Barre supérieure minimale : retour + logo + profil -->
+<header class="fp-topbar">
+    <a href="/movie/public/index.php?action=home" class="fp-retour">
+        <i class="fa-solid fa-arrow-left"></i> <span>Retour au catalogue</span>
+    </a>
+    <div class="fp-logo">
+        <i class="fa-solid fa-circle-play"></i> <span>Movies</span>
+    </div>
+    <div class="profil-utilisateur">
+        <span style="font-weight:700; font-size:14px; color:#fff;" id="fpNomUtilisateur"></span>
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150" alt="Avatar" class="avatar-petit" id="fpAvatarUtilisateur">
+    </div>
+</header>
+
+<!-- Hero : backdrop + titre + synopsis + actions rapides -->
+<section class="fp-hero" id="fpHero">
+    <div class="fp-hero-voile"></div>
+    <div class="fp-hero-contenu">
+        <span class="fp-badge-statut" id="fpBadgeStatut"><i class="fa-solid fa-play"></i> Disponible</span>
+        <h1 class="fp-titre" id="fpTitre">Chargement...</h1>
+        <div class="fp-meta-ligne">
+            <span id="fpAnnee">—</span>
+            <span id="fpDuree">—</span>
+            <span class="fp-genres-inline" id="fpGenres"></span>
+            <span class="fp-note-inline"><i class="fa-solid fa-star"></i> <span id="fpNoteInline">—</span>/5</span>
+        </div>
+        <p class="fp-synopsis" id="fpSynopsis">Récupération des informations du film...</p>
+        <div class="fp-actions-hero">
+            <button class="fp-btn-play" id="fpBtnRegarder"><i class="fa-solid fa-play"></i> Regarder</button>
+            <button class="fp-btn-icone" id="fpBtnFavori" title="Ajouter aux favoris"><i class="fa-regular fa-heart"></i></button>
+            <button class="fp-btn-icone" id="fpBtnTrailer" title="Voir la bande-annonce"><i class="fa-solid fa-film"></i></button>
+            <button class="fp-btn-icone" id="fpBtnPartager" title="Partager"><i class="fa-solid fa-share-nodes"></i></button>
+        </div>
+    </div>
+</section>
+
+<div class="fp-corps">
+
+    <!-- Lecteur vidéo -->
+    <div class="fp-player-cadre" id="fpPlayerCadre">
+        <video id="fpVideo" preload="metadata"></video>
+        <button class="fp-player-play-central" id="fpPlayCentral"><i class="fa-solid fa-play"></i></button>
+        <div class="fp-player-overlay">
+            <div class="fp-barre-progression" id="fpBarreProgression">
+                <div class="fp-barre-progression-remplissage" id="fpBarreProgressionRemplissage"></div>
+            </div>
+            <div class="fp-controles-bas">
+                <div class="fp-controles-gauche">
+                    <i class="fa-solid fa-play" id="fpBtnPlayPause"></i>
+                    <i class="fa-solid fa-rotate-left" id="fpBtnReculer" title="Reculer de 10s"></i>
+                    <i class="fa-solid fa-rotate-right" id="fpBtnAvancer" title="Avancer de 10s"></i>
+                    <span class="fp-temps" id="fpTemps">00:00 / 00:00</span>
+                </div>
+                <div class="fp-controles-droite">
+                    <i class="fa-solid fa-volume-high" id="fpBtnVolume"></i>
+                    <i class="fa-solid fa-expand" id="fpBtnPleinEcran"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Infos détaillées + note -->
+    <div class="fp-grille-info">
+        <div class="fp-affiche">
+            <img id="fpAffiche" src="" alt="Affiche du film">
+        </div>
+
+        <div>
+            <ul class="fp-liste-details">
+                <li><i class="fa-solid fa-user-tie"></i> <span><strong>Réalisateur :</strong> <span id="fpRealisateur">—</span></span></li>
+                <li><i class="fa-solid fa-masks-theater"></i> <span><strong>Genres :</strong> <span id="fpGenresDetail">—</span></span></li>
+                <li><i class="fa-solid fa-clock"></i> <span><strong>Durée :</strong> <span id="fpDureeDetail">—</span></span></li>
+                <li><i class="fa-solid fa-calendar-check"></i> <span><strong>Année de sortie :</strong> <span id="fpAnneeDetail">—</span></span></li>
+                <li><i class="fa-solid fa-eye"></i> <span><strong>Vues :</strong> <span id="fpVues">—</span></span></li>
+            </ul>
+        </div>
+
+        <div class="fp-carte-note">
+            <span class="fp-note-label">NOTE MOYENNE</span>
+            <div class="fp-note-moyenne"><span id="fpNoteMoyenneValeur">—</span><span>/5</span></div>
+            <span class="fp-note-label" id="fpNombreNotes">0 avis</span>
+
+            <div class="fp-etoiles-interactives" id="fpEtoilesInteractives">
+                <i class="fa-solid fa-star" data-valeur="1"></i>
+                <i class="fa-solid fa-star" data-valeur="2"></i>
+                <i class="fa-solid fa-star" data-valeur="3"></i>
+                <i class="fa-solid fa-star" data-valeur="4"></i>
+                <i class="fa-solid fa-star" data-valeur="5"></i>
+            </div>
+            <span class="fp-note-label" id="fpMonAvisLabel">Cliquez pour noter ce film</span>
+        </div>
+    </div>
+
+    <!-- Commentaires -->
+    <section id="fpCommentaires">
+        <h3 class="fp-section-titre">
+            COMMENTAIRES <span class="fp-count">(<span id="fpNombreCommentaires">0</span>)</span>
+        </h3>
+
+        <form class="fp-form-commentaire" id="fpFormCommentaire">
+            <label for="fpTexteCommentaire" class="visually-hidden">Votre commentaire</label>
+            <textarea id="fpTexteCommentaire" maxlength="1000" placeholder="Partagez votre avis sur ce film..." required></textarea>
+            <button type="submit">Publier</button>
+        </form>
+
+        <div id="fpListeCommentaires">
+            <p class="fp-vide">Chargement des commentaires...</p>
+        </div>
+    </section>
+
+    <!-- Films similaires -->
+    <section class="fp-similaires">
+        <h3 class="fp-section-titre">FILMS SIMILAIRES</h3>
+        <div class="grille-films" id="fpGrilleSimilaires"></div>
+    </section>
+
+</div>
+
+<footer class="pied-page">
+    <p>© 2026 Movies. Tous droits réservés.</p>
+</footer>
+
+<script src="/movie/view/utils/api.js"></script>
+<script src="/movie/view/utils/toast.js" defer></script>
+<script src="/movie/view/utilisateur/js/film.js" defer></script>
+</body>
+</html>

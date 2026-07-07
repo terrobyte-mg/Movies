@@ -161,6 +161,25 @@ class Api {
         });
     }
 
+    getFilmComments(filmId) {
+        return this.request("film-comments", { params: { id: filmId } });
+    }
+
+    addFilmComment(filmId, commentaire) {
+        return this.request("film-comment-add", {
+            method: "POST",
+            params: { id: filmId },
+            body: { commentaire }
+        });
+    }
+
+    deleteFilmComment(commentId) {
+        return this.request("film-comment-delete", {
+            method: "POST",
+            params: { id: commentId }
+        });
+    }
+
     createFilm(data) {
         return this.request("film-create", { method: "POST", body: data });
     }

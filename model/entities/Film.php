@@ -46,7 +46,7 @@ class Film {
             (int) $row['annee_sortie'],
             $row['poster'],
             $row['url_trailer'] ?? null,
-            $row['url_video'] ?? null
+            $row['video_path'] ?? null
         );
 
         $film->setId((int) $row['id']);
