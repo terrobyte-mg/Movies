@@ -167,6 +167,12 @@ switch ($action) {
         require __DIR__ . '/../view/admin/films.html';
         break;
 
+    case 'admin-film-edit':
+        requireAuthView();
+        requireAdminView();
+        require __DIR__ . '/../view/admin/film-edit.html';
+        break;
+
     case 'admin-utilisateurs':
         requireAuthView();
         requireAdminView();
@@ -222,6 +228,19 @@ switch ($action) {
         ApiResponse::send($filmController->show($id), 200, 404);
         break;
 
+    case 'admin-film':
+        requireAuthApi();
+        requireAdminApi();
+        $id = getIdParam();
+        ApiResponse::send($filmController->adminShow($id), 200, 404);
+        break;
+
+    case 'genres':
+        requireAuthApi();
+        requireAdminApi();
+        ApiResponse::send($filmController->genres());
+        break;
+
     case 'film-create':
         requireAuthApi();
         requireAdminApi();
@@ -256,6 +275,37 @@ switch ($action) {
         requireAuthApi();
         requireAdminApi();
         ApiResponse::send($adminController->dashboard());
+        break;
+
+    // ==========================================
+    // API gestion des utilisateurs (admin)
+    // ==========================================
+
+    case 'admin-users-list':
+        requireAuthApi();
+        requireAdminApi();
+        ApiResponse::send($userController->listUsers());
+        break;
+
+    case 'admin-user-suspend':
+        requireAuthApi();
+        requireAdminApi();
+        $id = getIdParam();
+        ApiResponse::send($userController->toggleSuspension($id, true));
+        break;
+
+    case 'admin-user-reactivate':
+        requireAuthApi();
+        requireAdminApi();
+        $id = getIdParam();
+        ApiResponse::send($userController->toggleSuspension($id, false));
+        break;
+
+    case 'admin-user-delete':
+        requireAuthApi();
+        requireAdminApi();
+        $id = getIdParam();
+        ApiResponse::send($userController->deleteUser($id));
         break;
 
     default:

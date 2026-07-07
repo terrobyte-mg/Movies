@@ -9,19 +9,36 @@ class UserController {
 
     private UserRepository $userRepository;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->userRepository = new UserRepository();
     }
 
-    public function getCurrentUser(): array
-    {
-
-        if (session_status() === PHP_SESSION_NONE) {
+    private function checkSession(): void {
+        if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
+    }
 
-        if (!isset($_SESSION['user'])) {
+    private function checkAuthentificationUser(): bool {
+
+        $this->checkSession();
+        if (!isset($_SESSION["user"])) {
+            return false;
+        }
+        return true;
+
+    }
+
+    private function checkAuthentificationAdmin(): bool {
+        if ($this->checkAuthentificationUser() && $_SESSION["user"]["role"] === "admin") {
+            return true;
+        }
+        return false;
+    }
+
+    public function getCurrentUser(): array {
+
+        if (!$this->checkAuthentificationUser()) {
             return [
                 "success" => false,
                 "message" => "Non authentifié"
@@ -37,13 +54,9 @@ class UserController {
     /**
      * @throws RandomException
      */
-    public function updateProfile(): array
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+    public function updateProfile(): array {
 
-        if (!isset($_SESSION['user'])) {
+        if (!$this->checkAuthentificationUser()) {
             return [
                 "success" => false,
                 "message" => "Non authentifié"
@@ -138,11 +151,8 @@ class UserController {
                 ];
             }
 
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mimeType = $finfo ? finfo_file($finfo, $fileTmpPath) : false;
-            if ($finfo) {
-                finfo_close($finfo);
-            }
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->file($fileTmpPath);
 
             $allowedMimeTypes = [
                 'image/jpeg' => 'jpg',
@@ -205,13 +215,9 @@ class UserController {
             ];
         }
     }
-    public function deleteAccount(): array
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+    public function deleteAccount(): array {
 
-        if (!isset($_SESSION['user'])) {
+        if (!$this->checkAuthentificationUser()) {
             return ["success" => false, "message" => "Non authentifié"];
         }
 
@@ -244,6 +250,86 @@ class UserController {
         }
 
         return ["success" => false, "message" => "Erreur lors de la suppression"];
+    }
+
+    public function deleteUser(int $userId): array {
+
+        if (!$this->checkAuthentificationAdmin()) {
+            return [
+                "success" => false,
+                "message" => "Veuillez vous connecter"
+            ];
+        }
+
+        if ($userId === $_SESSION['user']['id'] ?? 0) {
+            return [
+                "success" => false,
+                "message" => "Vous ne pouvez pas supprimer votre profil"
+            ];
+        }
+
+        $ok = $this->userRepository->deleteUser($userId);
+
+        return [
+            "success" => $ok,
+            "message" => $ok
+                ? "Compte efface"
+                : "Erreur lors de la suppression"
+        ];
+
+    }
+
+    /**
+     * Liste des utilisateurs pour le panneau admin, avec KPIs.
+     */
+    public function listUsers(): array {
+
+        if (!$this->checkAuthentificationAdmin()) {
+            return [
+                "success" => false,
+                "message" => "Accès refusé : Droits insuffisants."
+            ];
+        }
+
+        $users = $this->userRepository->listAllUsers();
+
+        return [
+            "success" => true,
+            "users" => $users,
+            "stats" => [
+                "total" => $this->userRepository->countUsers(),
+                "suspendus" => $this->userRepository->countSuspended()
+            ]
+        ];
+    }
+
+    /**
+     * Suspend ou réactive un compte utilisateur (action admin).
+     */
+    public function toggleSuspension(int $userId, bool $suspendre): array {
+
+        if ($this->checkAuthentificationAdmin()) {
+            return [
+                "success" => false,
+                "message" => "Accès refusé : Droits insuffisants."
+            ];
+        }
+
+        if ($userId === (int) ($_SESSION['user']['id'] ?? 0)) {
+            return [
+                "success" => false,
+                "message" => "Vous ne pouvez pas suspendre votre propre compte"
+            ];
+        }
+
+        $ok = $this->userRepository->setSuspension($userId, $suspendre);
+
+        return [
+            "success" => $ok,
+            "message" => $ok
+                ? ($suspendre ? "Compte suspendu" : "Compte réactivé")
+                : "Erreur lors de la mise à jour du compte"
+        ];
     }
 
 }

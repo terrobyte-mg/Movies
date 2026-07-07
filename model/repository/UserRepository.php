@@ -78,6 +78,7 @@ class UserRepository {
             $user->setId($row['id']);
             $user->setRoleUtilisateurs($row['role_utilisateur']);
             $user->setIsActif((bool)$row['is_actif']);
+            $user->setEstSuspendue((bool)($row['est_suspendue'] ?? false));
 
             return $user;
 
@@ -173,6 +174,75 @@ class UserRepository {
         } catch (PDOException $e) {
             error_log("Delete user error: " . $e->getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Liste complète des utilisateurs pour le panneau admin.
+     * Ne renvoie jamais le hash du mot de passe.
+     */
+    public function listAllUsers(): array
+    {
+        try {
+            $stmt = $this->pdo->query(
+                "SELECT id, nom_utilisateur, email, role_utilisateur, is_actif, est_suspendue, date_creation, url_photo_profil
+                 FROM utilisateurs
+                 ORDER BY date_creation DESC"
+            );
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error listAllUsers: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function countUsers(): int
+    {
+        try {
+            return (int) $this->pdo->query("SELECT COUNT(*) FROM utilisateurs")->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error countUsers: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function countSuspended(): int
+    {
+        try {
+            return (int) $this->pdo->query("SELECT COUNT(*) FROM utilisateurs WHERE est_suspendue = 1")->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error countSuspended: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Suspend ou réactive un compte (décision admin).
+     * Distinct de is_actif, qui reflète juste une session active.
+     */
+    public function setSuspension(int $userId, bool $suspendu): bool
+    {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE utilisateurs SET est_suspendue = :suspendu WHERE id = :id");
+            $stmt->bindValue(':suspendu', $suspendu ? 1 : 0, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $userId, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error setSuspension: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function findRoleById(int $userId): ?string
+    {
+        try {
+            $stmt = $this->pdo->prepare("SELECT role_utilisateur FROM utilisateurs WHERE id = :id");
+            $stmt->execute(['id' => $userId]);
+            $role = $stmt->fetchColumn();
+            return $role !== false ? $role : null;
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error findRoleById: " . $e->getMessage());
+            return null;
         }
     }
 

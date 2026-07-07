@@ -10,8 +10,7 @@ class FilmRepository {
         $this->pdo = Database::getInstance()->getPdo();
     }
 
-    public function listFilms(array $filters = [], bool $onlyPublished = true): array
-    {
+    public function listFilms(array $filters = [], bool $onlyPublished = true): array {
         try {
             [$where, $params] = $this->buildFilmFilters($filters, $onlyPublished);
             $orderBy = $this->resolveOrderBy($filters['sort'] ?? 'recent');
@@ -125,8 +124,7 @@ class FilmRepository {
         }
     }
 
-    public function deleteFilm(int $id): bool
-    {
+    public function deleteFilm(int $id): bool {
         try {
             $stmt = $this->pdo->prepare("DELETE FROM contenus WHERE id = :id AND type_code = 'film'");
             return $stmt->execute(['id' => $id]);
@@ -136,8 +134,7 @@ class FilmRepository {
         }
     }
 
-    public function incrementViews(int $id): bool
-    {
+    public function incrementViews(int $id): bool {
         try {
             $stmt = $this->pdo->prepare(
                 "UPDATE contenus SET nombre_vues = nombre_vues + 1 WHERE id = :id AND type_code = 'film' AND est_publie = 1"
@@ -149,8 +146,7 @@ class FilmRepository {
         }
     }
 
-    public function rateFilm(int $filmId, int $userId, int $note): bool
-    {
+    public function rateFilm(int $filmId, int $userId, int $note): bool {
         try {
             $stmt = $this->pdo->prepare(
                 "INSERT INTO notes_contenus (contenu_id, utilisateur_id, note)
@@ -255,8 +251,7 @@ class FilmRepository {
         }
     }
 
-    private function baseFilmSelect(): string
-    {
+    private function baseFilmSelect(): string {
         return "SELECT
                     c.*,
                     GROUP_CONCAT(DISTINCT g.nom ORDER BY g.nom SEPARATOR ',') AS genres,
@@ -268,8 +263,7 @@ class FilmRepository {
                 LEFT JOIN notes_contenus n ON n.contenu_id = c.id";
     }
 
-    private function buildFilmFilters(array $filters, bool $onlyPublished): array
-    {
+    private function buildFilmFilters(array $filters, bool $onlyPublished): array {
         $where = ["c.type_code = 'film'"];
         $params = [];
 
@@ -299,8 +293,7 @@ class FilmRepository {
         return ['WHERE ' . implode(' AND ', $where), $params];
     }
 
-    private function resolveOrderBy(string $sort): string
-    {
+    private function resolveOrderBy(string $sort): string {
         return match ($sort) {
             'views' => 'ORDER BY c.nombre_vues DESC, c.created_at DESC',
             'rating' => 'ORDER BY note_moyenne DESC, nombre_notes DESC',
@@ -310,8 +303,7 @@ class FilmRepository {
         };
     }
 
-    private function contentParams(array $data): array
-    {
+    private function contentParams(array $data): array {
         return [
             'titre' => $data['titre'],
             'realisateur' => $data['realisateur'],
@@ -325,8 +317,7 @@ class FilmRepository {
         ];
     }
 
-    private function syncGenres(int $filmId, array|string $genres): void
-    {
+    private function syncGenres(int $filmId, array|string $genres): void {
         $genres = is_array($genres) ? $genres : explode(',', $genres);
 
         $genres = array_values(array_unique(array_filter(array_map('trim', $genres))));
@@ -342,8 +333,7 @@ class FilmRepository {
         }
     }
 
-    private function getOrCreateGenre(string $nom): int
-    {
+    private function getOrCreateGenre(string $nom): int {
         $slug = $this->slugify($nom);
 
         $stmt = $this->pdo->prepare("SELECT id FROM genres WHERE slug = :slug");
@@ -360,8 +350,7 @@ class FilmRepository {
         return (int) $this->pdo->lastInsertId();
     }
 
-    private function slugify(string $value): string
-    {
+    private function slugify(string $value): string {
         $value = strtolower(trim($value));
         $value = iconv('UTF-8', 'ASCII//TRANSLIT', $value) ?: $value;
         $value = preg_replace('/[^a-z0-9]+/', '-', $value);

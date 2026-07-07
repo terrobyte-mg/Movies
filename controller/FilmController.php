@@ -55,6 +55,38 @@ class FilmController
     }
 
     /**
+     * DETAILS D'UN FILM POUR L'ADMIN (édition)
+     * Ne compte pas de vue et inclut aussi les films non publiés (brouillons).
+     */
+    public function adminShow(int $id): array
+    {
+        $film = $this->filmRepository->findFilmById($id, false);
+
+        if (!$film) {
+            return [
+                "success" => false,
+                "message" => "Film introuvable"
+            ];
+        }
+
+        return [
+            "success" => true,
+            "data" => $film
+        ];
+    }
+
+    /**
+     * LISTE DES GENRES (pour les checkbox du formulaire admin)
+     */
+    public function genres(): array
+    {
+        return [
+            "success" => true,
+            "data" => $this->filmRepository->listGenres()
+        ];
+    }
+
+    /**
      * CREER UN FILM (ADMIN)
      */
     public function store(): array

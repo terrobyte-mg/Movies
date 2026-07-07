@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MADAMOV Admin - Fiche Film</title>
+  <!-- FontAwesome CDN pour les icônes premium -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Style commun -->
+  <link rel="stylesheet" href="/movie/style.css">
+  <script src="/movie/view/utils/api.js" defer></script>
+  <script src="/movie/view/utils/toast.js" defer></script>
+  <script src="/movie/view/admin/js/film-edit.js" defer></script>
+  <style>
+    .fiche-form-grille {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 700px) {
+      .fiche-form-grille {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .poster-apercu-conteneur {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .poster-apercu {
+      width: 100%;
+      aspect-ratio: 2/3;
+      border-radius: 14px;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--gris-moyen);
+    }
+
+    .genres-grille {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .genre-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--gris-moyen);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gris-clair);
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .genre-chip input {
+      accent-color: var(--vert-clair);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    .genre-chip.selectionne {
+      border-color: var(--vert-clair);
+      background: rgba(46, 125, 50, 0.14);
+      color: var(--blanc);
+    }
+
+    .champ-texte,
+    .champ-textarea,
+    .champ-nombre {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--blanc);
+      border: 1px solid var(--gris-moyen);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .champ-textarea {
+      resize: vertical;
+      font-family: inherit;
+      min-height: 100px;
+    }
+
+    .section-video {
+      margin-top: 10px;
+      padding: 20px;
+      border: 1px solid var(--gris-moyen);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .video-ligne-test {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .video-ligne-test .form-groupe {
+      flex: 1;
+      min-width: 220px;
+      margin-bottom: 0;
+    }
+
+    .btn-tester-video {
+      padding: 12px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--vert-clair);
+      background: transparent;
+      color: var(--vert-clair);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-tester-video:hover {
+      background: rgba(46, 125, 50, 0.14);
+    }
+
+    .statut-test-video {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .statut-test-video.chargement { color: var(--gris-clair); }
+    .statut-test-video.succes { color: #4caf50; }
+    .statut-test-video.erreur { color: var(--rouge-mada); }
+
+    .toggle-publie {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .toggle-publie input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--vert-clair);
+      cursor: pointer;
+    }
+
+    .barre-actions-fiche {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .barre-actions-fiche button {
+      flex: 1;
+      min-width: 160px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-conteneur">
+
+  <!-- BARRE LATÉRALE ADMINISTRATIVE GAUCHE -->
+  <aside class="barre-laterale">
+    <div>
+      <div class="logo" style="font-size: 18px; gap: 8px; flex-wrap: nowrap; overflow: hidden;">
+        <i class="fa-solid fa-clapperboard" style="color: var(--rouge-mada); flex-shrink: 0;"></i>
+        <span style="color: var(--blanc); white-space: nowrap;">MADAMOV</span>
+        <span style="font-size: 10px; background: var(--rouge-mada); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 1px; flex-shrink: 0;">ADMIN</span>
+      </div>
+
+      <!-- Profil Admin -->
+      <div class="profil-section">
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar Administrateur" class="avatar-grand">
+        <h4 id="nomAdminConnecte">Théodoric</h4>
+        <p class="badge-premium" style="margin-top: 6px;">Administrateur</p>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav>
+        <p class="menu-titre">Tableau de bord</p>
+        <ul class="menu-liens">
+          <li>
+            <a href="/movie/public/index.php?action=admin">
+              <i class="fa-solid fa-house-chimney"></i> <span>Tableau de bord</span>
+            </a>
+          </li>
+        </ul>
+
+        <p class="menu-titre">Gestion du contenu</p>
+        <ul class="menu-liens">
+          <li class="actif">
+            <a href="/movie/public/index.php?action=admin-films">
+              <i class="fa-solid fa-film"></i> <span>Film</span>
+            </a>
+          </li>
+        </ul>
+
+        <p class="menu-titre">Utilisateurs</p>
+        <ul class="menu-liens">
+          <li>
+            <a href="/movie/public/index.php?action=admin-utilisateurs">
+              <i class="fa-solid fa-users"></i> <span>Utilisateurs</span>
+            </a>
+          </li>
+        </ul>
+
+        <p class="menu-titre">Paramètres</p>
+        <ul class="menu-liens">
+          <li>
+            <a href="/movie/public/index.php?action=admin-profil">
+              <i class="fa-solid fa-user-gear"></i> <span>Profil Admin</span>
+            </a>
+          </li>
+          <li>
+            <a id="logoutBtn">
+              <i class="fa-solid fa-right-from-bracket"></i> <span>Déconnexion</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div>
+      <div class="baobab-silhouettes"></div>
+      <div style="font-size: 11px; text-align: center; color: var(--gris-clair); padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05); font-weight: 500;">
+        © 2026 MADAMOV Admin Panel.<br>Tous droits réservés.
+      </div>
+    </div>
+  </aside>
+
+  <!-- ZONE DE CONTENU PRINCIPALE DROITE -->
+  <main class="zone-principale">
+    <!-- En-tête -->
+    <header class="en-tete">
+      <div class="recherche-barre" style="visibility:hidden;">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <label>
+          <input type="text" disabled>
+        </label>
+      </div>
+      <div class="en-tete-droite">
+        <div class="profil-utilisateur">
+          <span style="font-weight: 700; font-size: 14px;">Admin</span>
+          <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar mini" class="avatar-petit">
+        </div>
+      </div>
+    </header>
+
+    <div class="contenu-principal">
+      <!-- Titre de la page -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <a href="/movie/public/index.php?action=admin-films" style="color: var(--gris-clair); font-size: 13px; font-weight: 600; display:inline-flex; align-items:center; gap:6px; margin-bottom: 10px;">
+            <i class="fa-solid fa-arrow-left"></i> Retour aux films
+          </a>
+          <h1 id="titrePageFilm" style="font-size: 24px; font-weight: 700; color: var(--blanc);">
+            <i class="fa-solid fa-film" style="color: var(--rouge-mada); margin-right: 8px;"></i> Ajouter un film
+          </h1>
+        </div>
+      </div>
+
+      <!-- Formulaire fiche film -->
+      <div class="conteneur-section" style="padding: 24px;">
+        <form id="formFilm">
+          <div class="fiche-form-grille">
+
+            <!-- Colonne affiche -->
+            <div class="poster-apercu-conteneur">
+              <img id="apercuPoster" class="poster-apercu" src="" alt="Aperçu affiche">
+              <div class="form-groupe" style="margin-bottom:0;">
+                <label for="afficheFilm">URL Affiche</label>
+                <input type="url" id="afficheFilm" class="champ-texte" placeholder="https://..." required>
+              </div>
+            </div>
+
+            <!-- Colonne infos -->
+            <div>
+              <div class="form-double-ligne" style="margin-bottom: 15px;">
+                <div class="form-groupe" style="margin-bottom:0;">
+                  <label for="titreFilm">Titre du film</label>
+                  <input type="text" id="titreFilm" class="champ-texte" required>
+                </div>
+                <div class="form-groupe" style="margin-bottom:0;">
+                  <label for="realisateurFilm">Réalisateur</label>
+                  <input type="text" id="realisateurFilm" class="champ-texte" required>
+                </div>
+              </div>
+
+              <div class="form-groupe">
+                <label for="synopsisFilm">Synopsis</label>
+                <textarea id="synopsisFilm" class="champ-textarea" rows="4" required></textarea>
+              </div>
+
+              <div class="form-double-ligne" style="margin-bottom: 15px;">
+                <div class="form-groupe" style="margin-bottom:0;">
+                  <label for="anneeFilm">Année de sortie</label>
+                  <input type="number" id="anneeFilm" class="champ-nombre" value="2026" required>
+                </div>
+                <div class="form-groupe" style="margin-bottom:0;">
+                  <label for="dureeFilm">Durée (minutes)</label>
+                  <input type="number" id="dureeFilm" class="champ-nombre" placeholder="Ex: 135" min="1" required>
+                </div>
+              </div>
+
+              <div class="form-groupe">
+                <label for="trailerFilm">URL Bande-annonce (optionnel)</label>
+                <input type="url" id="trailerFilm" class="champ-texte" placeholder="https://...">
+              </div>
+
+              <div class="form-groupe">
+                <label>Genres</label>
+                <div id="genresGrille" class="genres-grille">
+                  <!-- Rempli par JavaScript -->
+                </div>
+              </div>
+
+              <div class="form-groupe">
+                <label for="autreGenreFilm">Autre genre (optionnel, si absent de la liste)</label>
+                <input type="text" id="autreGenreFilm" class="champ-texte" placeholder="Ex: Fantastique">
+              </div>
+
+              <label class="toggle-publie">
+                <input type="checkbox" id="publieFilm" checked>
+                Publier ce film (visible pour les utilisateurs)
+              </label>
+            </div>
+          </div>
+
+          <!-- Section test vidéo -->
+          <div class="section-video">
+            <h3 style="font-size: 15px; margin-bottom: 14px; font-weight: 700;">
+              <i class="fa-solid fa-clapperboard" style="color: var(--rouge-mada); margin-right: 6px;"></i>
+              Fichier vidéo
+            </h3>
+
+            <div class="video-ligne-test">
+              <div class="form-groupe">
+                <label for="videoFilm">Chemin du fichier (ex: /movie/uploads/videos/mon-film.mp4)</label>
+                <input type="text" id="videoFilm" class="champ-texte" placeholder="/movie/uploads/videos/...">
+              </div>
+              <button type="button" id="btnTesterVideo" class="btn-tester-video">
+                <i class="fa-solid fa-play"></i> Tester la vidéo
+              </button>
+            </div>
+
+            <p id="statutTestVideo" class="statut-test-video"></p>
+
+            <div id="cadreVideoTest" class="lecteur-video-cadre" style="display:none; margin-top: 16px; margin-bottom: 0; max-width: 480px;">
+              <video id="videoTest" class="video-tag" controls></video>
+            </div>
+          </div>
+
+          <div class="barre-actions-fiche">
+            <button type="submit" id="btnEnregistrerFilm" class="bouton-principal">
+              <i class="fa-solid fa-floppy-disk"></i> Enregistrer
+            </button>
+            <a href="/movie/public/index.php?action=admin-films" class="bouton-secondaire" style="text-decoration:none;">
+              Annuler
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+</body>
+</html>

@@ -50,17 +50,12 @@
               <i class="fa-solid fa-film"></i> <span>Film</span>
             </a>
           </li>
-          <li id="lienMenuCategories">
-            <a href="/movie/public/index.php?action=admin-utilisateurs" >
-              <i class="fa-solid fa-users"></i> <span>Utilisateurs</span>
-            </a>
-          </li>
         </ul>
 
         <p class="menu-titre">Utilisateurs</p>
         <ul class="menu-liens">
-          <li id="lienMenuUtilisateurs">
-            <a href="utilisateurs.html">
+          <li>
+            <a href="/movie/public/index.php?action=admin-utilisateurs">
               <i class="fa-solid fa-users"></i> <span>Utilisateurs</span>
             </a>
           </li>
@@ -101,7 +96,7 @@
     <header class="en-tete">
       <div class="recherche-barre">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="barreRechercheAdmin" placeholder="Rechercher un film, un utilisateur ou une catégorie..." >
+        <label for="barreRechercheAdmin"></label><input type="text" id="barreRechercheAdmin" placeholder="Rechercher un film, un utilisateur ou une catégorie..." >
       </div>
 
       <div class="en-tete-droite">
@@ -123,26 +118,26 @@
 
       <!-- Grille de fiches statistiques KPIs -->
       <div class="grille-stats">
-        <div class="carte-stat">
+        <a href="/movie/public/index.php?action=admin-films" class="carte-stat">
           <div class="icone-cercle rouge"><i class="fa-solid fa-clapperboard"></i></div>
           <div>
             <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Films disponibles</p>
             <h3 class="stat-valeur" id="kpiTotalFilms">—</h3>
           </div>
-        </div>
-        <div class="carte-stat">
+        </a>
+        <a onclick="" class="carte-stat">
           <div class="icone-cercle jaune"><i class="fa-solid fa-star"></i></div>
           <div>
             <p style="font-size: 11px; color: var(--gris-clair); font-weight: 700; text-transform: uppercase;">Film populaire</p>
             <h3 class="stat-valeur" id="kpiFilmPopulaire" style="font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">—</h3>
             <p class="stat-evol" style="color: #f59e0b;"><i class="fa-solid fa-fire"></i> <span id="kpiFilmPopulaireVues">0</span> vues</p>
           </div>
-        </div>
+        </a>
         <!-- Bloc de droite : Listes complètes -->
         <div class="conteneur-section grille-item-pleine-largeur" style="margin-bottom: 0; display: flex; flex-direction: column;">
           <h3 class="section-titre" style="margin-top: 0; font-size: 16px; margin-bottom: 20px;">LISTES COMPLÈTES</h3>
           <div style="display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: center;">
-            <div class="carte-stat curseur-main"  style="justify-content: space-between; padding: 16px; margin-bottom: 0;">
+            <a href="/movie/public/index.php?action=admin-films" class="carte-stat curseur-main"  style="justify-content: space-between; padding: 16px; margin-bottom: 0;">
               <div style="display: flex; align-items: center; gap: 14px;">
                 <div class="icone-cercle vert" style="width:40px; height:40px; font-size:16px;"><i class="fa-solid fa-clapperboard"></i></div>
                 <div>
@@ -151,7 +146,7 @@
                 </div>
               </div>
               <i class="fa-solid fa-chevron-right" style="color: var(--vert-clair);"></i>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -191,10 +186,10 @@
               <i class="fa-solid fa-trash-can" style="color: var(--rouge-mada);"></i>
               <span style="color: var(--blanc);">Supprimer des films</span>
             </div>
-            <div class="btn-action-carre" >
+            <a href="/movie/public/index.php?action=admin-utilisateurs" class="btn-action-carre" >
               <i class="fa-solid fa-user-group" style="color: #2196f3;"></i>
               <span style="color: var(--blanc);">Utilisateurs</span>
-            </div>
+            </a>
             <div class="btn-action-carre" >
               <i class="fa-solid fa-folder-tree" style="color: #8b5cf6;"></i>
               <span style="color: var(--blanc);">Catégories</span>
@@ -348,11 +343,13 @@
           <div class="table-pagination">
             <div>
               Afficher
-              <select style="background: var(--gris-moyen); color: white; border: 1px solid var(--gris-moyen); border-radius: 6px; padding: 4px 8px; cursor: pointer;" >
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-              </select> entrées
+              <label>
+                <select style="background: var(--gris-moyen); color: white; border: 1px solid var(--gris-moyen); border-radius: 6px; padding: 4px 8px; cursor: pointer;" >
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+              </label> entrées
             </div>
             <div class="pagination-boutons">
               <button class="pag-btn actif">1</button>

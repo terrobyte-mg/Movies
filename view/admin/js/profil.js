@@ -26,37 +26,72 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    async function loadAdmin() {
-        try {
-            const { success, user } = await api.getCurrentUser();
+    // ==================================================
+    // Gestion de l'état du formulaire
+    // ==================================================
 
-            if (!success || !user) {
-                console.log("Administrateur non connecté");
-                return;
+    let initialValues = {};
+
+    const form = document.getElementById("formulaireProfilAdmin");
+    const button = document.getElementById("submitProfile");
+
+    if (button) {
+        button.disabled = true;
+    }
+
+    function verifierModification() {
+        if (!form || !button) return;
+
+        const currentValues = {
+            nom: document.getElementById("nomUtilisateurAdmin").value.trim(),
+            email: document.getElementById("emailAdmin").value.trim(),
+            mdp: document.getElementById("nouveauMdpAdmin").value,
+            confirmation: document.getElementById("confirmerMdpAdmin").value
+        };
+
+        const modifie =
+            currentValues.nom !== initialValues.nom ||
+            currentValues.email !== initialValues.email ||
+            currentValues.mdp !== initialValues.mdp ||
+            currentValues.confirmation !== initialValues.confirmation;
+
+        button.disabled = !modifie;
+    }
+
+    if (form) {
+        [
+            "nomUtilisateurAdmin",
+            "emailAdmin",
+            "nouveauMdpAdmin",
+            "confirmerMdpAdmin"
+        ].forEach(id => {
+            const input = document.getElementById(id);
+
+            if (input) {
+                input.addEventListener("input", verifierModification);
             }
-
-            injectAdmin(user);
-
-        } catch (error) {
-            console.error("Erreur chargement profil admin", error);
-        }
+        });
     }
 
     function injectAdmin(user) {
         const nomAdminConnecte = document.getElementById("nomAdminConnecte");
-        const nomComplet = document.getElementById("nomCompletAdmin");
         const nomUtilisateur = document.getElementById("nomUtilisateurAdmin");
         const email = document.getElementById("emailAdmin");
 
-        // Pas de champ "nom complet" côté backend, on affiche le nom d'utilisateur
-        // à la fois comme identifiant et comme nom affiché.
         if (nomAdminConnecte) nomAdminConnecte.textContent = user.nom_utilisateur;
-        if (nomComplet) nomComplet.value = user.nom_utilisateur;
         if (nomUtilisateur) nomUtilisateur.value = user.nom_utilisateur;
         if (email) email.value = user.email;
-    }
 
-    const form = document.getElementById("formulaireProfilAdmin");
+        // Sauvegarde des valeurs initiales
+        initialValues = {
+            nom: user.nom_utilisateur,
+            email: user.email,
+            mdp: "",
+            confirmation: ""
+        };
+
+        verifierModification();
+    }
 
     if (form) {
         form.addEventListener("submit", async (e) => {
@@ -98,20 +133,60 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 if (success) {
                     showMessage("success", message);
+
+                    document.getElementById("nouveauMdpAdmin").value = "";
+                    document.getElementById("confirmerMdpAdmin").value = "";
+
                     if (user) {
                         injectAdmin(user);
                     }
-                    document.getElementById("nouveauMdpAdmin").value = "";
-                    document.getElementById("confirmerMdpAdmin").value = "";
+
                 } else {
                     showMessage("error", message);
                 }
+
             } catch (error) {
                 console.error(error);
                 showMessage("error", "Erreur lors de l'enregistrement");
             }
         });
+    }    function injectAdminIdentity(user) {
+        const nomSidebar = document.getElementById("nomAdminConnecte");
+        const nomHeader = document.querySelector(".profil-utilisateur span");
+
+        if (nomSidebar) {
+            nomSidebar.textContent = user.nom_utilisateur;
+        }
+
+        if (nomHeader) {
+            nomHeader.textContent = user.nom_utilisateur;
+        }
+
+        const avatars = document.querySelectorAll(".avatar-grand, .avatar-petit");
+        avatars.forEach(avatar => {
+            if (user.url_photo_profil) {
+                avatar.src = user.url_photo_profil;
+            }
+        });
     }
 
-    await loadAdmin();
+    async function chargerAdmin() {
+        try {
+            const { success, user } = await api.getCurrentUser();
+
+            if (!success || !user) {
+                console.log("Administrateur non connecté");
+                return;
+            }
+
+            injectAdminIdentity(user);
+            injectAdmin(user)
+
+        } catch (error) {
+            console.error("Erreur chargement identité admin", error);
+        }
+    }
+
+    await chargerAdmin();
+
 });

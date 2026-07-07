@@ -145,6 +145,14 @@ class Api {
         return this.request("film", { params: { id } });
     }
 
+    getAdminFilm(id) {
+        return this.request("admin-film", { params: { id } });
+    }
+
+    getGenres() {
+        return this.request("genres");
+    }
+
     rateFilm(id, note) {
         return this.request("film-rate", {
             method: "POST",
@@ -172,6 +180,23 @@ class Api {
     getAdminDashboard() {
         return this.request("admin-dashboard-data");
     }
+
+    getAdminUsers() {
+        return this.request("admin-users-list");
+    }
+
+    suspendUser(id) {
+        return this.request("admin-user-suspend", { method: "POST", params: { id } });
+    }
+
+    reactivateUser(id) {
+        return this.request("admin-user-reactivate", { method: "POST", params: { id } });
+    }
+
+    deleteUser(id) {
+        return this.request("admin-user-delete", { method: "POST", params: {id} })
+    }
+
 }
 
 const api = new Api();

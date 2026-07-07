@@ -128,6 +128,13 @@ class AuthController {
             ];
         }
 
+        if ($user->estSuspendue()) {
+            return [
+                "success" => false,
+                "message" => "Ce compte a été suspendu. Contactez un administrateur."
+            ];
+        }
+
         return [
             "success" => true,
             "user" => $user

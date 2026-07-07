@@ -25,14 +25,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     }
-
-    function formatterDate(dateStr) {
-        if (!dateStr) return "—";
-        const d = new Date(dateStr);
-        if (isNaN(d)) return "—";
-        return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
-    }
-
     function afficherKpis(stats) {
         const kpiTotalFilms = document.getElementById("kpiTotalFilms");
         const kpiFilmPopulaire = document.getElementById("kpiFilmPopulaire");

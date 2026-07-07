@@ -91,16 +91,17 @@
   <!-- BARRE LATÉRALE ADMINISTRATIVE GAUCHE -->
   <aside class="barre-laterale">
     <div>
-      <div class="logo">
-        <i class="fa-solid fa-clapperboard" style="color: var(--rouge-mada);"></i>
-        MADAMOV <span>ADMIN</span>
+      <div class="logo" style="font-size: 18px; gap: 8px; flex-wrap: nowrap; overflow: hidden;">
+        <i class="fa-solid fa-clapperboard" style="color: var(--rouge-mada); flex-shrink: 0;"></i>
+        <span style="color: var(--blanc); white-space: nowrap;">MADAMOV</span>
+        <span style="font-size: 10px; background: var(--rouge-mada); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 1px; flex-shrink: 0;">ADMIN</span>
       </div>
 
       <!-- Profil Admin -->
       <div class="profil-section">
         <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150" alt="Avatar Administrateur" class="avatar-grand">
-        <h4 id="nomAdminConnecte">Théodoric</h4>
-        <p class="badge-premium" style="margin-top: 6px;">Super Administrateur</p>
+        <h4 id="nomAdminConnecte"></h4>
+        <p class="badge-premium" style="margin-top: 6px;">Administrateur</p>
       </div>
 
       <!-- Navigation Menu -->
@@ -140,7 +141,7 @@
             </a>
           </li>
           <li>
-            <a href="inscription.html">
+            <a href="/movie/public/index.php?action=logout">
               <i class="fa-solid fa-right-from-bracket"></i> <span>Déconnexion</span>
             </a>
           </li>
@@ -159,10 +160,6 @@
   <main class="zone-principale">
     <!-- En-tête -->
     <header class="en-tete">
-      <div class="recherche-barre">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Rechercher..." disabled style="cursor: not-allowed; opacity: 0.5;">
-      </div>
       <div class="en-tete-droite">
         <button class="btn-icone" ><i class="fa-regular fa-bell"></i></button>
         <div class="profil-utilisateur">
@@ -187,12 +184,8 @@
           <h3 class="parametre-titre"><i class="fa-regular fa-user"></i> Informations personnelles</h3>
           <div class="form-ligne">
             <div class="form-colonne">
-              <label for="nomCompletAdmin">Nom complet</label>
-              <input type="text" id="nomCompletAdmin" value="Théodoric" required>
-            </div>
-            <div class="form-colonne">
               <label for="nomUtilisateurAdmin">Nom d'utilisateur</label>
-              <input type="text" id="nomUtilisateurAdmin" value="theodoric" required>
+              <input type="text" id="nomUtilisateurAdmin" value="" required>
             </div>
           </div>
           <div class="form-ligne">
@@ -202,7 +195,7 @@
             </div>
             <div class="form-colonne">
               <label for="roleAdmin">Rôle administratif</label>
-              <input type="text" id="roleAdmin" value="Super Administrateur" disabled style="background-color:rgba(255,255,255,0.02); color:var(--gris-clair); cursor:not-allowed;">
+              <input type="text" id="roleAdmin" value="Administrateur" disabled style="background-color:rgba(255,255,255,0.02); color:var(--gris-clair); cursor:not-allowed;">
             </div>
           </div>
         </div>
@@ -222,8 +215,8 @@
           </div>
         </div>
 
-        <div style="margin-top: 20px;">
-          <button type="submit" class="btn-enregistrer">
+        <div style="margin-top: 20px; text-align: center;">
+          <button type="submit" id="submitProfile" class="btn-enregistrer">
             <i class="fa-solid fa-check"></i> Enregistrer
           </button>
         </div>
