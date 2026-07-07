@@ -6,6 +6,7 @@
   <title>MADAMOV - Films par Genre</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/movie/style.css">
+  <script src="/movie/view/utils/api.js"></script>
   <script src="/movie/view/utils/toast.js" defer></script>
   <script src="/movie/view/utilisateur/utilisateur.js" defer></script>
   <style>
@@ -107,7 +108,7 @@
           <button class="bouton-menu-mobile" ><i class="fa-solid fa-bars"></i></button>
           <div class="barre-recherche">
             <i class="fa-solid fa-search"></i>
-            <input type="text" id="champRecherche" placeholder="Rechercher un film..." oninput="filtrerFilms()">
+            <input type="text" id="champRecherche" placeholder="Rechercher un film...">
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 14px;">
@@ -163,94 +164,5 @@
     </main>
   </div>
 
-  <script>
-    // Données de films par genre (le backend fournira les vraies données via API)
-    const filmsParGenre = {
-      "Action": [
-        { titre: "The Batman", annee: "2022", image: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg" },
-        { titre: "Top Gun: Maverick", annee: "2022", image: "https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDabo8diEhkHPm3.jpg" },
-        { titre: "Black Panther", annee: "2022", image: "https://image.tmdb.org/t/p/w500/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" },
-        { titre: "John Wick 4", annee: "2023", image: "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg" },
-        { titre: "Avengers", annee: "2021", image: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
-        { titre: "Fast & Furious 10", annee: "2023", image: "https://image.tmdb.org/t/p/w500/fiVW06jE7z9YnO4trhaMEdclSiC.jpg" }
-      ],
-      "Comédie": [
-        { titre: "Barbie", annee: "2023", image: "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7IS.jpg" },
-        { titre: "The Nice Guys", annee: "2016", image: "https://image.tmdb.org/t/p/w500/tEn4a3OTn0oRFwj8IYkRHkqjpYn.jpg" },
-        { titre: "Knives Out", annee: "2019", image: "https://image.tmdb.org/t/p/w500/pThyQovXQrw2m0s9x82twj48Jq4.jpg" },
-        { titre: "Jojo Rabbit", annee: "2019", image: "https://image.tmdb.org/t/p/w500/7GszMnbTCatGGavxrxnBi7BPZWX.jpg" }
-      ],
-      "Horreur": [
-        { titre: "Nope", annee: "2022", image: "https://image.tmdb.org/t/p/w500/AcKVlWaNVVVFQwynFAiSRS0jKZs.jpg" },
-        { titre: "The Menu", annee: "2022", image: "https://image.tmdb.org/t/p/w500/v3uMpqDLfgZSJl6xzEjgJAj4xaR.jpg" },
-        { titre: "Smile", annee: "2022", image: "https://image.tmdb.org/t/p/w500/aPqcQwu4VGEwallmXWMlFCgHaus.jpg" },
-        { titre: "Hereditary", annee: "2018", image: "https://image.tmdb.org/t/p/w500/rUPlZTa6bNnP3LzE55kM8JVPoeq.jpg" }
-      ],
-      "Romance": [
-        { titre: "La La Land", annee: "2016", image: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg" },
-        { titre: "Titanic", annee: "1997", image: "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg" }
-      ],
-      "Science-Fiction": [
-        { titre: "Dune: Part 2", annee: "2024", image: "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg" },
-        { titre: "Oppenheimer", annee: "2023", image: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg" },
-        { titre: "Everything Everywhere", annee: "2022", image: "https://image.tmdb.org/t/p/w500/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg" }
-      ],
-      "Thriller": [
-        { titre: "Parasite", annee: "2019", image: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg" },
-        { titre: "Gone Girl", annee: "2014", image: "https://image.tmdb.org/t/p/w500/3b2irOf7o6BSF8F1EFjpuLqHJQM.jpg" }
-      ],
-      "Animation": [
-        { titre: "Spider-Man: Across the Universe", annee: "2023", image: "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg" },
-        { titre: "Encanto", annee: "2021", image: "https://image.tmdb.org/t/p/w500/4j0PNHkMr5ax3IA8tjtxcmPU3QT.jpg" }
-      ],
-      "Aventure": [
-        { titre: "Indiana Jones 5", annee: "2023", image: "https://image.tmdb.org/t/p/w500/Af4bXE63pVsb2FtbW8uYIyPBadD.jpg" },
-        { titre: "Jurassic World", annee: "2022", image: "https://image.tmdb.org/t/p/w500/kAVRgw7GgK1CfYEJq8ME6EvRIgU.jpg" }
-      ]
-    };
-
-    // Sélectionner un genre et afficher ses films
-    function selectionnerGenre(nomGenre, elementClique) {
-      // Mettre à jour l'onglet actif
-      document.querySelectorAll(".carte-genre").forEach(c => c.classList.remove("actif"));
-      elementClique.classList.add("actif");
-
-      // Mettre à jour le titre des résultats
-      document.getElementById("genreSelectionne").textContent = nomGenre;
-
-      // Récupérer les films du genre sélectionné
-      afficherFilms(filmsParGenre[nomGenre] || []);
-    }
-
-    // Afficher la grille de films
-    function afficherFilms(listeFilms) {
-      const conteneur = document.getElementById("grilleFilms");
-      conteneur.innerHTML = listeFilms.map(film => `
-        <div class="carte-film" >
-          <img src="${film.image}" alt="${film.titre}" onerror="this.src='https://via.placeholder.com/160x230/1a1a2e/ffffff?text=${encodeURIComponent(film.titre)}'">
-          <div class="info-film">
-            <h4>${film.titre}</h4>
-            <span><i class="fa-regular fa-calendar" style="margin-right:4px;"></i>${film.annee}</span>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    // Charger les films d'action par défaut au chargement
-    window.addEventListener("DOMContentLoaded", () => {
-      afficherFilms(filmsParGenre["Action"]);
-    });
-
-    // Filtrer les films affichés par recherche
-    function filtrerFilms() {
-      const texteRecherche = document.getElementById("champRecherche").value.toLowerCase();
-      const cartes = document.querySelectorAll(".carte-film");
-      cartes.forEach(carte => {
-        const titreCarte = carte.querySelector("h4").textContent.toLowerCase();
-        carte.style.display = titreCarte.includes(texteRecherche) ? "" : "none";
-      });
-    }
-  </script>
 </body>
 </html>
-
