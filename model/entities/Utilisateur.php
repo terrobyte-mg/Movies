@@ -5,13 +5,20 @@ class Utilisateur extends Personne {
 
     private bool $isActif = false;
     private bool $estSuspendue = false;
-    public function __construct(string $nom_utilisateur, string $email, string $password_hash, ?string $url_photo_profil) {
+    public function __construct(
+        string $nom_utilisateur,
+        string $email,
+        string $password_hash,
+        ?string $url_photo_profil,
+        DateTime $date_naissance,
+    ) {
 
         parent::__construct(
             nom_utilisateur : $nom_utilisateur,
             email: $email,
             password_hash: $password_hash,
-            url_photo_profil: $url_photo_profil
+            url_photo_profil: $url_photo_profil,
+            date_naissance: $date_naissance
         );
 
     }

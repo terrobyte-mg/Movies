@@ -156,8 +156,7 @@ class FilmController
     /**
      * NOTE UN FILM
      */
-    public function rate(int $filmId): array
-    {
+    public function rate(int $filmId): array {
         $data = json_decode(file_get_contents("php://input"), true);
 
         $note = (int) ($data['note'] ?? 0);

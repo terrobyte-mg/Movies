@@ -2,95 +2,104 @@
 
 <html lang="fr">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Movies - Inscription</title>
-        <link rel="stylesheet" href="/movie/view/assets/fonts/fonts.css">
-        <link rel="stylesheet" href="/movie/style.css">
-        <link rel="stylesheet" href="/movie/view/auth/auth.css">
-        <script src="/movie/view/utils/api.js" defer></script>
-        <script src="/movie/view/utils/toast.js" defer></script>
-        <script src="/movie/view/auth/auth.js" defer></script>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies - Inscription</title>
+    <link rel="stylesheet" href="/movie/view/assets/fonts/fonts.css">
+    <link rel="stylesheet" href="/movie/style.css">
+    <link rel="stylesheet" href="/movie/view/auth/auth.css">
+    <script src="/movie/view/utils/api.js" defer></script>
+    <script src="/movie/view/utils/toast.js" defer></script>
+    <script src="/movie/view/auth/auth.js" defer></script>
+</head>
 
-    <body class="page-inscription">
+<body class="page-inscription">
 
-        <div class="boite-inscription">
-            <!-- Logo Movies  -->
-            <div style="text-align: center; margin-bottom: 25px;">
-                <div class="logo" style="justify-content: center; margin-bottom: 12px;">
-                    <svg class="circle-play-logo" style="color: var(--rouge-mada)"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
-                    Movies
-                </div>
-                <p style="font-size: 13px; color: var(--gris-clair); max-width: 380px; margin: 0 auto; line-height: 1.5;">
-                    Inscrivez-vous pour accéder à des diverses de catalogue de films.
-                </p>
+<div class="boite-inscription">
+    <!-- Logo Movies  -->
+    <div style="text-align: center; margin-bottom: 25px;">
+        <div class="logo" style="justify-content: center; margin-bottom: 12px;">
+            <svg class="circle-play-logo" style="color: var(--rouge-mada)"><use href="/movie/view/assets/icons.svg#circle-play"></use></svg>
+            Movies
+        </div>
+        <p style="font-size: 13px; color: var(--gris-clair); max-width: 380px; margin: 0 auto; line-height: 1.5;">
+            Inscrivez-vous pour accéder à des diverses de catalogue de films.
+        </p>
+    </div>
+
+    <!-- Formulaire d'inscription -->
+    <form method="POST" id="signupForm">
+
+        <!-- Nom utilisateur -->
+        <div class="form-groupe">
+            <label for="nom_utilisateur">Nom utilisateur</label>
+            <div class="input-icone">
+                <svg class="user-input"><use href="/movie/view/assets/icons.svg#user"></use></svg>
+                <input type="text" id="nom_utilisateur" name="nom_utilisateur" placeholder="Entrez votre nom d'utilisateur" maxlength="50" required>
             </div>
-
-            <!-- Formulaire d'inscription -->
-            <form method="POST" id="signupForm">
-
-                <!-- Nom utilisateur -->
-                <div class="form-groupe">
-                    <label for="nom_utilisateur">Nom utilisateur</label>
-                    <div class="input-icone">
-                        <svg class="user-input"><use href="/movie/view/assets/icons.svg#user"></use></svg>
-                        <input type="text" id="nom_utilisateur" name="nom_utilisateur" placeholder="Entrez votre nom d'utilisateur" maxlength="50" required>
-                    </div>
-                </div>
-
-                <!-- Email de l'utilisateur-->
-                <div class="form-groupe">
-                    <label for="email_utilisateur">Email valide</label>
-                    <div class="input-icone">
-                        <svg class="user-input"><use href="/movie/view/assets/icons.svg#user"></use></svg>
-                        <input type="email" id="email_utilisateur" name="email_utilisateur" placeholder="Entrez votre email" maxlength="255" required>
-                    </div>
-                </div>
-
-                <!-- Mot de passe -->
-                <div class="form-groupe">
-                    <label for="mot_de_passe">Mot de passe</label>
-                    <div class="input-icone">
-                        <svg class="user-input"><use href="/movie/view/assets/icons.svg#lock"></use></svg>
-                        <input type="password" id="mot_de_passe" name="mot_de_passe1" placeholder="Votre mot de passe" required>
-                        <svg class="eye-icon toggle-mdp" onclick="basculerMotDePasse('mot_de_passe', 'icon-eye-1')"><use id="icon-eye-1" href="/movie/view/assets/icons.svg#eye"></use></svg>
-                    </div>
-                </div>
-
-                <!-- Confirmer le mot de passe -->
-                <div class="form-groupe" id="groupeConfirmerMdp">
-                    <label for="confirmer_mot_de_passe">Confirmer le mot de passe</label>
-                    <div class="input-icone">
-                        <svg class="user-input"><use href="/movie/view/assets/icons.svg#lock"></use></svg>
-                        <input type="password" id="confirmer_mot_de_passe" name="mot_de_passe2" placeholder="Confirmez votre mot de passe" required>
-                        <svg class="eye-icon toggle-mdp" onclick="basculerMotDePasse('confirmer_mot_de_passe', 'icon-eye-2')"><use id="icon-eye-2" href="/movie/view/assets/icons.svg#eye"></use></svg>
-                    </div>
-                </div>
-
-                <!-- Bouton de connexion -->
-                <button type="submit" class="bouton-principal">
-                    <svg class="icon-bouton-principale"><use href="/movie/view/assets/icons.svg#user-plus"></use></svg>
-                    <span>Valider</span>
-                </button>
-
-            </form>
-
-            <!-- Lien vers inscription / connexion -->
-            <p class="form-lien-retour">
-                Vous avez déjà un compte ? <a href="/movie/public/index.php?action=login" >Connectez-vous</a>
-            </p>
-
-            <!-- Pied de page -->
-            <footer>
-                <div style="padding-top: 20px; bottom: 20px; font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; width: 100%;">
-                    2026 Movies . Tous droits réservés.
-                </div>
-            </footer>
-
         </div>
 
-    </body>
+        <!-- Email de l'utilisateur-->
+        <div class="form-groupe">
+            <label for="email_utilisateur">Email valide</label>
+            <div class="input-icone">
+                <svg class="user-input"><use href="/movie/view/assets/icons.svg#user"></use></svg>
+                <input type="email" id="email_utilisateur" name="email_utilisateur" placeholder="Entrez votre email" maxlength="255" required>
+            </div>
+        </div>
+
+        <!-- Date de naissance de l'utilisateur -->
+        <div class="form-groupe">
+            <label for="date_naissance_utilisateur">Date de naissance</label>
+            <div class="input-icone">
+                <svg class="user-input"><use href="/movie/view/assets/icons.svg#user"></use></svg>
+                <input type="date" id="date_naissance_utilisateur" name="date_naissance_utilisateur" required>
+            </div>
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="form-groupe">
+            <label for="mot_de_passe">Mot de passe</label>
+            <div class="input-icone">
+                <svg class="user-input"><use href="/movie/view/assets/icons.svg#lock"></use></svg>
+                <input type="password" id="mot_de_passe" name="mot_de_passe1" placeholder="Votre mot de passe" required>
+                <svg class="eye-icon toggle-mdp" onclick="basculerMotDePasse('mot_de_passe', 'icon-eye-1')"><use id="icon-eye-1" href="/movie/view/assets/icons.svg#eye"></use></svg>
+            </div>
+        </div>
+
+        <!-- Confirmer le mot de passe -->
+        <div class="form-groupe" id="groupeConfirmerMdp">
+            <label for="confirmer_mot_de_passe">Confirmer le mot de passe</label>
+            <div class="input-icone">
+                <svg class="user-input"><use href="/movie/view/assets/icons.svg#lock"></use></svg>
+                <input type="password" id="confirmer_mot_de_passe" name="mot_de_passe2" placeholder="Confirmez votre mot de passe" required>
+                <svg class="eye-icon toggle-mdp" onclick="basculerMotDePasse('confirmer_mot_de_passe', 'icon-eye-2')"><use id="icon-eye-2" href="/movie/view/assets/icons.svg#eye"></use></svg>
+            </div>
+        </div>
+
+        <!-- Bouton de connexion -->
+        <button type="submit" class="bouton-principal">
+            <svg class="icon-bouton-principale"><use href="/movie/view/assets/icons.svg#user-plus"></use></svg>
+            <span>Valider</span>
+        </button>
+
+    </form>
+
+    <!-- Lien vers inscription / connexion -->
+    <p class="form-lien-retour">
+        Vous avez déjà un compte ? <a href="/movie/public/index.php?action=login" >Connectez-vous</a>
+    </p>
+
+    <!-- Pied de page -->
+    <footer>
+        <div style="padding-top: 20px; bottom: 20px; font-size: 11px; color: rgba(255,255,255,0.4); text-align: center; width: 100%;">
+            2026 Movies . Tous droits réservés.
+        </div>
+    </footer>
+
+</div>
+
+</body>
 
 </html>

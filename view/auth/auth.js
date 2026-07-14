@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         handleForm(signupForm, (formData) => api.signup(
             formData.get("nom_utilisateur"),
             formData.get("email_utilisateur"),
+            formData.get("date_naissance_utilisateur"),
             formData.get("mot_de_passe1"),
             formData.get("mot_de_passe2")
         ));

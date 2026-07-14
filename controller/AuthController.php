@@ -18,6 +18,7 @@ class AuthController {
         if (
             empty($_POST['nom_utilisateur']) ||
             empty($_POST['email_utilisateur']) ||
+            empty($_POST['date_naissance_utilisateur']) ||
             empty($_POST['mot_de_passe1']) ||
             empty($_POST['mot_de_passe2'])
         ) {
@@ -29,6 +30,7 @@ class AuthController {
 
         $nom_utilisateur = strip_tags(trim($_POST['nom_utilisateur']));
         $email = strip_tags(trim($_POST['email_utilisateur']));
+        $date_naissance_brute = strip_tags(trim($_POST['date_naissance_utilisateur']));
         $mot_de_passe1 = $_POST['mot_de_passe1'];
         $mot_de_passe2 = $_POST['mot_de_passe2'];
 
@@ -60,6 +62,35 @@ class AuthController {
             ];
         }
 
+        $date_naissance = DateTime::createFromFormat('Y-m-d', $date_naissance_brute);
+        $erreurs_date = DateTime::getLastErrors();
+
+        if (!$date_naissance || ($erreurs_date && ($erreurs_date['warning_count'] > 0 || $erreurs_date['error_count'] > 0))) {
+            return [
+                "success" => false,
+                "message" => "Date de naissance invalide"
+            ];
+        }
+
+        $date_naissance->setTime(0, 0);
+        $aujourdhui = new DateTime('today');
+
+        if ($date_naissance > $aujourdhui) {
+            return [
+                "success" => false,
+                "message" => "La date de naissance ne peut pas être dans le futur"
+            ];
+        }
+
+        // Age minimum de 13 ans (RGPD / bonnes pratiques)
+        $age = $date_naissance->diff($aujourdhui)->y;
+        if ($age < 13) {
+            return [
+                "success" => false,
+                "message" => "Vous devez avoir au moins 13 ans pour vous inscrire"
+            ];
+        }
+
         if ($this->userRepository->emailExists($email)) {
             return [
                 "success" => false,
@@ -73,7 +104,8 @@ class AuthController {
             $nom_utilisateur,
             $email,
             $mot_de_passe_hash,
-            null
+            null,
+            $date_naissance
         );
 
         $success = $this->userRepository->createUser($user);

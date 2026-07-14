@@ -92,13 +92,14 @@ class Api {
         });
     }
 
-    signup(nomUtilisateur, email, mdp1, mdp2) {
+    signup(nomUtilisateur, email, dateNaissance, mdp1, mdp2) {
         return this.request("signup", {
             method: "POST",
             isFormData: true,
             body: this.toFormData({
                 nom_utilisateur: nomUtilisateur,
                 email_utilisateur: email,
+                date_naissance_utilisateur: dateNaissance,
                 mot_de_passe1: mdp1,
                 mot_de_passe2: mdp2
             })

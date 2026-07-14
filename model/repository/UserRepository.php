@@ -14,13 +14,14 @@ class UserRepository {
         try {
 
             $stmt = $this->pdo->prepare(
-                "INSERT INTO utilisateurs (nom_utilisateur, email, mot_de_passe_hash) VALUES (:nom_utilisateur, :email, :mot_de_passe_hash)"
+                "INSERT INTO utilisateurs (nom_utilisateur, email, mot_de_passe_hash, date_naisssance_utilisateur) VALUES (:nom_utilisateur, :email, :mot_de_passe_hash, :date_naissance_utilisateur)"
             );
 
             return $stmt->execute([
                 "nom_utilisateur" => $user->getNomUtilisateur(),
                 "email" => $user->getEmail(),
                 "mot_de_passe_hash" => $user->getPasswordHash(),
+                "date_naissance_utilisateur" => $user->getDateNaissance()->format('Y-m-d')
             ]);
 
         } catch (PDOException $e) {
@@ -74,7 +75,7 @@ class UserRepository {
 
             if (!$row) return null;
 
-            $user = new Utilisateur($row['nom_utilisateur'], $row['email'], $row['mot_de_passe_hash'], $row['url_photo_profil']);
+            $user = new Utilisateur($row['nom_utilisateur'], $row['email'], $row['mot_de_passe_hash'], $row['url_photo_profil'], new DateTime($row['date_naisssance_utilisateur']));
             $user->setId($row['id']);
             $user->setRoleUtilisateurs($row['role_utilisateur']);
             $user->setIsActif((bool)$row['is_actif']);
@@ -82,7 +83,7 @@ class UserRepository {
 
             return $user;
 
-        } catch (PDOException $e) {
+        } catch (PDOException|DateMalformedStringException $e) {
             error_log("[" . date('d-M-Y H-i-s') . "] Error findByEmail: " . $e->getMessage());
             return null;
         }

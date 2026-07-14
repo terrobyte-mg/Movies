@@ -8,14 +8,16 @@ abstract class Personne {
     protected string $nom_utilisateur;
     protected string $email;
     protected string $password_hash;
+    protected DateTime $date_naissance;
     protected RoleUtilisateurs $roleUtilisateurs = RoleUtilisateurs::USER;
     protected ?string $url_photo_profil;
 
-    public function __construct(string $nom_utilisateur, string $email, string $password_hash, ?string $url_photo_profil) {
+    public function __construct(string $nom_utilisateur, string $email, string $password_hash, ?string $url_photo_profil, DateTime $date_naissance) {
         $this->nom_utilisateur = $nom_utilisateur;
         $this->email = $email;
         $this->password_hash = $password_hash;
         $this->url_photo_profil = $url_photo_profil;
+        $this->date_naissance = $date_naissance;
     }
 
     public function getNomUtilisateur(): string {
@@ -68,6 +70,14 @@ abstract class Personne {
 
     public function setUrlPhotoProfil(?string $url_photo_profil): void {
         $this->url_photo_profil = $url_photo_profil;
+    }
+
+    public function getDateNaissance(): DateTime {
+        return $this->date_naissance;
+    }
+
+    public function setDateNaissance(DateTime $date_naissance): void {
+        $this->date_naissance = $date_naissance;
     }
 
 }
