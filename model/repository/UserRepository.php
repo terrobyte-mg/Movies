@@ -80,10 +80,11 @@ class UserRepository {
             $user->setRoleUtilisateurs($row['role_utilisateur']);
             $user->setIsActif((bool)$row['is_actif']);
             $user->setEstSuspendue((bool)($row['est_suspendue'] ?? false));
+            $user->setOnboardingComplete((bool)($row['onboarding_complete'] ?? false));
 
             return $user;
 
-        } catch (PDOException|DateMalformedStringException $e) {
+        } catch (PDOException $e) {
             error_log("[" . date('d-M-Y H-i-s') . "] Error findByEmail: " . $e->getMessage());
             return null;
         }
@@ -230,6 +231,21 @@ class UserRepository {
             return $stmt->execute();
         } catch (PDOException $e) {
             error_log("[" . date('d-M-Y H-i-s') . "] Error setSuspension: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Marque l'onboarding (choix des genres préférés) comme terminé
+     * pour un utilisateur donné.
+     */
+    public function markOnboardingComplete(int $userId): bool {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE utilisateurs SET onboarding_complete = 1 WHERE id = :id");
+            $stmt->bindValue(':id', $userId, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error markOnboardingComplete: " . $e->getMessage());
             return false;
         }
     }

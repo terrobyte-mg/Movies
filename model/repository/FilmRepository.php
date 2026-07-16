@@ -164,6 +164,21 @@ class FilmRepository {
         }
     }
 
+    public function getRateFilm(int $filmId, int $userId): int {
+
+        try {
+            $stmt = $this->pdo->prepare(
+                "SELECT note FROM notes_contenus WHERE contenu_id = :film_id AND utilisateur_id = :user_id"
+            );
+            $stmt->execute(['film_id' => $filmId, 'user_id' => $userId]);
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("[" . date('d-M-Y H-i-s') . "] Error getRateFilm: " . $e->getMessage());
+            return 0;
+        }
+
+    }
+
     public function listGenres(): array
     {
         try {

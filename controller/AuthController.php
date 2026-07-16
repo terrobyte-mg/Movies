@@ -72,7 +72,7 @@ class AuthController {
             ];
         }
 
-        $date_naissance->setTime(0, 0);
+        $date_naissance->setTime(0, 0, 0);
         $aujourdhui = new DateTime('today');
 
         if ($date_naissance > $aujourdhui) {
@@ -264,12 +264,18 @@ class AuthController {
             'nom_utilisateur' => $user->getNomUtilisateur(),
             'email' => $user->getEmail(),
             'is_actif' => $user->isActif(),
-            'url_photo_profil' => $user->getUrlPhotoProfil()
+            'url_photo_profil' => $user->getUrlPhotoProfil(),
+            'onboarding_complete' => $user->isOnboardingComplete()
         ];
 
-        $redirect = $user->getRoleUtilisateurs() === RoleUtilisateurs::ADMIN
-            ? "index.php?action=admin"
-            : "index.php?action=home";
+        if ($user->getRoleUtilisateurs() === RoleUtilisateurs::ADMIN) {
+            $redirect = "index.php?action=admin";
+        } elseif (!$user->isOnboardingComplete()) {
+            // Première connexion : on invite le client à choisir ses genres préférés
+            $redirect = "index.php?action=onboarding";
+        } else {
+            $redirect = "index.php?action=home";
+        }
 
         return [
             "success" => true,

@@ -2,16 +2,19 @@
 
 require_once(__DIR__ . '/../model/repository/FilmRepository.php');
 require_once(__DIR__ . '/../model/repository/CommentaireRepository.php');
+require_once(__DIR__ . '/../model/repository/FavorisRepository.php');
 
 class FilmController
 {
     private FilmRepository $filmRepository;
     private CommentaireRepository $commentaireRepository;
+    private FavorisRepository $favorisRepository;
 
     public function __construct()
     {
         $this->filmRepository = new FilmRepository();
         $this->commentaireRepository = new CommentaireRepository();
+        $this->favorisRepository = new FavorisRepository();
     }
 
     /**
@@ -49,6 +52,8 @@ class FilmController
         }
 
         $this->filmRepository->incrementViews($id);
+
+        $film['est_favori'] = !empty($_SESSION['user']['id']) && $this->favorisRepository->isFavori((int)$_SESSION['user']['id'], $id);
 
         return [
             "success" => true,
@@ -179,6 +184,24 @@ class FilmController
     }
 
     /**
+     * PRENDRE LA NOTE CORRESPONDANT A L'UTILISATEUR ET AU FILM
+     * A PARTIR DU FILM REPOSITORY
+     * @param int $filmId
+     * @return array
+     */
+    public function getRate(int $filmId): array {
+
+        $userId = $_SESSION['user']['id'];
+        $note = $this->filmRepository->getRateFilm($filmId, $userId);
+
+        return [
+            "success" => true,
+            "data" => $note
+        ];
+
+    }
+
+    /**
      * LISTE DES COMMENTAIRES D'UN FILM
      */
     public function comments(int $filmId): array
@@ -245,6 +268,60 @@ class FilmController
             "success" => true,
             "message" => "Commentaire publié",
             "comment_id" => $commentId
+        ];
+    }
+
+    /**
+     * AJOUTER / RETIRER UN FILM DES FAVORIS (bascule)
+     */
+    public function toggleFavori(int $filmId): array
+    {
+        if (empty($_SESSION['user']['id'])) {
+            return [
+                "success" => false,
+                "message" => "Vous devez être connecté pour gérer vos favoris"
+            ];
+        }
+
+        $film = $this->filmRepository->findFilmById($filmId);
+        if (!$film) {
+            return [
+                "success" => false,
+                "message" => "Film introuvable"
+            ];
+        }
+
+        $resultat = $this->favorisRepository->toggle((int) $_SESSION['user']['id'], $filmId);
+
+        if ($resultat === null) {
+            return [
+                "success" => false,
+                "message" => "Erreur lors de la mise à jour des favoris"
+            ];
+        }
+
+        return [
+            "success" => true,
+            "favori" => $resultat,
+            "message" => $resultat ? "Ajouté aux favoris" : "Retiré des favoris"
+        ];
+    }
+
+    /**
+     * LISTE DES FILMS FAVORIS DE L'UTILISATEUR CONNECTÉ ("Ma liste")
+     */
+    public function myFavoris(): array
+    {
+        if (empty($_SESSION['user']['id'])) {
+            return [
+                "success" => false,
+                "message" => "Vous devez être connecté"
+            ];
+        }
+
+        return [
+            "success" => true,
+            "data" => $this->favorisRepository->listByUser((int) $_SESSION['user']['id'])
         ];
     }
 

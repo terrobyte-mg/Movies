@@ -135,6 +135,25 @@ class Api {
     }
 
     // =========================
+    // Onboarding
+    // =========================
+
+    getOnboardingGenres() {
+        return this.request("onboarding-genres");
+    }
+
+    submitOnboarding(genreIds) {
+        return this.request("onboarding-submit", {
+            method: "POST",
+            body: { genre_ids: genreIds }
+        });
+    }
+
+    skipOnboarding() {
+        return this.request("onboarding-skip", { method: "POST" });
+    }
+
+    // =========================
     // Films
     // =========================
 
@@ -160,6 +179,23 @@ class Api {
             params: { id },
             body: { note }
         });
+    }
+
+    getRateFilm(filmId) {
+        return this.request("get-film-rate", {
+            params: { id : filmId }
+        })
+    }
+
+    toggleFavori(filmId) {
+        return this.request("film-favori-toggle", {
+            method: "POST",
+            params: { id: filmId }
+        });
+    }
+
+    getMesFavoris() {
+        return this.request("mes-favoris");
     }
 
     getFilmComments(filmId) {

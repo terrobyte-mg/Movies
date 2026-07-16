@@ -7,7 +7,7 @@ class Film {
     private string $synopsis;
     private int $dureeMinutes;
     private int $anneeSortie;
-    private string $poster;
+    private ?string $poster;
     private ?string $urlTrailer;
     private ?string $video_path;
     private int $nombreVues = 0;
@@ -22,7 +22,7 @@ class Film {
         string $synopsis,
         int $dureeMinutes,
         int $anneeSortie,
-        string $poster,
+        ?string $poster = null,
         ?string $urlTrailer = null,
         ?string $video_path = null
     ) {

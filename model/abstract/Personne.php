@@ -11,6 +11,7 @@ abstract class Personne {
     protected DateTime $date_naissance;
     protected RoleUtilisateurs $roleUtilisateurs = RoleUtilisateurs::USER;
     protected ?string $url_photo_profil;
+    protected bool $onboardingComplete = false;
 
     public function __construct(string $nom_utilisateur, string $email, string $password_hash, ?string $url_photo_profil, DateTime $date_naissance) {
         $this->nom_utilisateur = $nom_utilisateur;
@@ -78,6 +79,14 @@ abstract class Personne {
 
     public function setDateNaissance(DateTime $date_naissance): void {
         $this->date_naissance = $date_naissance;
+    }
+
+    public function isOnboardingComplete(): bool {
+        return $this->onboardingComplete;
+    }
+
+    public function setOnboardingComplete(bool $onboardingComplete): void {
+        $this->onboardingComplete = $onboardingComplete;
     }
 
 }

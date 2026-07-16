@@ -15,6 +15,7 @@ require_once __DIR__ . '/../controller/AuthController.php';
 require_once __DIR__ . '/../controller/UserController.php';
 require_once __DIR__ . '/../controller/FilmController.php';
 require_once __DIR__ . '/../controller/AdminController.php';
+require_once __DIR__ . '/../controller/OnboardingController.php';
 
 require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 require_once __DIR__ . '/../middleware/AdminMiddleware.php';
@@ -28,6 +29,7 @@ $authController = new AuthController();
 $userController = new UserController();
 $filmController = new FilmController();
 $adminController = new AdminController();
+$onboardingController = new OnboardingController();
 
 // ==========================================
 // Helpers de garde (évitent la répétition
@@ -35,6 +37,28 @@ $adminController = new AdminController();
 // ==========================================
 
 function requireAuthView(): void
+{
+    if (AuthMiddleware::handle()) {
+        require __DIR__ . '/../view/public/index.html';
+        exit;
+    }
+
+    // Première connexion : on redirige vers l'onboarding tant que
+    // l'utilisateur (non-admin) n'a pas choisi ses genres préférés.
+    $role = $_SESSION['user']['role'] ?? null;
+    $onboardingComplete = $_SESSION['user']['onboarding_complete'] ?? false;
+
+    if ($role !== 'admin' && !$onboardingComplete) {
+        header('location: /movie/public/index.php?action=onboarding');
+        exit;
+    }
+}
+
+/**
+ * Garde dédiée à la vue d'onboarding : authentification requise,
+ * mais SANS vérifier l'onboarding lui-même (sinon boucle infinie).
+ */
+function requireAuthOnly(): void
 {
     if (AuthMiddleware::handle()) {
         require __DIR__ . '/../view/public/index.html';
@@ -106,6 +130,11 @@ switch ($action) {
             requireGuestView();
             require __DIR__ . '/../view/auth/login.html';
         }
+        break;
+
+    case 'onboarding':
+        requireAuthOnly();
+        require __DIR__ . '/../view/onboarding/onboarding.html';
         break;
 
     case 'admin-login':
@@ -218,6 +247,25 @@ switch ($action) {
         break;
 
     // ==========================================
+    // API onboarding (choix des genres préférés)
+    // ==========================================
+
+    case 'onboarding-genres':
+        requireAuthApi();
+        ApiResponse::send($onboardingController->genres());
+        break;
+
+    case 'onboarding-submit':
+        requireAuthApi();
+        ApiResponse::send($onboardingController->submit());
+        break;
+
+    case 'onboarding-skip':
+        requireAuthApi();
+        ApiResponse::send($onboardingController->skip());
+        break;
+
+    // ==========================================
     // API films
     // ==========================================
 
@@ -269,6 +317,23 @@ switch ($action) {
         requireAuthApi();
         $id = getIdParam();
         ApiResponse::send($filmController->rate($id));
+        break;
+
+    case 'get-film-rate':
+        requireAuthApi();
+        $id = getIdParam();
+        ApiResponse::send($filmController->getRate($id));
+        break;
+
+    case 'film-favori-toggle':
+        requireAuthApi();
+        $id = getIdParam();
+        ApiResponse::send($filmController->toggleFavori($id));
+        break;
+
+    case 'mes-favoris':
+        requireAuthApi();
+        ApiResponse::send($filmController->myFavoris());
         break;
 
     case 'film-comments':

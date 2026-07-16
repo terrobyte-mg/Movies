@@ -73,7 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let currentUser = null;
     let currentFilm = null;
-    let noteSelectionnee = 0;
+    let noteSelectionnee = ((await api.getRateFilm(filmId)));
+    console.log(noteSelectionnee.data)
 
     // ---------------------------------------------------------------
     // Utilisateur connecté
@@ -161,6 +162,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             btnTrailer.disabled = true;
             btnTrailer.title = "Pas de bande-annonce disponible";
             btnTrailer.style.opacity = "0.4";
+        }
+
+        const btnFavori = document.getElementById("fpBtnFavori");
+        if (btnFavori) {
+            const estFavori = !!film.est_favori;
+            btnFavori.classList.toggle("fp-actif", estFavori);
+            btnFavori.innerHTML = estFavori
+                ? '<i class="fa-solid fa-heart"></i>'
+                : '<i class="fa-regular fa-heart"></i>';
         }
 
         renderEtoiles(0);
@@ -315,7 +325,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     if (success) {
                         noteSelectionnee = valeur;
                         label.textContent = `Vous avez donné ${valeur}/5`;
-                        renderEtoiles(0);
+                        renderEtoiles(noteSelectionnee.data);
                         const { success: okRefresh, data } = await api.getFilm(filmId);
                         if (okRefresh && data) {
                             renderFilm(data);
@@ -473,6 +483,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initPlayer();
     initFavoris();
     initNotation();
+    renderEtoiles(noteSelectionnee.data);
     initFormulaireCommentaire();
     await chargerCommentaires();
 });
